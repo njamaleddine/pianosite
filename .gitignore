@@ -1,0 +1,12 @@
+*.log
+*.pot
+*.pyc
+.env*
+.DS_Store
+media
+*.db
+*.sqlite3
+database_dump/*
+*.rdb
+public/media/cache/*
+public/media/images/*
