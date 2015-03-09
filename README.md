@@ -26,6 +26,6 @@ Pianosite sells digital media in the form of .mid files that other pianists/keyb
 # OS dependencies:
 
 In order to get midi to audio conversion the environment needs to have:
-* A Soundfont - http://musescore.org/en/handbook/soundfont (included in repo)
+* A Soundfont - http://musescore.org/en/handbook/soundfont (fluidr3_gm2-2.sf2)
 * FluidSynth - `sudo apt-get install fluidsynth`
 * FFMPEG - `sudo apt-get install libav-tools`
