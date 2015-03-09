@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 import dj_database_url
 
+from django.utils.translation import ugettext_lazy as _
+
 # Oscar Imports
 from oscar import get_core_apps
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
@@ -29,6 +31,19 @@ def location(path_name):
 # Project specific information
 SITE_NAME = u"Piano Site"
 SITE_ID = 1  # Necessary for Oscar
+
+# Internationalization
+# https://docs.djangoproject.com/en/1.7/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -56,6 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
     'compressor',
+    'paypal',
 ] + get_core_apps()
 
 MIDDLEWARE_CLASSES = (
@@ -176,16 +192,34 @@ EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 25))
 if EMAIL_PORT:
     EMAIL_USE_TLS = True
 
+# Oscar Settings
+OSCAR_SHOP_NAME = u"{}".format(SITE_NAME)
+OSCAR_SHOP_TAGLINE = ""
+OSCAR_FROM_EMAIL = SERVER_EMAIL
+OSCAR_DEFAULT_CURRENCY = "USD"
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
+# Oscar Paypal
+OSCAR_DASHBOARD_NAVIGATION.append(
+    {
+        'label': _('PayPal'),
+        'icon': 'icon-globe',
+        'children': [
+            {
+                'label': _('Express transactions'),
+                'url_name': 'paypal-express-list',
+            },
+        ]
+    }
+)
 
-LANGUAGE_CODE = 'en-us'
+# Oscar Paypal Support
+PAYPAL_API_USERNAME = os.environ.get("PAYPAL_API_USERNAME", "")
+PAYPAL_API_PASSWORD = os.environ.get("PAYPAL_API_PASSWORD", "")
+PAYPAL_API_SIGNATURE = os.environ.get("PAYPAL_API_SIGNATURE", "")
+# Taken from PayPal's documentation - these should always work in the sandbox
+PAYPAL_SANDBOX_MODE = True
+PAYPAL_CALLBACK_HTTPS = False
+PAYPAL_API_VERSION = '88.0'
+PAYPAL_CURRENCY = PAYPAL_PAYFLOW_CURRENCY = "USD"
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
+PAYPAL_PAYFLOW_DASHBOARD_FORMS = True

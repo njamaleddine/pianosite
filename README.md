@@ -21,3 +21,11 @@ Production environment run server:
 **Pianosite** is an ecommerce site built on top of Oscar, a Django ecommerce platform.
 
 Pianosite sells digital media in the form of .mid files that other pianists/keyboard players can use to perform live at shows.
+
+
+# OS dependencies:
+
+In order to get midi to audio conversion the environment needs to have:
+* A Soundfont - http://musescore.org/en/handbook/soundfont (included in repo)
+* FluidSynth - `sudo apt-get install fluidsynth`
+* FFMPEG - `sudo apt-get install libav-tools`

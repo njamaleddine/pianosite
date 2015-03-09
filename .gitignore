@@ -10,3 +10,7 @@ database_dump/*
 *.rdb
 public/media/cache/*
 public/media/images/*
+specs.md
+*.mid
+*.midi
+*.oga
