@@ -21,6 +21,7 @@ Production environment run server:
 **Pianosite** is an ecommerce site built on top of Oscar, a Django ecommerce platform.
 
 Pianosite sells digital media in the form of .mid files that other pianists/keyboard players can use to perform live at shows.
+Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 
 
 # OS dependencies:

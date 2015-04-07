@@ -1,4 +1,3 @@
-import os
 import subprocess
 import midi
 
@@ -106,4 +105,5 @@ def slice_audio(audio_file_name, length=(30 * 1000)):
         print e
 
 
-# convert_to_audio(soundfont='fluidr3_gm2-2.sf2', output_path='../pianosite/public/media/audio/')
+# convert_to_audio(midi_filename="mary.mid")
+# slice_audio(audio_file_name="mary.ogg")
