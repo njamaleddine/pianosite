@@ -5,7 +5,8 @@
 3. Activate virtualenv `workon pianosite`
 4. Install requirements `pip install -r requirements.txt`
 5. Copy `sample.env` to `.env`
-
+6. `pip install pycountry`
+7. `python manage.py oscar_populate_countries`
 
 # Environment
 

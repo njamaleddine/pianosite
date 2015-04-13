@@ -177,7 +177,8 @@ MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 
 # Template Directories
 TEMPLATE_DIRS = (
-    location('templates'),
+    # location('templates'),
+    os.path.abspath("templates"),
     OSCAR_MAIN_TEMPLATE_DIR,
 )
 
@@ -223,3 +224,12 @@ PAYPAL_API_VERSION = '88.0'
 PAYPAL_CURRENCY = PAYPAL_PAYFLOW_CURRENCY = "USD"
 
 PAYPAL_PAYFLOW_DASHBOARD_FORMS = True
+
+# Paypal Payflow
+# PAYPAL_PAYFLOW_VENDOR_ID = os.environ.get("PAYPAL_PAYFLOW_VENDOR_ID", "")
+# PAYPAL_PAYFLOW_PASSWORD = os.environ.get("PAYPAL_PAYFLOW_PASSWORD", "")
+PAYPAL_PAYFLOW_PRODUCTION_MODE = DEBUG
+
+LANGUAGES = (
+    ('en-us', _('English')),
+)
