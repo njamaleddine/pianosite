@@ -19,6 +19,8 @@ from oscar import get_core_apps
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
 from oscar.defaults import *
 
+from apps.utility.toolbelt import coerce_bool
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -52,9 +54,9 @@ USE_TZ = True
 SECRET_KEY = os.environ.get('SECRET_KEY', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", True))
+DEBUG = coerce_bool(os.environ.get("DEBUG", True))
 
-TEMPLATE_DEBUG = bool(os.environ.get("TEMPLATE_DEBUG", DEBUG))
+TEMPLATE_DEBUG = coerce_bool(os.environ.get("TEMPLATE_DEBUG", DEBUG))
 
 ALLOWED_HOSTS = ['localhost', ]
 
@@ -123,10 +125,10 @@ HAYSTACK_CONNECTIONS = {
 
 # DEBUG Toolbar
 DEBUG_TOOLBAR_CONFIG = {
-    "INTERCEPT_REDIRECTS": bool(os.environ.get("TOOLBAR_INTERCEPT", False))
+    "INTERCEPT_REDIRECTS": coerce_bool(os.environ.get("TOOLBAR_INTERCEPT", False))
 }
 
-DEBUG_TOOLBAR = bool(os.environ.get("DEBUG_TOOLBAR", DEBUG))
+DEBUG_TOOLBAR = coerce_bool(os.environ.get("DEBUG_TOOLBAR", DEBUG))
 if DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
     INSTALLED_APPS += ("debug_toolbar",)
