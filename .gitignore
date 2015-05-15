@@ -15,3 +15,5 @@ specs.md
 *.midi
 *.oga
 *.ogg
+audio_dump/*
+*.sf2

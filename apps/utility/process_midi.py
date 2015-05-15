@@ -67,6 +67,8 @@ def convert_to_audio(midi_filename, soundfont='fluidr3_gm2-2.sf2', output_path='
                     '-ni', soundfont, midi_filename
                 ]
             )
+
+        # return output_filename
     except:
         raise "Incorrect File type or file has no name!"
 
@@ -98,7 +100,10 @@ def slice_audio(audio_file_name, length=(30 * 1000)):
                 lower_bound = length - (length / 2)
                 song = song[lower_bound:(length * 2) - lower_bound].fade_in(2000).fade_out(3000)
 
-            song.export(u"{}_slice.{}".format(file_name, file_type), format=file_type)
+            slice_file_name = u"{}_slice.{}".format(file_name, file_type)
+            song.export(slice_file_name, format=file_type)
+
+            return slice_file_name
 
     except IOError as e:
         print e.errno

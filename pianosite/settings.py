@@ -72,7 +72,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'compressor',
     'paypal',
-] + get_core_apps()
+] + get_core_apps(['apps.catalogue'])
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -148,6 +148,7 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
+        'ATOMIC_REQUESTS': True,
     }
 }
 
@@ -232,4 +233,5 @@ PAYPAL_PAYFLOW_PRODUCTION_MODE = DEBUG
 
 LANGUAGES = (
     ('en-us', _('English')),
+    ('es', _('Spanish')),
 )
