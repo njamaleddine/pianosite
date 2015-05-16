@@ -9,6 +9,7 @@ media
 database_dump/*
 *.rdb
 public/media/cache/*
+public/static/cache/*
 public/media/images/*
 specs.md
 *.mid
