@@ -58,7 +58,7 @@ DEBUG = coerce_bool(os.environ.get("DEBUG", True))
 
 TEMPLATE_DEBUG = coerce_bool(os.environ.get("TEMPLATE_DEBUG", DEBUG))
 
-ALLOWED_HOSTS = ['localhost', ]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
