@@ -14,6 +14,3 @@ specs.md
 *.ogg
 audio_dump/*
 *.sf2
-pianosite/public/media/cache/*
-pianosite/public/media/audio/*
-pianosite/public/static/CACHE/*
