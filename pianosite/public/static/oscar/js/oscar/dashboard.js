@@ -23,6 +23,7 @@ var oscar = (function(o, $) {
                 'datetimeFormat': 'yy-mm-dd hh:ii',
                 'stepMinute': 15,
                 'tinyConfig': {
+                    entity_encoding: 'raw',
                     statusbar: false,
                     menubar: false,
                     plugins: "link",
@@ -36,6 +37,7 @@ var oscar = (function(o, $) {
             o.dashboard.options = $.extend(true, defaults, options);
 
             o.dashboard.initWidgets(window.document);
+            o.dashboard.initForms();
 
             $(".category-select ul").prev('a').on('click', function(){
                 var $this = $(this),
@@ -142,7 +144,6 @@ var oscar = (function(o, $) {
                             'format': $ele.data('dateformat')
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
 
                 var defaultDatetimepickerConfig = {
@@ -159,7 +160,6 @@ var oscar = (function(o, $) {
                           'minuteStep': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
 
                 var defaultTimepickerConfig = {
@@ -179,7 +179,6 @@ var oscar = (function(o, $) {
                           'formatViewType': 'time'
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
             }
         },
@@ -188,6 +187,18 @@ var oscar = (function(o, $) {
             $textareas = $(el).find('textarea').not('.no-widget-init textarea').not('.no-widget-init');
             $textareas.filter('form.wysiwyg textarea').tinymce(o.dashboard.options.tinyConfig);
             $textareas.filter('.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
+        },
+        initForms: function() {
+            // Disable buttons when they are clicked and show a "loading" message taken from the
+            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
+            // Do not disable if button is inside a form with invalid fields.
+            // This uses a delegated event so that it keeps working for forms that are reloaded
+            // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
+            $(document.body).on('click', '[data-loading-text]', function(){
+                var form = $(this).parents("form");
+                if (!form || $(":invalid", form).length == 0)
+                    $(this).button('loading');
+            });
         },
         offers: {
             init: function() {
@@ -204,6 +215,29 @@ var oscar = (function(o, $) {
                     $valueContainer.hide();
                 } else {
                     $valueContainer.show();
+                }
+            }
+        },
+        product_attributes: {
+            init: function(){
+                var type_selects = $("select[name$=type]");
+
+                type_selects.each(function(index){
+                    o.dashboard.product_attributes.toggleOptionGroup($(this));
+                });
+
+                type_selects.change(function(e){
+                    o.dashboard.product_attributes.toggleOptionGroup($(this));
+                });
+            },
+
+            toggleOptionGroup: function(type_select){
+                var option_group_select = $('#' + type_select.attr('id').replace('type', 'option_group'));
+
+                if(type_select.val() === 'option'){
+                    option_group_select.closest('.control-group').show();
+                }else{
+                    option_group_select.closest('.control-group').hide();
                 }
             }
         },

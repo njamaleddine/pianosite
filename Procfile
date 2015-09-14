@@ -1,1 +1,1 @@
-web: waitress-serve --port=$PORT pianosite.wsgi:application
+web: gunicorn -w 4 -b 0.0.0.0:$PORT pianosite.wsgi

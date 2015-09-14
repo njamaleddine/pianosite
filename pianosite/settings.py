@@ -56,8 +56,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY', None)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = coerce_bool(os.environ.get("DEBUG", True))
 
-TEMPLATE_DEBUG = coerce_bool(os.environ.get("TEMPLATE_DEBUG", DEBUG))
-
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 
@@ -72,6 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
+    'widget_tweaks',
     'compressor',
     'paypal',
 ] + get_core_apps(['apps.catalogue', 'apps.checkout', 'apps.dashboard'])
@@ -88,29 +87,43 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    # needed by django-treebeard for admin (and potentially other libs)
-    'django.template.loaders.eggs.Loader',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            # location('templates'),
+            os.path.abspath("templates"),
+            OSCAR_MAIN_TEMPLATE_DIR,
+        ],
+        'APP_DIRS': False,
+        'OPTIONS': {
+            'debug': coerce_bool(os.environ.get("TEMPLATE_DEBUG", DEBUG)),
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.request",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    'oscar.apps.search.context_processors.search_form',
-    'oscar.apps.promotions.context_processors.promotions',
-    'oscar.apps.checkout.context_processors.checkout',
-    'oscar.apps.customer.notifications.context_processors.notifications',
-    'oscar.core.context_processors.metadata',
-)
+                "django.core.context_processors.i18n",
+                "django.core.context_processors.media",
+                "django.core.context_processors.static",
+                "django.core.context_processors.tz",
+
+                'oscar.apps.search.context_processors.search_form',
+                'oscar.apps.promotions.context_processors.promotions',
+                'oscar.apps.checkout.context_processors.checkout',
+                'oscar.apps.customer.notifications.context_processors.notifications',
+                'oscar.core.context_processors.metadata',
+            ],
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+                # needed by django-treebeard for admin (and potentially other libs)
+                'django.template.loaders.eggs.Loader',
+            ]
+        },
+    },
+]
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.EmailBackend',
@@ -177,13 +190,6 @@ STATICFILES_FINDERS = (
 # Media URL
 MEDIA_ROOT = location("public/media")
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
-
-# Template Directories
-TEMPLATE_DIRS = (
-    # location('templates'),
-    os.path.abspath("templates"),
-    OSCAR_MAIN_TEMPLATE_DIR,
-)
 
 # Email
 SERVER_EMAIL = "django@localhost"

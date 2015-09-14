@@ -11,7 +11,7 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error', msg); },
+        error: function(msg) { o.messages.addMessage('danger', msg); },
         clear: function() {
             $('#messages').html('');
         },
@@ -75,7 +75,7 @@ var oscar = (function(o, $) {
             // Do not disable if button is inside a form with invalid fields.
             // This uses a delegated event so that it keeps working for forms that are reloaded
             // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
-            $(document.body).on('click', '.js-disable-on-click', function(){
+            $(document.body).on('click', '[data-loading-text]', function(){
                 var form = $(this).parents("form");
                 if (!form || $(":invalid", form).length == 0)
                     $(this).button('loading');
@@ -128,7 +128,7 @@ var oscar = (function(o, $) {
         },
         initNav: function() {
             // Initial navigation for desktop
-            var $sidebar = $('aside.span3'),
+            var $sidebar = $('aside.col-sm-3'),
                 $browse = $('[data-navigation="dropdown-menu"]'),
                 $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar

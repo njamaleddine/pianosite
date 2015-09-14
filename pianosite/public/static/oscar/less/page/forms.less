@@ -28,8 +28,10 @@ form {
     margin-top: 6px;
 }
 
-.control-label.required span {
+.control-label.required:after {
     color: #FF0000;
+    content:"*";
+    display: inline-block;
 }
 
 /* weird alternative to btn-block for specific use on the product page, where btn-block would cause a vertical misalignment when product size options are shown */
@@ -49,4 +51,11 @@ form {
             cursor:pointer;
         }
     }
+}
+
+.form-actions {
+    margin: @line-height-computed 0;
+    padding: @line-height-computed;
+    background-color: @form-actions-bg-color;
+    border-top: solid 1px @form-actions-border-color;
 }
