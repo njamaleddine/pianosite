@@ -73,7 +73,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'compressor',
     'paypal',
-] + get_core_apps(['apps.catalogue', 'apps.checkout', 'apps.dashboard'])
+] + get_core_apps(['apps.catalogue', 'apps.checkout', 'apps.dashboard', ])
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
