@@ -68,7 +68,7 @@ def convert_to_audio(midi_filename, soundfont='fluidr3_gm2-2.sf2', output_path='
                 ]
             )
 
-        # return output_filename
+        return output_filename
     except:
         raise "Incorrect File type or file has no name!"
 

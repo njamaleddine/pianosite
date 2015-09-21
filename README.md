@@ -11,10 +11,10 @@
 # Environment
 
 Local environment run server:
-    `foreman start -f Procfile.dev`
+        `foreman start -f Procfile.dev`
 
 Production environment run server:
-    `foreman start`
+        `foreman start`
 
 
 # About
@@ -30,4 +30,10 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 In order to get midi to audio conversion the environment needs to have:
 * A Soundfont - http://musescore.org/en/handbook/soundfont (fluidr3_gm2-2.sf2)
 * FluidSynth - `sudo apt-get install fluidsynth`
+               `bbrew install fluid-synth --with-libsndfile`
 * FFMPEG - `sudo apt-get install libav-tools`
+
+# Test if Fluidsynth is working correctly with the soundfont
+1. Enter this into the bash terminal:
+        `fluidsynth -T oga -F gerudo_valley.mp3 -ni fluidr3_gm2-2.sf2 gerudo_valley.mid`
+

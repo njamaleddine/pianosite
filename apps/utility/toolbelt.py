@@ -36,12 +36,16 @@ def upload_file(self, file_name, random=False):
         len(file_name)
     )
 
+    filename, file_extension = file_name.split('.')[0], file_name.split('.')[-1]
+    file_name = u'{}.{}'.format(filename, file_extension)
+
     # Crop the file name if it's too long
     if total_path_length > max_path_length:
-        file_extension = file_name.split(".")[-1]
-        file_name = file_name[0:35] + "." + file_extension
+        # file_extension = file_name.split(".")[-1]
+        # file_name = file_name.split(".")[0]
+        file_name = u'{}.{}'.format(file_name[0:35], file_extension)
 
-    return u'{0}/{1}{2}/{3}'.format(
+    return u'{}/{}{}/{}'.format(
         settings.MEDIA_ROOT, random_string, date_hash, file_name
     )
 

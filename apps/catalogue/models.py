@@ -40,24 +40,40 @@ class Genre (models.Model):
 class Product (AbstractProduct):
     artist = models.ForeignKey(Artist, null=True, blank=True)
     genre = models.ForeignKey(Genre, null=True, blank=True)
-    midi_file = models.FileField(upload_to=upload_file)
+    midi_file = models.FileField(upload_to=upload_file, max_length=255)
+    full_audio = models.URLField(max_length=2048, blank=True, null=True)
     sample_audio = models.URLField(max_length=2048, blank=True, null=True)
 
-    def process_file_data(self):
-        """
-        Create audio slice from midi file
-        Return path of sample_audio
-        """
+    # def process_file_data(self):
+    #     """
+    #     Create audio slice from midi file
+    #     Return path of sample_audio
+    #     """
+    #     if self.midi_file:
+    #         output_filename = convert_to_audio(midi_filename=self.midi_file.path)
+    #         slice_file_name = slice_audio(audio_file_name=output_filename)
+
+    #         self.full_audio = output_filename
+    #         self.sample_audio = slice_file_name
+    #         self.save()
+
+    #         return u"{}/".format(settings.MEDIA_ROOT, slice_file_name)
+    #     else:
+    #         raise "No midi file available with this object"
+
+    def save(self, *args, **kwargs):
         if self.midi_file:
-            output_filename = convert_to_audio(midi_filename=self.midi_file.name)
+            output_filename = convert_to_audio(midi_filename=self.midi_file.path)
             slice_file_name = slice_audio(audio_file_name=output_filename)
 
-            return u"{}/".format(settings.MEDIA_ROOT, slice_file_name)
+            self.full_audio = output_filename
+            self.sample_audio = slice_file_name
         else:
             raise "No midi file available with this object"
+        return super(Product, self).save(*args, **kwargs)
 
 
-post_save.connect(audio_slice_create, sender=Product)
+# post_save.connect(audio_slice_create, sender=Product)
 
 
 @python_2_unicode_compatible
