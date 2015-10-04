@@ -2,7 +2,6 @@
 import uuid
 
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
@@ -12,7 +11,9 @@ from oscar.apps.catalogue.abstract_models import AbstractProduct
 from apps.utility.toolbelt import upload_file
 from apps.utility.process_midi import convert_to_audio, slice_audio
 
-from signals import audio_slice_create
+from pianosite.settings import BASE_DIR
+
+from signals import audio_creation
 
 
 @python_2_unicode_compatible
@@ -44,36 +45,46 @@ class Product (AbstractProduct):
     full_audio = models.URLField(max_length=2048, blank=True, null=True)
     sample_audio = models.URLField(max_length=2048, blank=True, null=True)
 
-    # def process_file_data(self):
-    #     """
-    #     Create audio slice from midi file
-    #     Return path of sample_audio
-    #     """
-    #     if self.midi_file:
-    #         output_filename = convert_to_audio(midi_filename=self.midi_file.path)
-    #         slice_file_name = slice_audio(audio_file_name=output_filename)
-
-    #         self.full_audio = output_filename
-    #         self.sample_audio = slice_file_name
-    #         self.save()
-
-    #         return u"{}/".format(settings.MEDIA_ROOT, slice_file_name)
-    #     else:
-    #         raise "No midi file available with this object"
-
-    def save(self, *args, **kwargs):
+    def audio_conversion(self):
         if self.midi_file:
-            output_filename = convert_to_audio(midi_filename=self.midi_file.path)
+            midi_file_name = self.midi_file.path.split('/')[-1]
+            audio_directory = self.midi_file.path.replace(midi_file_name, '')
+
+            output_filename = convert_to_audio(
+                midi_filename=self.midi_file.path,
+                soundfont='{}/{}'.format(BASE_DIR, 'apps/utility/fluidr3_gm2-2.sf2'),
+                output_path='{}'.format(audio_directory),
+                output_types=['oga']
+            )
             slice_file_name = slice_audio(audio_file_name=output_filename)
 
-            self.full_audio = output_filename
-            self.sample_audio = slice_file_name
+            # self.full_audio = output_filename
+            # self.sample_audio = slice_file_name
+            return output_filename, slice_file_name
+            # self.objects.filter(pk=self.pk).update(full_audio=output_filename, sample_audio=slice_file_name)
         else:
             raise "No midi file available with this object"
+
+    def save(self, *args, **kwargs):
+        # if self.midi_file:
+        #     midi_file_name = self.midi_file.path.split('/')[-1]
+        #     audio_directory = self.midi_file.path.replace(midi_file_name, '')
+
+        #     output_filename = convert_to_audio(
+        #         midi_filename=self.midi_file.path,
+        #         soundfont='{}/{}'.format(BASE_DIR, 'apps/utility/fluidr3_gm2-2.sf2'),
+        #         output_path='{}'.format(audio_directory),
+        #         output_types=['oga']
+        #     )
+        #     slice_file_name = slice_audio(audio_file_name=output_filename)
+
+        #     self.full_audio = output_filename
+        #     self.sample_audio = slice_file_name
+        # else:
+        #     raise "No midi file available with this object"
         return super(Product, self).save(*args, **kwargs)
 
-
-# post_save.connect(audio_slice_create, sender=Product)
+post_save.connect(audio_creation, sender=Product)
 
 
 @python_2_unicode_compatible

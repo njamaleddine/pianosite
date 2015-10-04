@@ -30,7 +30,7 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 In order to get midi to audio conversion the environment needs to have:
 * A Soundfont - http://musescore.org/en/handbook/soundfont (fluidr3_gm2-2.sf2)
 * FluidSynth - `sudo apt-get install fluidsynth`
-               `bbrew install fluid-synth --with-libsndfile`
+               `brew install fluid-synth --with-libsndfile`
 * FFMPEG - `sudo apt-get install libav-tools`
 
 # Test if Fluidsynth is working correctly with the soundfont

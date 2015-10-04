@@ -43,7 +43,7 @@ def sample_midi(filename, total_length=(60 * 1000000) * 30):
 # midi.write_midifile("mary2.mid", sampled_midi)
 
 
-def convert_to_audio(midi_filename, soundfont='fluidr3_gm2-2.sf2', output_path='../pianosite/public/media/audio/', output_types=['oga']):
+def convert_to_audio(midi_filename, soundfont='fluidr3_gm2-2.sf2', output_path='.', output_types=['oga']):
     """
     Convert a single midi file to an audio given a list of output_types
 
@@ -55,8 +55,11 @@ def convert_to_audio(midi_filename, soundfont='fluidr3_gm2-2.sf2', output_path='
     if not soundfont:
         return "You need to download a soundfont file to convert the midi into audio!"
     try:
-        filename = midi_filename.split(".")[0]
-
+        try:
+            filename = midi_filename.split("/")[-1].split('.')[0]
+        except:
+            filename = midi_filename.split('.')[0]
+        print "PRINTING: ", filename
         for output_type in output_types:
             output_filename = u"{}{}.{}".format(
                 output_path, filename, output_type
