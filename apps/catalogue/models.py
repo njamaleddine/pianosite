@@ -8,7 +8,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from oscar.apps.catalogue.abstract_models import AbstractProduct
 
-from apps.utility.toolbelt import upload_file
+from apps.utility.toolbelt import upload_file, get_file_name_from_path
 from apps.utility.process_midi import convert_to_audio, slice_audio
 
 from pianosite.settings import BASE_DIR
@@ -49,39 +49,25 @@ class Product (AbstractProduct):
         if self.midi_file:
             midi_file_name = self.midi_file.path.split('/')[-1]
             audio_directory = self.midi_file.path.replace(midi_file_name, '')
+            audio_base_url = self.midi_file.url.replace(midi_file_name, '')
 
-            output_filename = convert_to_audio(
+            audio_path, audio_filename, = convert_to_audio(
                 midi_filename=self.midi_file.path,
                 soundfont='{}/{}'.format(BASE_DIR, 'apps/utility/fluidr3_gm2-2.sf2'),
                 output_path='{}'.format(audio_directory),
                 output_types=['oga']
             )
-            slice_file_name = slice_audio(audio_file_name=output_filename)
+            slice_file_name = slice_audio(audio_file_name=audio_path)
 
-            # self.full_audio = output_filename
-            # self.sample_audio = slice_file_name
-            return output_filename, slice_file_name
-            # self.objects.filter(pk=self.pk).update(full_audio=output_filename, sample_audio=slice_file_name)
+            audio_url = u'{}{}'.format(audio_base_url, audio_filename)
+            audio_slice_url = u'{}{}'.format(
+                audio_base_url, get_file_name_from_path(slice_file_name)
+            )
+            return audio_url, audio_slice_url
         else:
             raise "No midi file available with this object"
 
     def save(self, *args, **kwargs):
-        # if self.midi_file:
-        #     midi_file_name = self.midi_file.path.split('/')[-1]
-        #     audio_directory = self.midi_file.path.replace(midi_file_name, '')
-
-        #     output_filename = convert_to_audio(
-        #         midi_filename=self.midi_file.path,
-        #         soundfont='{}/{}'.format(BASE_DIR, 'apps/utility/fluidr3_gm2-2.sf2'),
-        #         output_path='{}'.format(audio_directory),
-        #         output_types=['oga']
-        #     )
-        #     slice_file_name = slice_audio(audio_file_name=output_filename)
-
-        #     self.full_audio = output_filename
-        #     self.sample_audio = slice_file_name
-        # else:
-        #     raise "No midi file available with this object"
         return super(Product, self).save(*args, **kwargs)
 
 post_save.connect(audio_creation, sender=Product)

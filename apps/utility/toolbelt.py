@@ -5,8 +5,6 @@ import hashlib
 from datetime import datetime
 from django.utils.crypto import get_random_string
 
-from django.conf import settings
-
 
 def generate_date_hash():
     """
@@ -30,7 +28,6 @@ def upload_file(self, file_name, random=False):
     date_hash = generate_date_hash()
 
     total_path_length = (
-        len(settings.MEDIA_ROOT) +
         len(random_string) +
         len(date_hash) +
         len(file_name)
@@ -45,8 +42,8 @@ def upload_file(self, file_name, random=False):
         # file_name = file_name.split(".")[0]
         file_name = u'{}.{}'.format(filename[0:35], file_extension)
 
-    return u'{}/{}{}/{}'.format(
-        settings.MEDIA_ROOT, random_string, date_hash, file_name
+    return u'{}{}/{}'.format(
+        random_string, date_hash, file_name
     )
 
 
@@ -121,3 +118,15 @@ def standardize_phone_number(phone_number):
             new_phone_number = u"{0}x{1}".format(new_phone_number, extension)
 
     return new_phone_number
+
+
+def get_file_name_from_path(path):
+    try:
+        filename = path.split("/")[-1]
+    except:
+        filename = path
+    return filename
+
+
+def get_file_name_without_extension(file_name):
+    return file_name.split('.')[0]

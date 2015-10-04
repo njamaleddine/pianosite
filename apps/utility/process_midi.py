@@ -2,6 +2,7 @@ import subprocess
 import midi
 
 from pydub import AudioSegment
+from toolbelt import get_file_name_from_path, get_file_name_without_extension
 
 
 def sample_midi(filename, total_length=(60 * 1000000) * 30):
@@ -43,7 +44,7 @@ def sample_midi(filename, total_length=(60 * 1000000) * 30):
 # midi.write_midifile("mary2.mid", sampled_midi)
 
 
-def convert_to_audio(midi_filename, soundfont='fluidr3_gm2-2.sf2', output_path='.', output_types=['oga']):
+def convert_to_audio(midi_filename, soundfont='fluidr3_gm2-2.sf2', output_path='', output_types=['oga']):
     """
     Convert a single midi file to an audio given a list of output_types
 
@@ -55,23 +56,22 @@ def convert_to_audio(midi_filename, soundfont='fluidr3_gm2-2.sf2', output_path='
     if not soundfont:
         return "You need to download a soundfont file to convert the midi into audio!"
     try:
-        try:
-            filename = midi_filename.split("/")[-1].split('.')[0]
-        except:
-            filename = midi_filename.split('.')[0]
-        print "PRINTING: ", filename
+        file_name = get_file_name_without_extension(
+            get_file_name_from_path(midi_filename)
+        )
         for output_type in output_types:
-            output_filename = u"{}{}.{}".format(
-                output_path, filename, output_type
+            output_filename = u'{}.{}'.format(file_name, output_type)
+            output_file_path = u"{}{}".format(
+                output_path, output_filename
             )
             subprocess.call(
                 [
-                    'fluidsynth', '-T', output_type, '-F', output_filename,
+                    'fluidsynth', '-T', output_type, '-F', output_file_path,
                     '-ni', soundfont, midi_filename
                 ]
             )
 
-        return output_filename
+        return output_file_path, output_filename
     except:
         raise "Incorrect File type or file has no name!"
 
@@ -111,7 +111,3 @@ def slice_audio(audio_file_name, length=(30 * 1000)):
     except IOError as e:
         print e.errno
         print e
-
-
-# convert_to_audio(midi_filename="mary.mid")
-# slice_audio(audio_file_name="mary.ogg")

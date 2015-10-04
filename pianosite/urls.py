@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 
@@ -6,6 +7,7 @@ from apps.app import application
 
 from paypal.payflow.dashboard.app import application as payflow
 from paypal.express.dashboard.app import application as express_dashboard
+
 
 urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
@@ -21,4 +23,9 @@ urlpatterns = [
     url(r'^dashboard/paypal/express/', include(express_dashboard.urls)),
 
     url(r'', include(application.urls)),
+    url(
+        r'^media/(?P<path>.*)$',
+        'django.views.static.serve',
+        {'document_root': settings.MEDIA_ROOT}
+    )
 ]
