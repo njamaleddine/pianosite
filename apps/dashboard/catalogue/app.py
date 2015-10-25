@@ -1,10 +1,10 @@
-from oscar.apps.dashboard.catalogue import app
+# from oscar.apps.dashboard.catalogue import app
 
-from apps.dashboard.catalogue import views
-
-
-class CatalogueApplication(app.CatalogueApplication):
-    payment_details_view = views.PaymentDetailsView
+# from apps.dashboard.catalogue import views
 
 
-application = CatalogueApplication()
+# class CatalogueApplication(app.CatalogueApplication):
+#     payment_details_view = views.PaymentDetailsView
+
+
+# application = CatalogueApplication()
