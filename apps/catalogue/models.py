@@ -41,9 +41,9 @@ class Genre (models.Model):
 class Product (AbstractProduct):
     artist = models.ForeignKey(Artist, null=True, blank=True)
     genre = models.ForeignKey(Genre, null=True, blank=True)
-    midi_file = models.FileField(upload_to=upload_file, max_length=255)
-    full_audio = models.URLField(max_length=2048, blank=True, null=True)
-    sample_audio = models.URLField(max_length=2048, blank=True, null=True)
+    midi_file = models.FileField(upload_to=upload_file, max_length=1024)
+    full_audio = models.FileField(upload_to=upload_file, max_length=1024, blank=True, null=True)
+    sample_audio = models.FileField(upload_to=upload_file, max_length=1024, blank=True, null=True)
 
     def audio_conversion(self):
         if self.midi_file:

@@ -1,5 +1,6 @@
 """ Useful functions """
 
+import os
 import re
 import hashlib
 from datetime import datetime
@@ -68,6 +69,18 @@ def coerce_bool(value):
         elif str(value).lower() == 'true' or str(value) == str(1):
             return True
     return False
+
+
+def get_env(key, default=None):
+    """ Get an environment variable and coerce it's type """
+    value = None
+    if isinstance(default, int):
+        value = coerce_int(os.environ.get(key, default))
+    elif isinstance(default, bool):
+        value = coerce_bool(os.environ.get(key, default))
+    else:
+        value = os.environ.get(key, default)
+    return value
 
 
 def upload_to_s3(self, file_name, sub_directory=""):
