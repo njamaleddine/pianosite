@@ -1,3 +1,5 @@
+from __future__ import unicode_literals, absolute_import
+
 # Catalogue models
 import uuid
 
@@ -8,12 +10,13 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from oscar.apps.catalogue.abstract_models import AbstractProduct
 
+from apps.utility.models import TimeStampedModel
 from apps.utility.toolbelt import upload_file, get_file_name_from_path
 from apps.utility.process_midi import convert_to_audio, slice_audio
 
 from pianosite.settings import BASE_DIR
 
-from signals import audio_creation
+from .signals import audio_creation
 
 
 @python_2_unicode_compatible
@@ -74,15 +77,32 @@ post_save.connect(audio_creation, sender=Product)
 
 
 @python_2_unicode_compatible
-class MidiDownloadURL(models.Model):
+class MidiDownloadURL(TimeStampedModel):
     """ The midi download url available for the user to access the file """
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey(Product)
     owner = models.ForeignKey(User)
-    is_valid = models.BooleanField(default=True)
+    date_redeemed = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return u"{}".format(self.uuid)
 
+    @property
+    def expired(self):
+        if self.date_redeemed:
+            return True
+        return False
 
+    @property
+    def file(self):
+        if not self.date_redeemed:
+            return self.product.midi_file
+        return None
+
+    @property
+    def file_name(self):
+        return self.file.path.split('/')[-1]
+
+
+# Required to import the rest of the oscar models unfortunately
 from oscar.apps.catalogue.models import *
