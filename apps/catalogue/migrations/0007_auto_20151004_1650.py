@@ -10,7 +10,7 @@ def create_product_classes(apps, schema_editor):
     ProductClass.objects.get_or_create(
         name='Midi',
         requires_shipping=False,
-        track_stock=True
+        track_stock=False
     )
 
 
