@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from oscar.apps.checkout import app
 
 from apps.checkout import views
