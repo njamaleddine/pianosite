@@ -1,0 +1,11 @@
+{% load i18n %}
+
+<form method="get" action="{% url 'search:search' %}" class="navbar-form navbar-right" id="product-search-form">
+    <div class="box form-group">
+        <div class="container-4">
+            {{ search_form.q }}
+            <button class="icon"><i class="icon-search"></i></button>
+        </div>
+    </div>
+    <!-- <input type="submit" value="{% trans "Search" %}" class="btn btn-default" /> -->
+</form>

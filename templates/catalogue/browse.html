@@ -59,7 +59,7 @@
 
     <form method="get" class="form-horizontal">
         {# Render other search params in a hidden block #}
-        <div style="display:none">
+        <div>
             {% for value in selected_facets %}
                 <input name="selected_facets" value="{{ value }}" />
             {% endfor %}
@@ -106,7 +106,6 @@
     {% else %}
         <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
-
 {% endblock content %}
 
 {% block onbodyload %}

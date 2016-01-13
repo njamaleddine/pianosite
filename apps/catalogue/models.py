@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
 # Catalogue models
@@ -9,6 +10,7 @@ from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
 
 from oscar.apps.catalogue.abstract_models import AbstractProduct
+from oscar.apps.catalogue.managers import ProductManager
 
 from apps.utility.models import TimeStampedModel
 from apps.utility.toolbelt import upload_file, get_file_name_from_path
@@ -24,10 +26,10 @@ class Artist (models.Model):
     name = models.CharField(max_length=255)
 
     class Meta (object):
-        ordering = ("name",)
+        ordering = ('name',)
 
     def __str__(self):
-        return u"{0}".format(self.name)
+        return '{0}'.format(self.name)
 
 
 @python_2_unicode_compatible
@@ -35,10 +37,10 @@ class Genre (models.Model):
     name = models.CharField(max_length=255)
 
     class Meta (object):
-        ordering = ("name",)
+        ordering = ('name',)
 
     def __str__(self):
-        return u"{0}".format(self.name)
+        return '{0}'.format(self.name)
 
 
 class Product (AbstractProduct):
@@ -68,7 +70,7 @@ class Product (AbstractProduct):
             )
             return audio_url, audio_slice_url
         else:
-            raise "No midi file available with this object"
+            raise 'No midi file available with this object'
 
     def save(self, *args, **kwargs):
         return super(Product, self).save(*args, **kwargs)
@@ -85,7 +87,7 @@ class MidiDownloadURL(TimeStampedModel):
     date_redeemed = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return u"{}".format(self.uuid)
+        return '{}'.format(self.uuid)
 
     @property
     def expired(self):
@@ -95,7 +97,7 @@ class MidiDownloadURL(TimeStampedModel):
 
     @property
     def file(self):
-        if not self.date_redeemed:
+        if not self.expired:
             return self.product.midi_file
         return None
 

@@ -11,7 +11,12 @@ from .models import MidiDownloadURL
 
 
 class MidiDownloadView(View):
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        """
+        The view requires a `POST` request instead of a get request since
+        prerendered page load should not cound as a click to download the midi
+        file
+        """
         uuid = self.kwargs.get('uuid')
 
         if request.user.is_authenticated():

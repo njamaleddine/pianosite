@@ -45,6 +45,28 @@ def create_partners(apps, schema_editor):
     )
 
 
+def create_automatic_product_lists(apps, schema_editor):
+    """ Generate Automatic product list """
+    AutomaticProductList = apps.get_app_config('promotions').models.get('AutomaticProductList')
+    # Create Newest Products list
+    new_items = AutomaticProductList.objects.get_or_create(
+        name='New Items',
+        method='RecentlyAdded',
+        num_products=4
+    )
+    # Create best sellers product list
+    best_sellers = AutomaticProductList.objects.get_or_create(
+        name='Best Sellers',
+        method='Bestselling',
+        num_products=4
+    )
+
+    # Add the promotions to the homepage
+    PagePromotion = apps.get_app_config('promotions').models.get('PagePromotion')
+    PagePromotion.objects.get_or_create(page_url='/', promotion=new_items)
+    PagePromotion.objects.get_or_create(page_url='/', promotion=best_sellers)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -55,4 +77,5 @@ class Migration(migrations.Migration):
         migrations.RunPython(create_product_classes),
         migrations.RunPython(create_categories),
         migrations.RunPython(create_partners),
+        migrations.RunPython(create_automatic_product_lists),
     ]

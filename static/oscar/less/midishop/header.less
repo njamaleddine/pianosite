@@ -1,0 +1,42 @@
+.site-brand-name-link {
+    color: #333;
+    border: 4px double #333;
+    padding: 5px;
+    text-decoration: none;
+
+    &:visited {
+        text-decoration: none;
+    }
+
+    &:hover {
+        text-decoration: none;
+        color: lighten(#333, 15%);
+        border: 4px double #88a;
+        -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
+        transition: border 200ms color 200ms, transform 200ms;
+    }
+
+    &:active {
+        text-decoration: none;
+        color: darken(#333, 15%);
+        border: 4px double darken(#88a, 15%);
+        -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
+        transition: border 200ms color 200ms, transform 200ms;
+    }
+}
+
+#top_page {
+    margin-bottom: 0;
+    padding: 30px 80px;
+
+    #login_link {
+        padding: 7px;
+    }
+
+    .account-dropdown {
+        a {
+            padding: 6px;
+            color: #333;
+        }
+    }
+}

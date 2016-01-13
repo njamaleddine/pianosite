@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from collections import OrderedDict
+
 import dj_database_url
 
 from django.utils.translation import ugettext_lazy as _
@@ -29,9 +31,11 @@ def location(path_name):
         os.path.dirname(os.path.realpath(__file__)), path_name
     )
 
+def append_to_base_dir(path):
+    return os.path.join(BASE_DIR, path)
 
 # Project specific information
-SITE_NAME = u"Piano Site"
+SITE_NAME = u"Midi Shop"
 SITE_ID = 1  # Necessary for Oscar
 
 # Internationalization
@@ -78,6 +82,7 @@ INSTALLED_APPS = [
     'apps.checkout',
     'apps.dashboard',
     'apps.dashboard.catalogue',
+    'apps.dashboard.promotions',
 ])
 
 MIDDLEWARE_CLASSES = (
@@ -185,7 +190,8 @@ DEFAULT_FILE_STORAGE = os.environ.get(
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
-    location('static/'),
+    # location('static/'),
+    append_to_base_dir('static/'),
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -212,20 +218,6 @@ OSCAR_SHOP_NAME = u"{}".format(SITE_NAME)
 OSCAR_SHOP_TAGLINE = ""
 OSCAR_FROM_EMAIL = SERVER_EMAIL
 OSCAR_DEFAULT_CURRENCY = "USD"
-
-# Oscar Paypal
-# OSCAR_DASHBOARD_NAVIGATION.append(
-#     {
-#         'label': _('PayPal'),
-#         'icon': 'icon-globe',
-#         'children': [
-#             {
-#                 'label': _('Express transactions'),
-#                 'url_name': 'paypal-express-list',
-#             },
-#         ]
-#     }
-# )
 
 OSCAR_DASHBOARD_NAVIGATION = [
     {
@@ -273,10 +265,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'children': [
             {
                 'label': _('Orders'),
-                'url_name': 'dashboard:order-list',
-            },
-            {
-                'label': _('Downloaded Midis'),
                 'url_name': 'dashboard:order-list',
             },
             {
@@ -367,13 +355,34 @@ OSCAR_DASHBOARD_NAVIGATION = [
         ]
     }
 ]
+OSCAR_SEARCH_FACETS = {
+    'fields': OrderedDict([
+        ('product_class', {'name': _('Type'), 'field': 'product_class'}),
+        ('rating', {'name': _('Rating'), 'field': 'rating'}),
+    ]),
+    'queries': OrderedDict([
+        ('price_range',
+         {
+             'name': _('Price range'),
+             'field': 'price',
+             'queries': [
+                 # This is a list of (name, query) tuples where the name will
+                 # be displayed on the front-end.
+                 (_('0 to 20'), u'[0 TO 20]'),
+                 (_('20 to 40'), u'[20 TO 40]'),
+                 (_('40 to 60'), u'[40 TO 60]'),
+                 (_('60+'), u'[60 TO *]'),
+             ]
+         }),
+    ]),
+}
 
 # Oscar Paypal Support
 PAYPAL_API_USERNAME = os.environ.get("PAYPAL_API_USERNAME", "")
 PAYPAL_API_PASSWORD = os.environ.get("PAYPAL_API_PASSWORD", "")
 PAYPAL_API_SIGNATURE = os.environ.get("PAYPAL_API_SIGNATURE", "")
 # Taken from PayPal's documentation - these should always work in the sandbox
-PAYPAL_SANDBOX_MODE = coerce_bool(os.environ.get("PAYPAL_API_USERNAME", True))
+PAYPAL_SANDBOX_MODE = coerce_bool(os.environ.get("PAYPAL_SANDBOX_MODE", True))
 PAYPAL_CALLBACK_HTTPS = False
 PAYPAL_API_VERSION = '88.0'
 PAYPAL_CURRENCY = PAYPAL_PAYFLOW_CURRENCY = "USD"
@@ -388,5 +397,5 @@ PAYPAL_PAYFLOW_PRODUCTION_MODE = DEBUG
 
 LANGUAGES = (
     ('en-us', _('English')),
-    ('es', _('Spanish')),
+    # ('es', _('Spanish')),
 )
