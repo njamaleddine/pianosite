@@ -8,5 +8,9 @@
                     ...
                 </ul>
          {% endcomment %}
+         <div>Contact us at
+             <a class="contact-email-footer" href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+         </div>
+         <div>&copy; {{ site_name }} {% now "Y" %}</div>
     {% endblock %}
 </footer>

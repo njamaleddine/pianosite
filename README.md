@@ -69,6 +69,7 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 
 9. Change default Site object domain to host domain instead of `example.com`
 
+10. Copy `static/oscar/img/placeholder.png` to `pianosite/public/media/`
 
 # Environment
 

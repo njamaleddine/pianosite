@@ -125,6 +125,8 @@ TEMPLATES = [
                 'oscar.apps.checkout.context_processors.checkout',
                 'oscar.apps.customer.notifications.context_processors.notifications',
                 'oscar.core.context_processors.metadata',
+                'pianosite.context_processors.site_name',
+                'pianosite.context_processors.contact_email',
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
@@ -204,6 +206,7 @@ MEDIA_ROOT = location("public/media")
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 
 # Email
+CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", None)
 SERVER_EMAIL = "server@midishop.com"
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", None)
 EMAIL_HOST = os.environ.get("EMAIL_HOST", None)
@@ -377,6 +380,7 @@ OSCAR_SEARCH_FACETS = {
          }),
     ]),
 }
+OSCAR_MISSING_IMAGE_URL = append_to_base_dir('pianosite/public/media/placeholder.png')
 
 # Oscar Paypal Support
 PAYPAL_API_USERNAME = os.environ.get("PAYPAL_API_USERNAME", "")

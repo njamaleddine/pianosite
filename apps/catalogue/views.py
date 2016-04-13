@@ -14,7 +14,7 @@ class MidiDownloadView(View):
     def post(self, request, *args, **kwargs):
         """
         The view requires a `POST` request instead of a get request since
-        prerendered page load should not cound as a click to download the midi
+        prerendered page load should not count as a click to download the midi
         file
         """
         uuid = self.kwargs.get('uuid')
