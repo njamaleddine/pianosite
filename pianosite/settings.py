@@ -31,6 +31,7 @@ def location(path_name):
         os.path.dirname(os.path.realpath(__file__)), path_name
     )
 
+
 def append_to_base_dir(path):
     return os.path.join(BASE_DIR, path)
 
@@ -203,7 +204,7 @@ MEDIA_ROOT = location("public/media")
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 
 # Email
-SERVER_EMAIL = "django@localhost"
+SERVER_EMAIL = "server@midishop.com"
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", None)
 EMAIL_HOST = os.environ.get("EMAIL_HOST", None)
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", None)

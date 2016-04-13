@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-# Register your models here.
-from django.db.models import get_models, get_app
+from django.apps import apps
 
-for model in get_models(get_app('dashboard')):
+for model in apps.get_app_config('dashboard').models:
     admin.site.register(model)
