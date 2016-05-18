@@ -8,6 +8,10 @@ def freeze():
     local("pip freeze > requirements.txt")
 
 
+def less():
+    local("lessc static/oscar/less/styles.less static/oscar/css/styles.css")
+
+
 def read_env():
     try:
         with open('.env') as f:

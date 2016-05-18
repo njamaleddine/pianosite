@@ -78,9 +78,11 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'compressor',
     'paypal',
+    'djstripe'
 ] + get_core_apps([
     'apps.catalogue',
     'apps.checkout',
+    'apps.customer',
     'apps.dashboard',
     'apps.dashboard.catalogue',
     'apps.dashboard.promotions',
@@ -404,3 +406,7 @@ LANGUAGES = (
     ('en-us', _('English')),
     # ('es', _('Spanish')),
 )
+
+# DJ-STRIPE
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
