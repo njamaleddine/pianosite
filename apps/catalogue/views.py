@@ -16,6 +16,9 @@ class MidiDownloadView(View):
         The view requires a `POST` request instead of a get request since
         prerendered page load should not count as a click to download the midi
         file
+
+        If a user is not authenticated, an order_token must be passed in to
+        redeem the order
         """
         uuid = self.kwargs.get('uuid')
 
