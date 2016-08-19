@@ -72,3 +72,11 @@ def slice_audio(audio_file_name, length=(30 * 1000)):
     except IOError as e:
         print(e.errno)
         print(e)
+
+
+def ogg_to_mp3(audio_file_name):
+    """ Convert ogg to mp3 """
+    song = AudioSegment.from_ogg(audio_file_name)
+    mp3_filename = '{}.mp3'.format(audio_file_name.split('.')[0])
+    mp3_file = song.export(mp3_filename, format="mp3")
+    return mp3_file.name

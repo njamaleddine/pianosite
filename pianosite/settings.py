@@ -404,7 +404,7 @@ PAYPAL_PAYFLOW_PRODUCTION_MODE = DEBUG
 
 LANGUAGES = (
     ('en-us', _('English')),
-    # ('es', _('Spanish')),
+    ('es', _('Español')),
 )
 
 # DJ-STRIPE

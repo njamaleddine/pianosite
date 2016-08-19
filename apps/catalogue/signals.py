@@ -13,7 +13,9 @@ def audio_creation(sender, instance, **kwargs):
     Only update generate the audio if this is the first time or the midi
     was changed.
     """
-    output_filename, slice_file_name = instance.audio_conversion()
+    audio_dict = instance.audio_conversion()
     sender.objects.filter(pk=instance.pk).update(
-        full_audio=output_filename, sample_audio=slice_file_name
+        full_audio=audio_dict['audio_url'],
+        sample_ogg=audio_dict['ogg_audio_slice_url'],
+        sample_mp3=audio_dict['mp3_audio_slice_url']
     )
