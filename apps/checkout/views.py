@@ -60,18 +60,18 @@ class PaymentDetailsView(views.PaymentDetailsView):
     def do_place_order(self, request):
         # Helper method to check that the hidden forms wasn't tinkered
         # with.
-        print "IN HERE!"
+        print("IN HERE!")
         ctx = self.get_context_data()
         customer = ctx['customer']
 
         if customer and customer.can_charge():
-            print "CAN CHARGE"
+            print("CAN CHARGE")
             submission = self.build_submission()
             return self.submit(**submission)
 
         bankcard_form = forms.BankcardForm(request.POST)
         if not bankcard_form.is_valid():
-            print "INVALID"
+            print("INVALID")
             messages.error(request, "Invalid submission")
             return HttpResponseRedirect(reverse('checkout:payment-details'))
 
@@ -79,8 +79,8 @@ class PaymentDetailsView(views.PaymentDetailsView):
         # gets passed back to the 'handle_payment' method below.
         submission = self.build_submission()
         submission['payment_kwargs']['bankcard'] = bankcard_form.bankcard
-        print submission
-        print ">>>>>>>>>>>>>>>>>>>>>>>>>>> ", submission['payment_kwargs']['bankcard'].__dict__
+        print(submission)
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>> ", submission['payment_kwargs']['bankcard'].__dict__)
         return self.submit(**submission)
 
     def handle_payment(self, order_number, total, **kwargs):

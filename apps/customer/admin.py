@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-# from django.db.models import get_models, get_app
 from django.apps import apps
 
 

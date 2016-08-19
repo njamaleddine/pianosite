@@ -13,17 +13,16 @@ import os
 from collections import OrderedDict
 
 import dj_database_url
+import environ
 
 from django.utils.translation import ugettext_lazy as _
-
-# Oscar Imports
 from oscar import get_core_apps
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
 from oscar.defaults import *
 
-from apps.utility.toolbelt import coerce_bool
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+env = environ.Env()
 
 
 def location(path_name):
@@ -36,7 +35,7 @@ def append_to_base_dir(path):
     return os.path.join(BASE_DIR, path)
 
 # Project specific information
-SITE_NAME = u"Midi Shop"
+SITE_NAME = 'Midi Shop'
 SITE_ID = 1  # Necessary for Oscar
 
 # Internationalization
@@ -56,12 +55,12 @@ USE_TZ = True
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', None)
+SECRET_KEY = env('SECRET_KEY', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = coerce_bool(os.environ.get("DEBUG", True))
+DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="").split(",")
 
 
 # Application definition
@@ -75,6 +74,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
+    'django_extensions',
     'widget_tweaks',
     'compressor',
     'paypal',
@@ -110,7 +110,7 @@ TEMPLATES = [
         ],
         'APP_DIRS': False,
         'OPTIONS': {
-            'debug': coerce_bool(os.environ.get("TEMPLATE_DEBUG", DEBUG)),
+            'debug': env.bool("TEMPLATE_DEBUG", default=DEBUG),
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -153,10 +153,10 @@ HAYSTACK_CONNECTIONS = {
 
 # DEBUG Toolbar
 DEBUG_TOOLBAR_CONFIG = {
-    "INTERCEPT_REDIRECTS": coerce_bool(os.environ.get("TOOLBAR_INTERCEPT", False))
+    "INTERCEPT_REDIRECTS": env.bool("TOOLBAR_INTERCEPT", default=False)
 }
 
-DEBUG_TOOLBAR = coerce_bool(os.environ.get("DEBUG_TOOLBAR", DEBUG))
+DEBUG_TOOLBAR = env.bool("DEBUG_TOOLBAR", default=DEBUG)
 if DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
     INSTALLED_APPS += ("debug_toolbar",)
@@ -182,7 +182,7 @@ DATABASES = {
     }
 }
 
-if os.environ.get("DATABASE_URL", None):
+if env("DATABASE_URL", default=None):
     DATABASES['default'] = dj_database_url.config()
 
 # Static files (CSS, JavaScript, Images)
@@ -195,7 +195,6 @@ DEFAULT_FILE_STORAGE = os.environ.get(
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
-    # location('static/'),
     append_to_base_dir('static/'),
 )
 STATICFILES_FINDERS = (
@@ -214,13 +213,13 @@ EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", None)
 EMAIL_HOST = os.environ.get("EMAIL_HOST", None)
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", None)
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 25))
+EMAIL_PORT = env.int("EMAIL_PORT", default=25)
 
 if EMAIL_PORT:
     EMAIL_USE_TLS = True
 
 # Oscar Settings
-OSCAR_SHOP_NAME = u"{}".format(SITE_NAME)
+OSCAR_SHOP_NAME = "{}".format(SITE_NAME)
 OSCAR_SHOP_TAGLINE = ""
 OSCAR_FROM_EMAIL = SERVER_EMAIL
 OSCAR_DEFAULT_CURRENCY = "USD"
@@ -375,10 +374,10 @@ OSCAR_SEARCH_FACETS = {
              'queries': [
                  # This is a list of (name, query) tuples where the name will
                  # be displayed on the front-end.
-                 (_('0 to 20'), u'[0 TO 20]'),
-                 (_('20 to 40'), u'[20 TO 40]'),
-                 (_('40 to 60'), u'[40 TO 60]'),
-                 (_('60+'), u'[60 TO *]'),
+                 (_('0 to 20'), '[0 TO 20]'),
+                 (_('20 to 40'), '[20 TO 40]'),
+                 (_('40 to 60'), '[40 TO 60]'),
+                 (_('60+'), '[60 TO *]'),
              ]
          }),
     ]),
@@ -390,7 +389,7 @@ PAYPAL_API_USERNAME = os.environ.get("PAYPAL_API_USERNAME", "")
 PAYPAL_API_PASSWORD = os.environ.get("PAYPAL_API_PASSWORD", "")
 PAYPAL_API_SIGNATURE = os.environ.get("PAYPAL_API_SIGNATURE", "")
 # Taken from PayPal's documentation - these should always work in the sandbox
-PAYPAL_SANDBOX_MODE = coerce_bool(os.environ.get("PAYPAL_SANDBOX_MODE", True))
+PAYPAL_SANDBOX_MODE = env.bool("PAYPAL_SANDBOX_MODE", default=True)
 PAYPAL_CALLBACK_HTTPS = False
 PAYPAL_API_VERSION = '88.0'
 PAYPAL_CURRENCY = PAYPAL_PAYFLOW_CURRENCY = "USD"

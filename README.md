@@ -16,19 +16,15 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 
         brew install git
 
-3. Install [python](https://www.python.org/)
+3. Install [python3](https://www.python.org/)
 
-        brew install python
+        brew install python3
 
 4. Install [PostgreSQL](http://www.postgresql.org/)
 
         brew install postgres
 
-5. Install [Foreman](http://ddollar.github.io/foreman/) (**Must have [Ruby](https://www.ruby-lang.org/en/) installed on machine**)
-
-        gem install foreman
-
-6. Install [Virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/index.html)
+5. Install [Virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/index.html)
 
         sudo pip install virtualenvwrapper
 
@@ -74,10 +70,15 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 # Environment
 
 Local environment run server:
-        `foreman start -f Procfile.dev`
+        `honcho start -f Procfile.dev`
 
 Production environment run server:
-        `foreman start`
+        `honcho start`
+
+# Useful Commands
+    python manage.py runserver_plus
+
+    python manage.py shell_plus
 
 
 # OS dependencies:

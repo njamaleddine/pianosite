@@ -1,11 +1,12 @@
-
+# -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from oscar.core.loading import get_model
-from forms import ArtistForm, GenreForm
 from django.shortcuts import get_object_or_404, HttpResponseRedirect
+
+from .forms import ArtistForm, GenreForm
 
 Artist = get_model('catalogue', 'Artist')
 Genre = get_model('catalogue', 'Genre')

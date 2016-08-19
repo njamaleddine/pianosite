@@ -64,8 +64,8 @@ class Product (AbstractProduct):
             )
             slice_file_name = slice_audio(audio_file_name=audio_path)
 
-            audio_url = u'{}{}'.format(audio_base_url, audio_filename)
-            audio_slice_url = u'{}{}'.format(
+            audio_url = '{}{}'.format(audio_base_url, audio_filename)
+            audio_slice_url = '{}{}'.format(
                 audio_base_url, get_file_name_from_path(slice_file_name)
             )
             return audio_url, audio_slice_url
