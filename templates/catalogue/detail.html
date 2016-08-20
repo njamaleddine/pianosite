@@ -146,6 +146,14 @@
                 <td>{{ av.value_as_html }}</td>
             </tr>
         {% endfor %}
+        <tr>
+            <th>{% trans "Artist" %}</th>
+            <td>{{ product.artist }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Genre" %}</th>
+            <td>{{ product.genre }}</td>
+        </tr>
         {% iffeature "reviews" %}
             <tr>
                 <th>{% trans "Number of reviews" %}</th>

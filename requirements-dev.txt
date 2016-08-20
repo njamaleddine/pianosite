@@ -7,7 +7,7 @@ django-debug-toolbar==1.5
 # Testing and coverage
 # -------------------------------------
 factory_boy==2.7.0
-fake-factory==0.5.7
+fake-factory==0.6.0
 pytest-django==2.9.1
 pytest-pythonpath==0.7
 pytest-cov==2.3.1
