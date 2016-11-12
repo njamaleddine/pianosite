@@ -6,19 +6,15 @@ import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
 
 from oscar.apps.catalogue.abstract_models import AbstractProduct
-from oscar.apps.catalogue.managers import ProductManager
 
 from apps.utility.models import TimeStampedModel
 from apps.utility.toolbelt import upload_file, get_file_name_from_path
 from apps.utility.process_midi import convert_to_audio, slice_audio, ogg_to_mp3
 
 from pianosite.settings import BASE_DIR
-
-from .signals import audio_creation
 
 
 @python_2_unicode_compatible
@@ -95,23 +91,23 @@ class Product (AbstractProduct):
         self.sample_mp3 = audio_dict['mp3_audio_slice_url']
         return super(Product, self).save(*args, **kwargs)
 
-# post_save.connect(audio_creation, sender=Product)
-
 
 @python_2_unicode_compatible
 class MidiDownloadURL(TimeStampedModel):
     """ The midi download url available for the user to access the file """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey(Product)
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, blank=True, null=True)
+    customer_email = models.EmailField(blank=True)
     date_redeemed = models.DateTimeField(blank=True, null=True)
+    downloads_left = models.IntegerField(default=2)
 
     def __str__(self):
         return '{}'.format(self.uuid)
 
     @property
     def expired(self):
-        if self.date_redeemed:
+        if self.date_redeemed and self.downloads_left < 1:
             return True
         return False
 

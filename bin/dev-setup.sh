@@ -6,6 +6,8 @@ brew install node
 brew install sassc
 brew install fluid-synth --with-libsndfile
 brew install ffmpeg
+wget http://archive.apache.org/dist/lucene/solr/4.7.2/solr-4.7.2.tgz
+tar xzf solr-4.7.2.tgz
 sudo pip install virtualenvwrapper
 
 createdb pianosite

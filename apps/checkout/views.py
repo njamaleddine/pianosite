@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import logging
+
+import stripe
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -9,7 +13,12 @@ from oscar.apps.payment import forms
 from oscar.apps.payment.models import SourceType
 from djstripe.models import Customer as DJStripeCustomer
 
+from apps.catalogue.models import MidiDownloadURL
+from .utils import get_stripe_token
+
 User = get_user_model()
+
+logger = logging.getLogger(__name__)
 
 
 class PaymentDetailsView(views.PaymentDetailsView):
@@ -21,11 +30,15 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
         # Get or create a new customer if the user is authenticated
         ctx['customer'] = None
+        ctx['is_anonymous_user'] = False
         if self.request.user.is_authenticated():
             user = self.request.user
         else:
-            user, created = User.objects.get_or_create(username=ctx.get('guest_email'), email=ctx.get('guest_email'))
+            user, created = User.objects.get_or_create(
+                username=ctx.get('guest_email'), email=ctx.get('guest_email')
+            )
             ctx['is_anonymous_user'] = True
+
         customer, created = DJStripeCustomer.get_or_create(subscriber=user)
         ctx['customer'] = customer
         return ctx
@@ -48,11 +61,30 @@ class PaymentDetailsView(views.PaymentDetailsView):
             return self.do_place_order(request)
 
         bankcard_form = forms.BankcardForm(request.POST)
+        ctx = self.get_context_data(bankcard_form=bankcard_form)
+        customer = ctx['customer']
+
         if not bankcard_form.is_valid():
             # Form validation failed, render page again with errors
             self.preview = False
-            ctx = self.get_context_data(bankcard_form=bankcard_form)
             return self.render_to_response(ctx)
+
+        elif ctx['is_anonymous_user'] and bankcard_form.is_valid():
+            # Create the card on stripe for the user
+            stripe_customer = stripe.Customer.retrieve(customer.stripe_id)
+
+            stripe_token = get_stripe_token(
+                bankcard_form.bankcard.number,
+                bankcard_form.bankcard.expiry_date.month,
+                bankcard_form.bankcard.expiry_date.year,
+                bankcard_form.bankcard.ccv,
+            )
+            if not stripe_token:
+                self.preview = False
+                messages.error(request, "Error processing card, try another card")
+                return self.render_to_response(ctx)
+
+            stripe_customer.sources.create(source=stripe_token.id)
 
         # Render preview with bankcard details hidden
         return self.render_preview(request, bankcard_form=bankcard_form)
@@ -60,18 +92,15 @@ class PaymentDetailsView(views.PaymentDetailsView):
     def do_place_order(self, request):
         # Helper method to check that the hidden forms wasn't tinkered
         # with.
-        print("IN HERE!")
         ctx = self.get_context_data()
         customer = ctx['customer']
 
         if customer and customer.can_charge():
-            print("CAN CHARGE")
             submission = self.build_submission()
             return self.submit(**submission)
 
         bankcard_form = forms.BankcardForm(request.POST)
         if not bankcard_form.is_valid():
-            print("INVALID")
             messages.error(request, "Invalid submission")
             return HttpResponseRedirect(reverse('checkout:payment-details'))
 
@@ -79,8 +108,6 @@ class PaymentDetailsView(views.PaymentDetailsView):
         # gets passed back to the 'handle_payment' method below.
         submission = self.build_submission()
         submission['payment_kwargs']['bankcard'] = bankcard_form.bankcard
-        print(submission)
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>> ", submission['payment_kwargs']['bankcard'].__dict__)
         return self.submit(**submission)
 
     def handle_payment(self, order_number, total, **kwargs):
@@ -91,9 +118,11 @@ class PaymentDetailsView(views.PaymentDetailsView):
         customer = ctx['customer']
 
         # Record payment source and event
-        # stripe_ref = Facade().charge(order_number, total, card=self.request.POST[STRIPE_TOKEN],
-        #                              description=self.payment_description(order_number, total, **kwargs),
-        #                              metadata=self.payment_metadata(order_number, total, **kwargs))
+        # stripe_ref = Facade().charge(
+        #     order_number, total, card=self.request.POST['STRIPE_TOKEN'],
+        #     description=self.payment_description(order_number, total, **kwargs),
+        #     metadata=self.payment_metadata(order_number, total, **kwargs)
+        # )
         source_type, is_created = SourceType.objects.get_or_create(name='Stripe')
         source = source_type.sources.model(
             source_type=source_type,
@@ -107,7 +136,8 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
             if ctx['is_anonymous_user']:
                 try:
-                    # Delete the user
+                    # Delete the anonymous user so that they can check out again
+                    # another time, this is a hack
                     user = User.objects.get(email=ctx['guest_email'])
                     user.delete()
                 except User.DoesNotExist:
@@ -116,3 +146,49 @@ class PaymentDetailsView(views.PaymentDetailsView):
             # Some invalid card error here
             raise ValidationError(str(e))
         self.add_payment_event('charge-created', total.incl_tax)
+
+    def create_midi_download_urls(self, user, basket):
+        """
+        Creates midi download urls for each product in the basket
+
+        params
+            user: request.user
+            basket: basket instance
+        """
+        customer = None
+        if user.is_authenticated():
+            customer = user
+            customer_email = user.email
+        else:
+            customer_email = self.get_context_data()['guest_email']
+
+        midi_download_urls = []
+
+        basket_lines = basket.lines.all()
+
+        for line in basket_lines:
+            midi_download_urls.append(
+                MidiDownloadURL(
+                    product=line.product,
+                    owner=customer,
+                    customer_email=customer_email,
+                    downloads_left=line.quantity,
+                )
+            )
+
+        created_midi_download_urls = MidiDownloadURL.objects.bulk_create(midi_download_urls)
+
+        for index, line in enumerate(basket_lines):
+            line.midi_download_url = created_midi_download_urls[index]
+            line.save()
+
+    def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
+               shipping_charge, billing_address, order_total,
+               payment_kwargs=None, order_kwargs=None):
+        self.create_midi_download_urls(user, basket)
+
+        return super(PaymentDetailsView, self).submit(
+            user, basket, shipping_address, shipping_method,
+            shipping_charge, billing_address, order_total,
+            payment_kwargs, order_kwargs
+        )

@@ -2,10 +2,10 @@
 Django settings for pianosite project.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
+https://docs.djangoproject.com/en/1.9/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
+https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -34,6 +34,7 @@ def location(path_name):
 def append_to_base_dir(path):
     return os.path.join(BASE_DIR, path)
 
+
 # Project specific information
 SITE_NAME = 'Midi Shop'
 SITE_ID = 1  # Necessary for Oscar
@@ -43,7 +44,7 @@ SITE_ID = 1  # Necessary for Oscar
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -80,10 +81,13 @@ INSTALLED_APPS = [
     'paypal',
     'djstripe'
 ] + get_core_apps([
+    'apps.basket',
     'apps.catalogue',
     'apps.checkout',
     'apps.customer',
     'apps.dashboard',
+    'apps.order',
+    'apps.search',
     'apps.dashboard.catalogue',
     'apps.dashboard.promotions',
 ])
@@ -117,10 +121,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                "django.core.context_processors.i18n",
-                "django.core.context_processors.media",
-                "django.core.context_processors.static",
-                "django.core.context_processors.tz",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
 
                 'oscar.apps.search.context_processors.search_form',
                 'oscar.apps.promotions.context_processors.promotions',
@@ -145,9 +149,16 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+#     },
+# }
+
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8983/solr/'
     },
 }
 
@@ -164,7 +175,7 @@ if DEBUG_TOOLBAR:
 
 ROOT_URLCONF = 'pianosite.urls'
 
-WSGI_APPLICATION = 'pianosite.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
@@ -365,6 +376,8 @@ OSCAR_SEARCH_FACETS = {
     'fields': OrderedDict([
         ('product_class', {'name': _('Type'), 'field': 'product_class'}),
         ('rating', {'name': _('Rating'), 'field': 'rating'}),
+        ('genre', {'name': _('Genre'), 'field': 'genre'}),
+        ('artist', {'name': _('Artist'), 'field': 'artist'}),
     ]),
     'queries': OrderedDict([
         ('price_range',
@@ -410,3 +423,89 @@ LANGUAGES = (
 # DJ-STRIPE
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_API_VERSION = os.environ.get('STRIPE_API_VERSION', '2012-11-07')
+
+# LOGGING CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#logging
+# Default logging for Django. This sends an email to the site admins on every
+# HTTP 500 error. Depending on DEBUG, all other log records are either sent to
+# the console (DEBUG=True) or discarded by mean of the NullHandler (DEBUG=False)
+# See http://docs.djangoproject.com/en/dev/topics/logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s:%(asctime)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'sentry': {
+            'level': 'WARNING',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['mail_admins', 'console', 'sentry'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'gunicorn': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
+            'propagate': False,
+        },
+        'apps': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
+            'propagate': False,
+        },
+        'pianosite': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'WARNING',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'WARNING',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        # Catch All Logger -- Captures any other logging
+        '': {
+            'handlers': ['console', 'sentry', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}

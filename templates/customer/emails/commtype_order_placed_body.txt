@@ -17,7 +17,7 @@ will be processed shortly.{% endblocktrans %}
 {% endfor %}
 
 {% if status_url %}
-{% blocktrans %}You can view the status of this order at the below URL:
+{% blocktrans %}You can view the status or redeem this order if it is a digital product at the below URL:
 {{ status_url }}{% endblocktrans %}
 {% endif %}
 
