@@ -1,7 +1,6 @@
 # Core
 # -------------------------------------
 django-oscar==1.3
-django-oscar-paypal==0.9.7
 Django==1.9.11
 gunicorn==19.6.0
 

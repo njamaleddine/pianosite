@@ -78,7 +78,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'widget_tweaks',
     'compressor',
-    'paypal',
     'djstripe'
 ] + get_core_apps([
     'apps.basket',
@@ -360,16 +359,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'label': _('Reports'),
         'icon': 'icon-bar-chart',
         'url_name': 'dashboard:reports-index',
-    },
-    {
-        'label': _('PayPal'),
-        'icon': 'icon-globe',
-        'children': [
-            {
-                'label': _('Express transactions'),
-                'url_name': 'paypal-express-list',
-            },
-        ]
     }
 ]
 OSCAR_SEARCH_FACETS = {
