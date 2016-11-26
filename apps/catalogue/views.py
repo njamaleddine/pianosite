@@ -32,8 +32,8 @@ class MidiDownloadView(View):
                 if (
                     midi_download.owner == request.user or
                     (
-                        midi_download.customer_email == request.POST.get('customer_email') and
-                        request.user.is_anonymous
+                        midi_download.customer_email == request.POST.get('guest_email') and
+                        request.user.is_anonymous()
                     )
                 ):
                     # The user must be the owner of the download (authenticated)

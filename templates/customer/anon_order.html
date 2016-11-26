@@ -40,7 +40,7 @@
                     <th>{% trans 'Notes' %}</th>
                     <td>{{ address.notes|linebreaks }}</td>
                 </tr>
-            {% endif %} 
+            {% endif %}
         </table>
     {% endwith %}
 
@@ -56,11 +56,12 @@
     <table class="table table-striped table-bordered">
         <tr>
             <th>{% trans 'Product' %}</th>
-            <th>{% trans 'Status' %}</th>
-            <th>{% trans 'Estimated dispatch date' %}</th>
+            <!-- <th>{% trans 'Status' %}</th> -->
+            <!-- <th>{% trans 'Estimated dispatch date' %}</th> -->
             <th>{% trans 'Quantity' %}</th>
             <th>{% trans 'Line price excl. tax' %}</th>
             <th>{% trans 'Line price incl. tax' %}</th>
+            <th>{% trans 'Download' %}</th>
             {% iffeature "reviews" %}
                 <th></th>
             {% endiffeature %}
@@ -68,11 +69,23 @@
         {% for line in order.lines.all %}
             <tr>
                 <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
-                <td>{{ line.shipping_status|default:"-" }}</td>
-                <td>{{ line.est_dispatch_date|default:"-" }}</td>
+                <!-- <td>{{ line.shipping_status|default:"-" }}</td> -->
+                <!-- <td>{{ line.est_dispatch_date|default:"-" }}</td> -->
                 <td>{{ line.quantity }}</td>
                 <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                 <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
+                <td>
+                    {% if line.midi_download_url and not line.midi_download_url.expired %}
+                        <form id="redeem_midi_form{{ line.id }}" action="{% url 'catalogue:catalogue_midi_download' uuid=line.midi_download_url.pk %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="guest_email" value="{{ order.guest_email }}">
+                            <button id="reorder_line_{{ line.id }}" class="btn btn-success" type="submit" data-loading-text="{% trans 'Downloading...' %}">{% trans 'Download' %}</button>
+                            <p>({{ line.midi_download_url.downloads_left }} {% trans 'remaining' %})</p>
+                        </form>
+                    {% else %}
+                        {% trans 'No downloads left' %}
+                    {% endif %}
+                </td>
                 {% iffeature "reviews" %}
                     <td>
                         {% if line.product|is_review_permitted:user %}

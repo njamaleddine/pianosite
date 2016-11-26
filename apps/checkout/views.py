@@ -14,7 +14,7 @@ from oscar.apps.payment.models import SourceType
 from djstripe.models import Customer as DJStripeCustomer
 
 from apps.catalogue.models import MidiDownloadURL
-from .utils import get_stripe_token
+from apps.customer.utils import get_stripe_token
 
 User = get_user_model()
 
@@ -42,6 +42,16 @@ class PaymentDetailsView(views.PaymentDetailsView):
         customer, created = DJStripeCustomer.get_or_create(subscriber=user)
         ctx['customer'] = customer
         return ctx
+
+    def get_stripe_metadata(self, order_number, basket):
+        metadata = {
+            'dashboard_order_url': self.request.build_absolute_uri(
+                reverse('dashboard:order-detail', kwargs={'number': order_number})
+            ),
+            'order_number': order_number,
+            'total': basket.total_incl_tax,
+        }
+        return metadata
 
     def get(self, request, *args, **kwargs):
         # Skip if the user is authenticated and has a valid stripe credit card
@@ -117,12 +127,6 @@ class PaymentDetailsView(views.PaymentDetailsView):
         ctx = self.get_context_data()
         customer = ctx['customer']
 
-        # Record payment source and event
-        # stripe_ref = Facade().charge(
-        #     order_number, total, card=self.request.POST['STRIPE_TOKEN'],
-        #     description=self.payment_description(order_number, total, **kwargs),
-        #     metadata=self.payment_metadata(order_number, total, **kwargs)
-        # )
         source_type, is_created = SourceType.objects.get_or_create(name='Stripe')
         source = source_type.sources.model(
             source_type=source_type,
@@ -132,7 +136,11 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
         # Create the charge on stripe
         try:
-            customer.charge(total.incl_tax)
+            customer.charge(
+                amount=total.incl_tax,
+                currency='usd',
+                metadata=self.get_stripe_metadata(order_number, kwargs['basket']),
+            )
 
             if ctx['is_anonymous_user']:
                 try:
@@ -186,6 +194,11 @@ class PaymentDetailsView(views.PaymentDetailsView):
                shipping_charge, billing_address, order_total,
                payment_kwargs=None, order_kwargs=None):
         self.create_midi_download_urls(user, basket)
+
+        # Set additional arguments to get passed to handle_payment()
+        payment_kwargs = {
+            'basket': basket,
+        }
 
         return super(PaymentDetailsView, self).submit(
             user, basket, shipping_address, shipping_method,
