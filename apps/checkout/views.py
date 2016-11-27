@@ -79,7 +79,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
             self.preview = False
             return self.render_to_response(ctx)
 
-        elif ctx['is_anonymous_user'] and bankcard_form.is_valid():
+        else:
             # Create the card on stripe for the user
             stripe_customer = stripe.Customer.retrieve(customer.stripe_id)
 
@@ -94,8 +94,10 @@ class PaymentDetailsView(views.PaymentDetailsView):
                 messages.error(request, "Error processing card, try another card")
                 return self.render_to_response(ctx)
 
-            stripe_customer.sources.create(source=stripe_token.id)
-
+            if ctx['is_anonymous_user']:
+                stripe_customer.sources.create(source=stripe_token.id)
+            elif customer and not customer.can_charge():
+                customer.update_card(stripe_token.id)
         # Render preview with bankcard details hidden
         return self.render_preview(request, bankcard_form=bankcard_form)
 

@@ -20,14 +20,17 @@
 
 {% block tabcontent %}
 <div id="account-customer-change-card">
-    <p class="lead">
+    <div class="lead">
         {% if customer.card_kind and customer.card_last_4 %}
-            Current card on file is a <strong>{{ customer.card_kind }}</strong>
-            ending in the digits <strong>{{ customer.card_last_4 }}</strong>.
+            <p>
+              Current card on file is a <strong>{{ customer.card_kind }}</strong>
+              ending in the digits <strong>{{ customer.card_last_4 }}</strong>.
+            </p>
+            <button class="btn btn-danger delete-card" data-toggle="modal" data-target="#deleteCardModal">Remove Card</button>
         {% else %}
-            You do not currently have a card on file.
+            <p>You do not currently have a card on file.</p>
         {% endif %}
-    </p>
+    </div>
 
     {% if stripe_error %}
         <div class="alert alert-error">{{ stripe_error }}</div>
@@ -60,6 +63,28 @@
 
       <button class="btn btn-primary change-card" type="submit">Change Card</button>
     </form>
+</div>
+
+<!-- Delete card modal -->
+<div class="modal fade" id="deleteCardModal" tabindex="-1" role="dialog" aria-labelledby="deleteCardModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="deleteCardModalLabel">Remove Card</h4>
+      </div>
+      <div class="modal-body">
+        Your card will be removed from your account, do you want to continue?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Go back</button>
+        <form action="{% url 'customer:delete-card' %}" method="POST" id="remove-card-form" style="display:inline-block;">
+        {% csrf_token %}
+          <button class="btn btn-danger delete-card" type="submit" data-toggle="modal" data-target="#deleteCardModal">Remove Card</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
