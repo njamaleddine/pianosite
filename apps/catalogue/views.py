@@ -2,8 +2,8 @@
 from __future__ import unicode_literals, absolute_import
 
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.views.generic import View
 
@@ -62,3 +62,43 @@ class MidiDownloadView(View):
                 )
         else:
             return HttpResponseRedirect(reverse_lazy('promotions:home'))
+
+
+class MidiDownloadCancelView(View):
+    """
+    Sets the total remaining downloads to 0 for a given midi
+
+    This view should only be accessible by an admin (is_staff & is_superuser)
+    """
+    def _response(self, request, *args, **kwargs):
+        uuid = self.kwargs.get('uuid')
+        order_number = self.kwargs.get('order_number')
+
+        try:
+            midi_download = MidiDownloadURL.objects.get(uuid=uuid)
+        except:
+            midi_download = None
+
+        if (
+            midi_download and
+            request.user.is_authenticated() and
+            request.user.is_staff and
+            request.user.is_superuser
+        ):
+            midi_download.date_redeemed = timezone.now()
+            midi_download.downloads_left = 0
+            midi_download.save()
+            messages.success(request, 'The midi download has been deactivated')
+
+        return HttpResponseRedirect(
+            reverse_lazy('dashboard:order-detail', kwargs={'number': order_number})
+        )
+
+    def get(self, request, *args, **kwargs):
+        # This is a fallback to the OrderDetailsView Override
+        # This is mostly here for graceful degradation in case js is blocked
+        # Though it's generally a bad idea to use GET for requests that mutate data
+        return self._response(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self._response(request, *args, **kwargs)

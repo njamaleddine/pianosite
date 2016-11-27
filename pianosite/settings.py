@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'apps.order',
     'apps.search',
     'apps.dashboard.catalogue',
+    'apps.dashboard.orders',
     'apps.dashboard.promotions',
 ])
 
