@@ -6,12 +6,12 @@ django-debug-toolbar==1.6
 
 # Testing and coverage
 # -------------------------------------
-factory-boy==2.7.0
-fake-factory==0.7.2
-pytest-django==3.0.0
+factory-boy==2.8.1
+Faker==0.7.7
+pytest-django==3.1.2
 pytest-pythonpath==0.7.1
 pytest-cov==2.4.0
-flake8==3.0.4
+flake8==3.2.1
 
 # Versioning
 # -------------------------------------
