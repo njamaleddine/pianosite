@@ -1,8 +1,10 @@
 # Core
 # -------------------------------------
-django-oscar==1.3
-Django==1.9.12
-gunicorn==19.6.0
+# django-oscar==1.5
+# There's an incompatability, we will have to use dev (1.5 for now off master)
+git+git://github.com/django-oscar/django-oscar.git@master
+Django==1.11
+gunicorn==19.7.1
 
 # Payments
 # -------------------------------------
@@ -10,35 +12,35 @@ dj-stripe==0.8.0
 
 # Audio Conversion
 # -------------------------------------
-pydub==0.16.7
+pydub==0.18.0
 
 # Extensions
 # -------------------------------------
-django-extensions==1.7.5
+django-extensions==1.7.8
 django-uuid-upload-path==1.0.0
-pytz==2016.7
-ipython==5.1.0
-pycountry==1.20
-Werkzeug==0.11.11
+pytz==2017.2
+ipython==6.0.0
+pycountry==17.1.8
+Werkzeug==0.12.1
 
 # Configuration
 # -------------------------------------
-django-environ==0.4.1
-python-dotenv==0.6.2
+django-environ==0.4.3
+python-dotenv==0.6.4
 
 # Images
 # -------------------------------------
-Pillow==4.0.0
+Pillow==4.1.1
 
 # Staticfiles
 # -------------------------------------
 dj-static==0.0.6
-django-compressor==2.1
+django-compressor==2.1.1
 
 # Persistence
 # -------------------------------------
 dj-database-url==0.4.2
-psycopg2==2.6.2
+psycopg2==2.7.1
 
 # Solr Search
 # -------------------------------------
@@ -46,8 +48,8 @@ pysolr==3.6.0
 
 # Process
 # -------------------------------------
-honcho==0.7.1
+honcho==1.0.1
 
 # Sentry
 # -------------------------------------
-raven==5.32.0
+raven==6.0.0

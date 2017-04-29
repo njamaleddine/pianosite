@@ -89,7 +89,6 @@ INSTALLED_APPS = [
     'apps.search',
     'apps.dashboard.catalogue',
     'apps.dashboard.orders',
-    'apps.dashboard.promotions',
 ])
 
 MIDDLEWARE_CLASSES = (
