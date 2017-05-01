@@ -1,0 +1,102 @@
+/*
+    Buttons styles
+
+    Replaces bootstrap's buttons style with ghost buttons
+*/
+
+.ghost-button {
+    background: none;
+    cursor: pointer;
+    border: 1px solid;
+    color: inherit;
+    // display: inline-block;
+    font-family: inherit;
+    font-weight: 300;
+    letter-spacing: 1px;
+    // margin: 1em;
+    outline: none;
+    transition: all 0.2s ease;
+    text-align: center;
+    text-decoration: none !important;
+    // text-shadow: 0 1px 0 rgba(0, 0, 0, 0.01);
+    vertical-align: middle;
+}
+
+.btn {
+    &:extend(.ghost-button);
+    border-radius: 3px;
+}
+
+/* Sizes */
+.button-small {
+    font-size: 0.8em;
+    padding: 0.4em 1.25em;
+}
+.button-medium {
+    font-size: 1em;
+    padding: 0.5em 1.375em;
+}
+.button-large {
+    font-size: 1.2em;
+    padding: 0.5em 1.5em;
+}
+
+/* Colors */
+.btn-success {
+    color: @ghost-green;
+    border-color: @ghost-green;
+
+    &:hover, &:active  {
+        background: @ghost-green !important;
+        color: #fff !important;
+        border-color: @ghost-green !important;
+    }
+    &:disabled {
+        color: #fff !important;
+    }
+
+}
+
+.btn-primary {
+    color: @ghost-blue;
+    border-color: @ghost-blue;
+
+    &:hover, &:active {
+        background: @ghost-blue !important;
+        color: #fff !important;
+        border-color: @ghost-blue !important;
+    }
+}
+
+.btn-info {
+    color: @ghost-light-blue !important;
+    border-color: @ghost-light-blue;
+
+    &:hover, &:active {
+        background: @ghost-light-blue !important;
+        color: #fff !important;
+        border-color: @ghost-light-blue !important;
+    }
+}
+
+.btn-danger {
+    color: @ghost-red;
+    border-color: @ghost-red;
+
+    &:hover, &:active {
+        background: @ghost-red !important;
+        color: #fff !important;
+        border-color: @ghost-red !important;
+    }
+}
+
+.btn-default {
+    color: #333 !important;
+    border-color: @ghost-gray;
+
+    &:hover, &:active {
+        background: @ghost-gray !important;
+        color: #333 !important;
+        border-color: @ghost-gray !important;
+    }
+}
