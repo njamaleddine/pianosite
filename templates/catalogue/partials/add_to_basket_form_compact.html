@@ -3,10 +3,11 @@
 {% load purchase_info_tags %}
 
 {% purchase_info_for_product request product as session %}
-{% if product.sample_audio %}
+{% if product.sample_ogg or product.sample_mp3 %}
 <div class="product_sample_audio">
     <audio controls>
-        <source src={{ product.sample_audio }} type="audio/ogg">
+        <source src={{ product.sample_ogg }} type="audio/ogg">
+        <source src={{ product.sample_mp3 }} type="audio/mp3">
         Your browser does not support the html5 audio tag and cannot play the sample.
     </audio>
 </div>

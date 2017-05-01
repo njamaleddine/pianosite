@@ -1,29 +1,68 @@
 {% extends 'oscar/checkout/payment_details.html' %}
-{% load url from future %}
 {% load i18n %}
 
 {% block payment_details %}
     <div class="well">
         <div class="sub-header">
-            <h3>{% trans "PayPal Express" %}</h3>
+            <h3>{% trans "Enter Credit Card" %}</h3>
         </div>
-        <p>{% trans "Click on the below icon to use Express Checkout but where the shipping address and method is already chosen on the merchant site." %}</p>
-        <div style="overflow:auto"><a href="{% url 'paypal-direct-payment' %}" title="{% trans "Pay with PayPal" %}"><img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" align="left" style="margin-right:7px;"></a>&nbsp;</div>
-    </div>
-
-    <div class="well">
-        <div class="sub-header">
-            <h3>{% trans "PayPal PayFlow Pro" %}</h3>
-        </div>
-        <form method="post" action="{% url 'checkout:preview' %}" class="form-stacked">
+        <form method="post" id="checkout-preview-form" action="{% url 'checkout:preview' %}" class="form-stacked">
             {% csrf_token %}
-            <h4>{% trans "Bankcard" %}</h4>
             {% include "partials/form_fields.html" with form=bankcard_form %}
-            <h4>{% trans "Billing address" %}</h4>
-            {% include "partials/form_fields.html" with form=billing_address_form %}
+            {% comment %}
+                <h4>{% trans "Billing address" %}</h4>
+                {% include "partials/form_fields.html" with form=billing_address_form %}
+            {% endcomment %}
             <div class="form-actions">
                 <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
             </div>
         </form>
     </div>
 {% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript">
+  // This identifies your website in the createToken call below
+  Stripe.setPublishableKey('{{ STRIPE_PUBLIC_KEY }}');
+  jQuery(function($) {
+    $('#checkout-preview-form').submit(function(event) {
+        var $form = $(this);
+
+        // Disable the submit button to prevent repeated clicks
+        $form.find('button').prop('disabled', true);
+
+        Stripe.card.createToken({
+            number: $('#id_number').val(),
+            cvc: $('#id_ccv').val(),
+            exp_month: $('#id_expiry_month_0').val(),
+            exp_year: $('#id_expiry_month_1').val()
+        }, stripeResponseHandler);
+
+        // Prevent the form from submitting with the default action
+        return false;
+    });
+
+    var stripeResponseHandler = function(status, response) {
+      var $form = $('#checkout-preview-form');
+
+      if (response.error) {
+        // Show the errors on the form
+        $form.find('.payment-errors').text(response.error.message);
+        $form.find('button').prop('disabled', false);
+      } else {
+        console.log(response)
+        // token contains id, last4, and card type
+        var token = response.id;
+        // Insert the token into the form so it gets submitted to the server
+        $('#id_stripe_token').val(token);
+        // and submit
+        $form.get(0).submit();
+      }
+    };
+});
+</script>
+
+{% endblock javascript %}

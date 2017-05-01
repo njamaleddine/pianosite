@@ -2,10 +2,10 @@
 Django settings for pianosite project.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
+https://docs.djangoproject.com/en/1.9/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
+https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -13,17 +13,16 @@ import os
 from collections import OrderedDict
 
 import dj_database_url
+import environ
 
 from django.utils.translation import ugettext_lazy as _
-
-# Oscar Imports
 from oscar import get_core_apps
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
 from oscar.defaults import *
 
-from apps.utility.toolbelt import coerce_bool
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+env = environ.Env()
 
 
 def location(path_name):
@@ -35,8 +34,9 @@ def location(path_name):
 def append_to_base_dir(path):
     return os.path.join(BASE_DIR, path)
 
+
 # Project specific information
-SITE_NAME = u"Midi Shop"
+SITE_NAME = 'Midi Shop'
 SITE_ID = 1  # Necessary for Oscar
 
 # Internationalization
@@ -44,7 +44,7 @@ SITE_ID = 1  # Necessary for Oscar
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -56,12 +56,12 @@ USE_TZ = True
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', None)
+SECRET_KEY = env('SECRET_KEY', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = coerce_bool(os.environ.get("DEBUG", True))
+DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="").split(",")
 
 
 # Application definition
@@ -75,15 +75,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
+    'django_extensions',
     'widget_tweaks',
     'compressor',
-    'paypal',
+    'djstripe'
 ] + get_core_apps([
+    'apps.basket',
     'apps.catalogue',
     'apps.checkout',
+    'apps.customer',
     'apps.dashboard',
+    'apps.order',
+    'apps.payment',
+    'apps.search',
     'apps.dashboard.catalogue',
-    'apps.dashboard.promotions',
+    'apps.dashboard.orders',
 ])
 
 MIDDLEWARE_CLASSES = (
@@ -108,17 +114,17 @@ TEMPLATES = [
         ],
         'APP_DIRS': False,
         'OPTIONS': {
-            'debug': coerce_bool(os.environ.get("TEMPLATE_DEBUG", DEBUG)),
+            'debug': env.bool("TEMPLATE_DEBUG", default=DEBUG),
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                "django.core.context_processors.i18n",
-                "django.core.context_processors.media",
-                "django.core.context_processors.static",
-                "django.core.context_processors.tz",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
 
                 'oscar.apps.search.context_processors.search_form',
                 'oscar.apps.promotions.context_processors.promotions',
@@ -143,18 +149,25 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+#     },
+# }
+
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8983/solr/'
     },
 }
 
 # DEBUG Toolbar
 DEBUG_TOOLBAR_CONFIG = {
-    "INTERCEPT_REDIRECTS": coerce_bool(os.environ.get("TOOLBAR_INTERCEPT", False))
+    "INTERCEPT_REDIRECTS": env.bool("TOOLBAR_INTERCEPT", default=False)
 }
 
-DEBUG_TOOLBAR = coerce_bool(os.environ.get("DEBUG_TOOLBAR", DEBUG))
+DEBUG_TOOLBAR = env.bool("DEBUG_TOOLBAR", default=DEBUG)
 if DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
     INSTALLED_APPS += ("debug_toolbar",)
@@ -162,7 +175,7 @@ if DEBUG_TOOLBAR:
 
 ROOT_URLCONF = 'pianosite.urls'
 
-WSGI_APPLICATION = 'pianosite.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
@@ -180,7 +193,7 @@ DATABASES = {
     }
 }
 
-if os.environ.get("DATABASE_URL", None):
+if env("DATABASE_URL", default=None):
     DATABASES['default'] = dj_database_url.config()
 
 # Static files (CSS, JavaScript, Images)
@@ -193,7 +206,6 @@ DEFAULT_FILE_STORAGE = os.environ.get(
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
-    # location('static/'),
     append_to_base_dir('static/'),
 )
 STATICFILES_FINDERS = (
@@ -212,16 +224,17 @@ EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", None)
 EMAIL_HOST = os.environ.get("EMAIL_HOST", None)
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", None)
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 25))
+EMAIL_PORT = env.int("EMAIL_PORT", default=25)
 
 if EMAIL_PORT:
     EMAIL_USE_TLS = True
 
 # Oscar Settings
-OSCAR_SHOP_NAME = u"{}".format(SITE_NAME)
+OSCAR_SHOP_NAME = "{}".format(SITE_NAME)
 OSCAR_SHOP_TAGLINE = ""
 OSCAR_FROM_EMAIL = SERVER_EMAIL
 OSCAR_DEFAULT_CURRENCY = "USD"
+OSCAR_ALLOW_ANON_CHECKOUT = True
 
 OSCAR_DASHBOARD_NAVIGATION = [
     {
@@ -347,22 +360,14 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'label': _('Reports'),
         'icon': 'icon-bar-chart',
         'url_name': 'dashboard:reports-index',
-    },
-    {
-        'label': _('PayPal'),
-        'icon': 'icon-globe',
-        'children': [
-            {
-                'label': _('Express transactions'),
-                'url_name': 'paypal-express-list',
-            },
-        ]
     }
 ]
 OSCAR_SEARCH_FACETS = {
     'fields': OrderedDict([
         ('product_class', {'name': _('Type'), 'field': 'product_class'}),
         ('rating', {'name': _('Rating'), 'field': 'rating'}),
+        ('genre', {'name': _('Genre'), 'field': 'genre'}),
+        ('artist', {'name': _('Artist'), 'field': 'artist'}),
     ]),
     'queries': OrderedDict([
         ('price_range',
@@ -372,10 +377,10 @@ OSCAR_SEARCH_FACETS = {
              'queries': [
                  # This is a list of (name, query) tuples where the name will
                  # be displayed on the front-end.
-                 (_('0 to 20'), u'[0 TO 20]'),
-                 (_('20 to 40'), u'[20 TO 40]'),
-                 (_('40 to 60'), u'[40 TO 60]'),
-                 (_('60+'), u'[60 TO *]'),
+                 (_('0 to 20'), '[0 TO 20]'),
+                 (_('20 to 40'), '[20 TO 40]'),
+                 (_('40 to 60'), '[40 TO 60]'),
+                 (_('60+'), '[60 TO *]'),
              ]
          }),
     ]),
@@ -387,7 +392,7 @@ PAYPAL_API_USERNAME = os.environ.get("PAYPAL_API_USERNAME", "")
 PAYPAL_API_PASSWORD = os.environ.get("PAYPAL_API_PASSWORD", "")
 PAYPAL_API_SIGNATURE = os.environ.get("PAYPAL_API_SIGNATURE", "")
 # Taken from PayPal's documentation - these should always work in the sandbox
-PAYPAL_SANDBOX_MODE = coerce_bool(os.environ.get("PAYPAL_SANDBOX_MODE", True))
+PAYPAL_SANDBOX_MODE = env.bool("PAYPAL_SANDBOX_MODE", default=True)
 PAYPAL_CALLBACK_HTTPS = False
 PAYPAL_API_VERSION = '88.0'
 PAYPAL_CURRENCY = PAYPAL_PAYFLOW_CURRENCY = "USD"
@@ -402,5 +407,95 @@ PAYPAL_PAYFLOW_PRODUCTION_MODE = DEBUG
 
 LANGUAGES = (
     ('en-us', _('English')),
-    # ('es', _('Spanish')),
+    ('es', _('Español')),
 )
+
+# DJ-STRIPE
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_API_VERSION = os.environ.get('STRIPE_API_VERSION', '2012-11-07')
+
+# LOGGING CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#logging
+# Default logging for Django. This sends an email to the site admins on every
+# HTTP 500 error. Depending on DEBUG, all other log records are either sent to
+# the console (DEBUG=True) or discarded by mean of the NullHandler (DEBUG=False)
+# See http://docs.djangoproject.com/en/dev/topics/logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s:%(asctime)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'sentry': {
+            'level': 'WARNING',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['mail_admins', 'console', 'sentry'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'gunicorn': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
+            'propagate': False,
+        },
+        'apps': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
+            'propagate': False,
+        },
+        'pianosite': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'WARNING',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'WARNING',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        # Catch All Logger -- Captures any other logging
+        '': {
+            'handlers': ['console', 'sentry', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}

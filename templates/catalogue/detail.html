@@ -78,10 +78,11 @@
 
             <!-- <hr/> -->
 
-            {% if product.sample_audio %}
+            {% if product.sample_ogg or product.sample_mp3 %}
             <div id="product_sample_audio" class="sub-header">
                 <audio controls>
-                    <source src={{ product.sample_audio }} type="audio/ogg">
+                    <source src={{ product.sample_ogg }} type="audio/ogg">
+                    <source src={{ product.sample_mp3 }} type="audio/mp3">
                     Your browser does not support the html5 audio tag and cannot play the sample.
                 </audio>
             </div>
@@ -145,6 +146,14 @@
                 <td>{{ av.value_as_html }}</td>
             </tr>
         {% endfor %}
+        <tr>
+            <th>{% trans "Artist" %}</th>
+            <td>{{ product.artist }}</td>
+        </tr>
+        <tr>
+            <th>{% trans "Genre" %}</th>
+            <td>{{ product.genre }}</td>
+        </tr>
         {% iffeature "reviews" %}
             <tr>
                 <th>{% trans "Number of reviews" %}</th>
