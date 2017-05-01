@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 import logging
 
-import stripe
-
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from oscar.apps.checkout import views
-from oscar.apps.payment import forms
-from oscar.apps.payment.models import SourceType
 from djstripe.models import Customer as DJStripeCustomer
 
 from apps.catalogue.models import MidiDownloadURL
-from apps.customer.utils import get_stripe_token
+from apps.customer.models import GuestStripeCustomer
+from apps.payment import forms
+from apps.payment.models import SourceType
+
 
 User = get_user_model()
 
@@ -27,31 +27,15 @@ class PaymentDetailsView(views.PaymentDetailsView):
         # Override method so the bankcard form can be added to the context.
         ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
         ctx['bankcard_form'] = kwargs.get('bankcard_form', forms.BankcardForm())
+        ctx['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
 
         # Get or create a new customer if the user is authenticated
         ctx['customer'] = None
-        ctx['is_anonymous_user'] = False
         if self.request.user.is_authenticated():
             user = self.request.user
-        else:
-            user, created = User.objects.get_or_create(
-                username=ctx.get('guest_email'), email=ctx.get('guest_email')
-            )
-            ctx['is_anonymous_user'] = True
-
-        customer, created = DJStripeCustomer.get_or_create(subscriber=user)
-        ctx['customer'] = customer
+            customer, created = DJStripeCustomer.get_or_create(subscriber=user)
+            ctx['customer'] = customer
         return ctx
-
-    def get_stripe_metadata(self, order_number, basket):
-        metadata = {
-            'dashboard_order_url': self.request.build_absolute_uri(
-                reverse('dashboard:order-detail', kwargs={'number': order_number})
-            ),
-            'order_number': order_number,
-            'total': basket.total_incl_tax,
-        }
-        return metadata
 
     def get(self, request, *args, **kwargs):
         # Skip if the user is authenticated and has a valid stripe credit card
@@ -72,32 +56,12 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
         bankcard_form = forms.BankcardForm(request.POST)
         ctx = self.get_context_data(bankcard_form=bankcard_form)
-        customer = ctx['customer']
 
         if not bankcard_form.is_valid():
             # Form validation failed, render page again with errors
             self.preview = False
             return self.render_to_response(ctx)
 
-        else:
-            # Create the card on stripe for the user
-            stripe_customer = stripe.Customer.retrieve(customer.stripe_id)
-
-            stripe_token = get_stripe_token(
-                bankcard_form.bankcard.number,
-                bankcard_form.bankcard.expiry_date.month,
-                bankcard_form.bankcard.expiry_date.year,
-                bankcard_form.bankcard.ccv,
-            )
-            if not stripe_token:
-                self.preview = False
-                messages.error(request, "Error processing card, try another card")
-                return self.render_to_response(ctx)
-
-            if ctx['is_anonymous_user']:
-                stripe_customer.sources.create(source=stripe_token.id)
-            elif customer and not customer.can_charge():
-                customer.update_card(stripe_token.id)
         # Render preview with bankcard details hidden
         return self.render_preview(request, bankcard_form=bankcard_form)
 
@@ -122,13 +86,40 @@ class PaymentDetailsView(views.PaymentDetailsView):
         submission['payment_kwargs']['bankcard'] = bankcard_form.bankcard
         return self.submit(**submission)
 
+    def get_stripe_metadata(self, order_number, basket):
+        metadata = {
+            'dashboard_order_url': self.request.build_absolute_uri(
+                reverse('dashboard:order-detail', kwargs={'number': order_number})
+            ),
+            'order_number': order_number,
+            'total': basket.total_incl_tax,
+        }
+        return metadata
+
+    def payment_description(self, order_number, total, email, **kwargs):
+        return (
+            'Order {order_number} with a total of {total} for {email}'.format(
+                order_number=order_number,
+                total=total.incl_tax,
+                email=email,
+            )
+        )
+
     def handle_payment(self, order_number, total, **kwargs):
         """
         Make submission to Stripe
         """
         ctx = self.get_context_data()
         customer = ctx['customer']
+        guest_email = ctx.get('guest_email')
+        bankcard = kwargs.get('bankcard')
 
+        # Record payment source and event
+        # stripe_ref = Facade().charge(
+        #     order_number, total, card=self.request.POST['STRIPE_TOKEN'],
+        #     description=self.payment_description(order_number, total, **kwargs),
+        #     metadata=self.payment_metadata(order_number, total, **kwargs)
+        # )
         source_type, is_created = SourceType.objects.get_or_create(name='Stripe')
         source = source_type.sources.model(
             source_type=source_type,
@@ -138,20 +129,30 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
         # Create the charge on stripe
         try:
-            customer.charge(
-                amount=total.incl_tax,
-                currency='usd',
-                metadata=self.get_stripe_metadata(order_number, kwargs['basket']),
-            )
-
-            if ctx['is_anonymous_user']:
-                try:
-                    # Delete the anonymous user so that they can check out again
-                    # another time, this is a hack
-                    user = User.objects.get(email=ctx['guest_email'])
-                    user.delete()
-                except User.DoesNotExist:
-                    user = None
+            if customer and customer.can_charge():
+                customer.charge(
+                    amount=total.incl_tax,
+                    currency='usd',
+                    description=self.payment_description(
+                        order_number, total, customer.subscriber.email, **kwargs
+                    ),
+                    metadata=self.get_stripe_metadata(order_number, ctx['basket'])
+                )
+            elif guest_email and bankcard and bankcard.stripe_token:
+                guest_customer = GuestStripeCustomer.create(email=guest_email)
+                guest_customer.add_card(
+                    source=bankcard.stripe_token
+                )
+                guest_customer.charge(
+                    amount=total.incl_tax,
+                    currency='usd',
+                    description=self.payment_description(
+                        order_number, total, guest_email, **kwargs
+                    ),
+                    metadata=self.get_stripe_metadata(order_number, ctx['basket'])
+                )
+            else:
+                raise ValidationError('Unable to make charge, credit card is invalid')
         except Exception as e:
             # Some invalid card error here
             raise ValidationError(str(e))
@@ -196,11 +197,6 @@ class PaymentDetailsView(views.PaymentDetailsView):
                shipping_charge, billing_address, order_total,
                payment_kwargs=None, order_kwargs=None):
         self.create_midi_download_urls(user, basket)
-
-        # Set additional arguments to get passed to handle_payment()
-        payment_kwargs = {
-            'basket': basket,
-        }
 
         return super(PaymentDetailsView, self).submit(
             user, basket, shipping_address, shipping_method,

@@ -58,7 +58,8 @@ class DeleteCardView(LoginRequiredMixin, PaymentsContextMixin, DetailView):
             delete_all_stripe_cards(customer)
 
         except stripe.StripeError as exc:
-            messages.info(request, "Stripe Error")
+            Customer.objects.filter(id=customer.pk).delete()
+            messages.info(request, "Error removing deleting, please try again")
             return render(
                 request,
                 self.template_name,
