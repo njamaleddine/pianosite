@@ -9708,6 +9708,7 @@ input[type="number"][id*="quantity"] {
 }
 .site-brand-name-link {
   color: #333;
+  font-weight: 300;
   padding: 5px;
   position: relative;
   text-decoration: none;
@@ -9740,11 +9741,21 @@ input[type="number"][id*="quantity"] {
   padding: 7px;
 }
 #top_page .account-dropdown a {
-  padding: 6px;
   color: #333;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: 300;
+  padding: 6px;
+}
+#browse .li > a {
+  padding: 6px;
+  font-family: inherit;
+  font-weight: 300;
 }
 #browse li a {
-  padding: 10px;
+  padding: 6px;
+  font-family: inherit;
+  font-weight: 300;
 }
 #product-search-form {
   margin: 0px;
@@ -9903,11 +9914,13 @@ ul.row {
 .product_pod .availability,
 .product_pod .price_color {
   margin-bottom: 10px;
+  margin-bottom: -4px;
 }
 .product_pod .product_price {
   position: absolute;
   bottom: 0;
   width: 100%;
+  margin-bottom: 4px;
 }
 .product_pod audio {
   width: 100%;
@@ -10034,13 +10047,13 @@ a:hover .thumbnail {
 }
 .btn-default {
   color: #333 !important;
-  border-color: #a0a0a0;
+  border-color: #d0d0d0;
 }
 .btn-default:hover,
 .btn-default:active {
-  background: #a0a0a0 !important;
+  background: #d0d0d0 !important;
   color: #333 !important;
-  border-color: #a0a0a0 !important;
+  border-color: #d0d0d0 !important;
 }
 .basket-mini-item a.btn {
   color: #4682b4;

@@ -4,130 +4,126 @@
 
 <div id="top_page" class="navbar navbar-default navbar-static-top accounts">
     {# This is used in mobile view #}
-    <div style="max-width:1280px">
-        {% include "partials/brand.html" %}
-
+    <div class="container" style="max-width:1280px">
         <div class="navbar-header">
             <a class="btn btn-default navbar-toggle collapsed" data-toggle="collapse" data-target=".account-collapse">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
+            {% include "partials/brand.html" %}
         </div>
 
         <div class="navbar-collapse account-collapse collapse">
-            <div class="container-fluid">
-                <ul class="nav navbar-nav navbar-right">
-                    {% comment %}
-                    {% if LANGUAGES|length > 1 %}
-                    <li>
-                        <form id="language_selector" class="navbar-right navbar-form" action="{% url 'set_language' %}" method="post">
-                            {% csrf_token %}
-                            <input name="next" type="hidden" value="{{ language_neutral_url_path }}" />
-                            <div class="form-group">
-                                <select name="language" class="form-control">
-                                    {% get_language_info_list for LANGUAGES as languages %}
-                                    {% for language in languages %}
-                                        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE%} selected="selected"{% endif %}>
-                                            {{ language.name_local }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% trans "Go" %}</button>
-                        </form>
-                    </li>
-                    {% endif %}
-                    {% endcomment %}
-                    <li>
-                        {% block nav_dropdown %}
-                        <ul id="browse" class="nav navbar-nav">
-                                <li class="dropdown active {% if expand_dropdown %}open{% endif %}">
-                                    <a href="#" class="dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
-                                        {% trans "Browse store" %}
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu" data-navigation="dropdown-menu">
-                                        {% category_tree depth=2 as tree_categories %}
-                                        <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
-                                        {% if tree_categories %}
-                                            <li class="divider"></li>
-                                            {% for tree_category, info in tree_categories %}
-                                                {% if info.has_children %}
-                                                    <li class="dropdown-submenu">
-                                                        <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                                                        <ul class="dropdown-menu">
-                                                        {% else %}
-                                                            <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
-                                                        {% endif %}
+            <ul class="nav navbar-nav navbar-right">
+                {% comment %}
+                {% if LANGUAGES|length > 1 %}
+                <li>
+                    <form id="language_selector" class="navbar-right navbar-form" action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ language_neutral_url_path }}" />
+                        <div class="form-group">
+                            <select name="language" class="form-control">
+                                {% get_language_info_list for LANGUAGES as languages %}
+                                {% for language in languages %}
+                                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE%} selected="selected"{% endif %}>
+                                        {{ language.name_local }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% trans "Go" %}</button>
+                    </form>
+                </li>
+                {% endif %}
+                {% endcomment %}
+                <li>
+                    {% block nav_dropdown %}
+                    <ul id="browse" class="nav navbar-nav">
+                        <li>
+                            <a href="#" class="dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
+                                {% trans "Browse store" %}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" data-navigation="dropdown-menu">
+                                {% category_tree depth=2 as tree_categories %}
+                                <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
+                                {% if tree_categories %}
+                                    <li class="divider"></li>
+                                    {% for tree_category, info in tree_categories %}
+                                        {% if info.has_children %}
+                                            <li class="dropdown-submenu">
+                                                <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                                                <ul class="dropdown-menu">
+                                                {% else %}
+                                                    <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
+                                                {% endif %}
 
-                                                        {% for close in info.num_to_close %}
-                                                            </ul></li>
-                                                        {% endfor %}
-                                            {% endfor %}
-                                        {% endif %}
-                                        <li class="divider"></li>
-                                        {% block nav_dropdown_extra_items %}
-                                            <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
-                                        {% endblock %}
-                                    </ul>
-                                </li>
-                                {% block nav_extra %}
-                                {% endblock %}
-                        </ul>
-                        {% endblock %}
-                    </li>
-                    {% if user.is_authenticated %}
-                        <li class="account-dropdown dropdown">
-                            <a href="#" data-target="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">{{ request.user.email }} <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    {% if num_unread_notifications > 0 %}
-                                        {# If user has new notifications - we change account link to go to inbox #}
-                                        <a href="{% url 'customer:notifications-inbox' %}">
-                                            <i class="icon-user"></i>
-                                            {% trans "Account" %}
-                                            <span class="label label-important">{{ num_unread_notifications }}</span>
-                                        </a>
-                                    {% else %}
-                                        <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
-                                    {% endif %}
-                                </li>
-                                {% if user.is_staff or perms.partner.dashboard_access %}
-                                    <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                                                {% for close in info.num_to_close %}
+                                                    </ul></li>
+                                                {% endfor %}
+                                    {% endfor %}
                                 {% endif %}
-                                <li><a id="logout_link" href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+                                <li class="divider"></li>
+                                {% block nav_dropdown_extra_items %}
+                                    <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
+                                {% endblock %}
                             </ul>
                         </li>
+                        {% block nav_extra %}
+                        {% endblock %}
+                    </ul>
+                    {% endblock %}
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="account-dropdown dropdown">
+                        <a href="#" data-target="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">{{ request.user.email }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                {% if num_unread_notifications > 0 %}
+                                    {# If user has new notifications - we change account link to go to inbox #}
+                                    <a href="{% url 'customer:notifications-inbox' %}">
+                                        <i class="icon-user"></i>
+                                        {% trans "Account" %}
+                                        <span class="label label-important">{{ num_unread_notifications }}</span>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
+                                {% endif %}
+                            </li>
+                            {% if user.is_staff or perms.partner.dashboard_access %}
+                                <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                            {% endif %}
+                            <li><a id="logout_link" href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a id="login_link" class="btn btn-default" href="{% url 'customer:login' %}">{% trans "Login / Register" %}</a></li>
+                {% endif %}
+                <li>
+                    {# Mini-basket wrapped in a block so some templates can now display it #}
+                    {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
+                </li>
+                <li>
+                    {% include "partials/search.html" %}
+                </li>
+            </ul>
+
+            <a class="btn btn-default navbar-btn btn-cart navbar-right visible-xs-inline-block" href="{% url 'basket:summary' %}">
+                <i class="icon-shopping-cart"></i>
+                {% trans "Basket" %}
+                {% if not request.basket.is_empty %}
+                    {% if request.basket.is_tax_known %}
+                        {% blocktrans with total=request.basket.total_incl_tax|currency:request.basket.currency %}
+                            Total: {{ total }}
+                        {% endblocktrans %}
                     {% else %}
-                        <li><a id="login_link" class="btn btn-default" href="{% url 'customer:login' %}"><i class="icon-signin"></i> {% trans "Login or register" %}</a></li>
+                        {% blocktrans with total=request.basket.total_excl_tax|currency:request.basket.currency %}
+                            Total: {{ total }}
+                        {% endblocktrans %}
                     {% endif %}
-                    <li>
-                        {# Mini-basket wrapped in a block so some templates can now display it #}
-                        {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
-                    </li>
-                    <li>
-                        {% include "partials/search.html" %}
-                    </li>
-                </ul>
-
-
-                <a class="btn btn-default navbar-btn btn-cart navbar-right visible-xs-inline-block" href="{% url 'basket:summary' %}">
-                    <i class="icon-shopping-cart"></i>
-                    {% trans "Basket" %}
-                    {% if not request.basket.is_empty %}
-                        {% if request.basket.is_tax_known %}
-                            {% blocktrans with total=request.basket.total_incl_tax|currency:request.basket.currency %}
-                                Total: {{ total }}
-                            {% endblocktrans %}
-                        {% else %}
-                            {% blocktrans with total=request.basket.total_excl_tax|currency:request.basket.currency %}
-                                Total: {{ total }}
-                            {% endblocktrans %}
-                        {% endif %}
-                    {% endif %}
-                </a>
-            </div>
+                {% endif %}
+            </a>
         </div>
     </div>
 </div>
