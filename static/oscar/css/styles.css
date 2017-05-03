@@ -9708,8 +9708,9 @@ input[type="number"][id*="quantity"] {
 }
 .site-brand-name-link {
   color: #333;
-  border: 4px double #333;
+  font-weight: 300;
   padding: 5px;
+  position: relative;
   text-decoration: none;
 }
 .site-brand-name-link:visited {
@@ -9718,27 +9719,47 @@ input[type="number"][id*="quantity"] {
 .site-brand-name-link:hover {
   text-decoration: none;
   color: #595959;
-  border: 4px double #88a;
   -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
   transition: border 200ms color 200ms, transform 200ms;
 }
 .site-brand-name-link:active {
   text-decoration: none;
   color: #0d0d0d;
-  border: 4px double #606086;
   -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
   transition: border 200ms color 200ms, transform 200ms;
 }
 #top_page {
   margin-bottom: 0;
-  padding: 30px 80px;
+  padding: 10px 15px;
+}
+@media (min-width: 768px) {
+  #top_page {
+    padding: 30px 80px;
+  }
 }
 #top_page #login_link {
   padding: 7px;
 }
 #top_page .account-dropdown a {
-  padding: 6px;
   color: #333;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: 300;
+  padding: 6px;
+}
+#browse .li > a {
+  padding: 6px;
+  font-family: inherit;
+  font-weight: 300;
+}
+#browse li a {
+  padding: 6px;
+  font-family: inherit;
+  font-weight: 300;
+}
+#product-search-form {
+  margin: 0px;
+  padding: 0px;
 }
 #product-search-form .container-4 {
   overflow: hidden;
@@ -9803,7 +9824,9 @@ input[type="number"][id*="quantity"] {
 #product-search-form .container-4:hover button.icon:hover {
   background: white;
 }
-#default body,
+#default {
+  background-color: #fff;
+}
 #default div,
 #default h1,
 #default h2,
@@ -9813,6 +9836,9 @@ input[type="number"][id*="quantity"] {
 #default h6 {
   color: #333;
   font-weight: 300;
+}
+#default .page .page_inner {
+  box-shadow: none;
 }
 ol.row,
 ul.row {
@@ -9888,11 +9914,13 @@ ul.row {
 .product_pod .availability,
 .product_pod .price_color {
   margin-bottom: 10px;
+  margin-bottom: -4px;
 }
 .product_pod .product_price {
   position: absolute;
   bottom: 0;
   width: 100%;
+  margin-bottom: 4px;
 }
 .product_pod audio {
   width: 100%;
@@ -9936,4 +9964,97 @@ a:hover .thumbnail {
 }
 #account-customer-change-card .form-group-inline:first-of-type {
   padding-right: 60px;
+}
+/*
+    Buttons styles
+
+    Replaces bootstrap's buttons style with ghost buttons
+*/
+.ghost-button,
+.btn {
+  background: none;
+  cursor: pointer;
+  border: 1px solid;
+  color: inherit;
+  font-family: inherit;
+  font-weight: 300;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.2s ease;
+  text-align: center;
+  text-decoration: none !important;
+  vertical-align: middle;
+}
+.btn {
+  border-radius: 3px;
+}
+/* Sizes */
+.button-small {
+  font-size: 0.8em;
+  padding: 0.4em 1.25em;
+}
+.button-medium {
+  font-size: 1em;
+  padding: 0.5em 1.375em;
+}
+.button-large {
+  font-size: 1.2em;
+  padding: 0.5em 1.5em;
+}
+/* Colors */
+.btn-success {
+  color: #3cb371;
+  border-color: #3cb371;
+}
+.btn-success:hover,
+.btn-success:active {
+  background: #3cb371 !important;
+  color: #fff !important;
+  border-color: #3cb371 !important;
+}
+.btn-success:disabled {
+  color: #fff !important;
+}
+.btn-primary {
+  color: #4682b4;
+  border-color: #4682b4;
+}
+.btn-primary:hover,
+.btn-primary:active {
+  background: #4682b4 !important;
+  color: #fff !important;
+  border-color: #4682b4 !important;
+}
+.btn-info {
+  color: #4682f8 !important;
+  border-color: #4682f8;
+}
+.btn-info:hover,
+.btn-info:active {
+  background: #4682f8 !important;
+  color: #fff !important;
+  border-color: #4682f8 !important;
+}
+.btn-danger {
+  color: #b22222;
+  border-color: #b22222;
+}
+.btn-danger:hover,
+.btn-danger:active {
+  background: #b22222 !important;
+  color: #fff !important;
+  border-color: #b22222 !important;
+}
+.btn-default {
+  color: #333 !important;
+  border-color: #d0d0d0;
+}
+.btn-default:hover,
+.btn-default:active {
+  background: #d0d0d0 !important;
+  color: #333 !important;
+  border-color: #d0d0d0 !important;
+}
+.basket-mini-item a.btn {
+  color: #4682b4;
 }

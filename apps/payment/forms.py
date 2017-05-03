@@ -24,7 +24,7 @@ class BankcardForm(OscarBankcardForm):
 
     number = BankcardNumberField()
     ccv = BankcardCCVField()
-    start_month = BankcardStartingMonthField()
+    start_month = BankcardStartingMonthField(widget=forms.HiddenInput)
     expiry_month = BankcardExpiryMonthField()
     stripe_token = forms.CharField(max_length=100, widget=forms.HiddenInput)
 
