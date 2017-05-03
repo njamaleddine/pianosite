@@ -1,7 +1,9 @@
 .site-brand-name-link {
     color: #333;
-    border: 4px double #333;
+    // border: 4px double #333;
+    font-weight: 300;
     padding: 5px;
+    position: relative;  // This seems to cause an issue with this and the nav positioning
     text-decoration: none;
 
     &:visited {
@@ -11,7 +13,7 @@
     &:hover {
         text-decoration: none;
         color: lighten(#333, 15%);
-        border: 4px double #88a;
+        // border: 4px double #88a;
         -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
         transition: border 200ms color 200ms, transform 200ms;
     }
@@ -19,7 +21,7 @@
     &:active {
         text-decoration: none;
         color: darken(#333, 15%);
-        border: 4px double darken(#88a, 15%);
+        // border: 4px double darken(#88a, 15%);
         -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
         transition: border 200ms color 200ms, transform 200ms;
     }
@@ -27,16 +29,42 @@
 
 #top_page {
     margin-bottom: 0;
-    padding: 30px 80px;
+    padding: 10px 15px;
 
+    @media (min-width: 768px) {
+        padding: 30px 80px;
+    }
     #login_link {
         padding: 7px;
     }
 
     .account-dropdown {
         a {
-            padding: 6px;
             color: #333;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: 300;
+            padding: 6px;
         }
     }
+}
+
+#browse {
+    .li > a {
+        padding: 6px;
+        font-family: inherit;
+        font-weight: 300;
+    }
+    li {
+        a {
+            padding: 6px;
+            font-family: inherit;
+            font-weight: 300;
+        }
+    }
+}
+
+#product-search-form {
+    margin: 0px;
+    padding: 0px;
 }

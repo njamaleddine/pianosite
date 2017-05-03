@@ -3,7 +3,7 @@
 # django-oscar==1.5
 # There's an incompatability, we will have to use dev (1.5 for now off master)
 git+git://github.com/django-oscar/django-oscar.git@master
-Django==1.11
+Django==1.10.7
 gunicorn==19.7.1
 
 # Payments
