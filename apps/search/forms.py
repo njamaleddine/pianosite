@@ -8,7 +8,6 @@ from haystack.forms import FacetedSearchForm
 
 from oscar.core.loading import get_class
 
-from apps.catalogue.models import Artist, Genre
 
 is_solr_supported = get_class('search.features', 'is_solr_supported')
 
@@ -45,15 +44,6 @@ class SearchForm(FacetedSearchForm):
             "tabindex": "1",
             "class": "form-control"
         }))
-    artist = forms.ChoiceField(
-        label=_("Artist"),
-        choices=(artist.name for artist in Artist.objects.all()),
-        widget=forms.Select(), required=False
-    )
-    genre = forms.ChoiceField(
-        label=_("Genre"), choices=(genre.name for genre in Genre.objects.all()),
-        widget=forms.Select(), required=False
-    )
 
     # Search
     RELEVANCY = "relevancy"

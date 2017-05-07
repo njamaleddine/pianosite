@@ -149,16 +149,11 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-# HAYSTACK_CONNECTIONS = {
-#     'default': {
-#         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
-#     },
-# }
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
         'URL': 'http://localhost:8983/solr',
+        'INCLUDE_SPELLING': True,
     },
 }
 
@@ -365,8 +360,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
 
 OSCAR_SEARCH_FACETS = {
     'fields': OrderedDict([
-        ('text', {'name': _('Type'), 'field': 'text'}),
-        ('upc', {'name': _('Type'), 'field': 'upc'}),
         ('product_class', {'name': _('Type'), 'field': 'product_class'}),
         ('rating', {'name': _('Rating'), 'field': 'rating'}),
         ('genre', {'name': _('Genre'), 'field': 'genre'}),

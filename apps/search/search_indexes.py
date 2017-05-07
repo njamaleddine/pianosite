@@ -8,18 +8,75 @@ Selector = get_class('partner.strategy', 'Selector')
 strategy = Selector().strategy()
 
 
+class ArtistIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.EdgeNgramField(
+        document=True, use_template=True,
+        template_name='search/indexes/artist/item_text.txt'
+    )
+    date_created = indexes.DateTimeField(model_attr='created')
+    date_updated = indexes.DateTimeField(model_attr='modified')
+
+    def get_model(self):
+        return get_model('catalogue', 'Artist')
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all().order_by('name')
+
+    def prepare(self, obj):
+        prepared_data = super().prepare(obj)
+
+        if is_solr_supported():
+            prepared_data['title_s'] = prepared_data['text']
+
+        prepared_data['suggestions'] = prepared_data['text']
+
+        return prepared_data
+
+    def get_updated_field(self):
+        return 'date_updated'
+
+
+class GenreIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.EdgeNgramField(
+        document=True, use_template=True,
+        template_name='search/indexes/genre/item_text.txt'
+    )
+    date_created = indexes.DateTimeField(model_attr='created')
+    date_updated = indexes.DateTimeField(model_attr='modified')
+
+    def get_model(self):
+        return get_model('catalogue', 'Genre')
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all().order_by('name')
+
+    def prepare(self, obj):
+        prepared_data = super().prepare(obj)
+
+        if is_solr_supported():
+            prepared_data['title_s'] = prepared_data['text']
+
+        prepared_data['suggestions'] = prepared_data['text']
+
+        return prepared_data
+
+    def get_updated_field(self):
+        return 'date_updated'
+
+
 class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     # Search text
     text = indexes.EdgeNgramField(
         document=True, use_template=True,
-        template_name='oscar/search/indexes/product/item_text.txt')
+        template_name='search/indexes/product/item_text.txt'
+    )
 
     upc = indexes.CharField(model_attr="upc", null=True)
     title = indexes.EdgeNgramField(model_attr='title', null=True)
 
     # Fields for faceting
     product_class = indexes.CharField(null=True, faceted=True)
-    category = indexes.MultiValueField(null=True, faceted=True)
+    # category = indexes.MultiValueField(null=True, faceted=True)
     price = indexes.DecimalField(null=True, faceted=True)
     artist = indexes.CharField(model_attr='artist', null=True, faceted=True)
     genre = indexes.CharField(model_attr='genre', null=True, faceted=True)
@@ -71,12 +128,10 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return result.price.excl_tax
 
     def prepare_artist(self, obj):
-        if obj.artist is not None:
-            return obj.artist.name
+        return obj.artist.name if obj.artist else None
 
     def prepare_genre(self, obj):
-        if obj.artist is not None:
-            return obj.genre.name
+        return obj.genre.name if obj.genre else None
 
     def prepare_num_in_stock(self, obj):
         if obj.is_parent:
