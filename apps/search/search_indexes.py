@@ -21,6 +21,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     product_class = indexes.CharField(null=True, faceted=True)
     category = indexes.MultiValueField(null=True, faceted=True)
     price = indexes.DecimalField(null=True, faceted=True)
+    artist = indexes.CharField(model_attr='artist', null=True, faceted=True)
+    genre = indexes.CharField(model_attr='genre', null=True, faceted=True)
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
     rating = indexes.IntegerField(null=True, faceted=True)
 
@@ -35,10 +37,10 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         # Only index browsable products (not each individual child product)
-        return self.get_model().browsable.order_by('-date_updated')
+        return self.get_model().browsable.select_related('artist', 'genre').order_by('-date_updated')
 
     def read_queryset(self, using=None):
-        return self.get_model().browsable.base_queryset()
+        return self.get_model().browsable.base_queryset().select_related('artist', 'genre')
 
     def prepare_product_class(self, obj):
         return obj.get_product_class().name
@@ -67,6 +69,14 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             if result.price.is_tax_known:
                 return result.price.incl_tax
             return result.price.excl_tax
+
+    def prepare_artist(self, obj):
+        if obj.artist is not None:
+            return obj.artist.name
+
+    def prepare_genre(self, obj):
+        if obj.artist is not None:
+            return obj.genre.name
 
     def prepare_num_in_stock(self, obj):
         if obj.is_parent:

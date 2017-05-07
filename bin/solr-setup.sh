@@ -1,9 +1,11 @@
-wget http://archive.apache.org/dist/lucene/solr/4.7.2/solr-4.7.2.tgz
-tar xzf solr-4.7.2.tgz
-cd solr-4.7.2/example/solr/collection1
+SOLR_VERSION=4.10.2
+
+wget http://archive.apache.org/dist/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz
+tar xzf solr-$SOLR_VERSION.tgz
+cd solr-$SOLR_VERSION/example/solr/collection1
 cp -R conf conf.original
 cp build
-python manage.py build_solr_schema > schema.xml
-mv pianosite/schema.xml pianosite/solr-4.7.2/example/solr/collection1/conf/schema.xml
-cd pianosite/solr-4.7.2/solr-4.7.2/example
+workon pianosite
+python manage.py build_solr_schema > solr-$SOLR_VERSION/example/solr/collection1/schema.xml
+cd solr-$SOLR_VERSION/example
 java -jar start.jar
