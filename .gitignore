@@ -15,3 +15,4 @@ specs.md
 audio_dump/*
 *.sf2
 pianosite/public/media/*
+solr-4.10.2/*
