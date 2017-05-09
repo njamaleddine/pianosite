@@ -361,24 +361,37 @@ OSCAR_DASHBOARD_NAVIGATION = [
 OSCAR_SEARCH_FACETS = {
     'fields': OrderedDict([
         ('product_class', {'name': _('Type'), 'field': 'product_class'}),
+        ('category', {'name': _('Type'), 'field': 'category'}),
         ('rating', {'name': _('Rating'), 'field': 'rating'}),
         ('genre', {'name': _('Genre'), 'field': 'genre'}),
         ('artist', {'name': _('Artist'), 'field': 'artist'}),
     ]),
     'queries': OrderedDict([
-        ('price_range',
-         {
-             'name': _('Price range'),
-             'field': 'price',
-             'queries': [
-                 # This is a list of (name, query) tuples where the name will
-                 # be displayed on the front-end.
-                 (_('0 to 20'), '[0 TO 20]'),
-                 (_('20 to 40'), '[20 TO 40]'),
-                 (_('40 to 60'), '[40 TO 60]'),
-                 (_('60+'), '[60 TO *]'),
-             ]
-         }),
+        ('price_range', {
+            'name': _('Price range'),
+            'field': 'price',
+            'queries': [
+                # This is a list of (name, query) tuples where the name will
+                # be displayed on the front-end.
+                (_('0 to 5'), '[0 TO 5]'),
+                (_('5 to 20'), '[5 TO 20]'),
+                (_('20 to 40'), '[20 TO 40]'),
+                (_('40+'), '[40 TO *]'),
+            ]
+        }),
+        ('rating', {
+            'name': _('Rating'),
+            'field': 'rating',
+            'queries': [
+                # This is a list of (name, query) tuples where the name will
+                # be displayed on the front-end.
+                (_('5 stars'), '5'),
+                (_('4 stars'), '4'),
+                (_('3 stars'), '3'),
+                (_('2 stars'), '2'),
+                (_('1 star'), '1'),
+            ]
+        }),
     ]),
 }
 OSCAR_MISSING_IMAGE_URL = append_to_base_dir('pianosite/public/media/placeholder.png')

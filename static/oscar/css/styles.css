@@ -9840,6 +9840,18 @@ input[type="number"][id*="quantity"] {
 #default .page .page_inner {
   box-shadow: none;
 }
+#default .side_categories {
+  border: 1px solid #e3e3e3;
+  box-shadow: 0 0 0 !important;
+  border-radius: 2px;
+}
+#default .side_categories .nav > li {
+  padding: 0px;
+}
+#default .side_categories .nav > li a,
+#default .side_categories .nav > li strong {
+  padding: 10px;
+}
 ol.row,
 ul.row {
   margin-left: 0;

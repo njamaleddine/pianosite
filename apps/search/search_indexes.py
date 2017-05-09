@@ -76,7 +76,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     # Fields for faceting
     product_class = indexes.CharField(null=True, faceted=True)
-    # category = indexes.MultiValueField(null=True, faceted=True)
+    category = indexes.MultiValueField(null=True, faceted=True)
     price = indexes.DecimalField(null=True, faceted=True)
     artist = indexes.CharField(model_attr='artist', null=True, faceted=True)
     genre = indexes.CharField(model_attr='genre', null=True, faceted=True)
