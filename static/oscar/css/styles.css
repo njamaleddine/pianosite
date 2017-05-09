@@ -9747,6 +9747,11 @@ input[type="number"][id*="quantity"] {
   font-weight: 300;
   padding: 6px;
 }
+@media (max-width: 767px) {
+  #browse {
+    margin: 7.5px 0px;
+  }
+}
 #browse .li > a {
   padding: 6px;
   font-family: inherit;
@@ -9839,6 +9844,18 @@ input[type="number"][id*="quantity"] {
 }
 #default .page .page_inner {
   box-shadow: none;
+}
+#default .side_categories {
+  border: 1px solid #e3e3e3;
+  box-shadow: 0 0 0 !important;
+  border-radius: 2px;
+}
+#default .side_categories .nav > li {
+  padding: 0px;
+}
+#default .side_categories .nav > li a,
+#default .side_categories .nav > li strong {
+  padding: 10px;
 }
 ol.row,
 ul.row {
@@ -10035,6 +10052,16 @@ a:hover .thumbnail {
   color: #fff !important;
   border-color: #4682f8 !important;
 }
+.btn-jumbotron {
+  color: #68a4fa !important;
+  border-color: #68a4fa;
+}
+.btn-jumbotron:hover,
+.btn-jumbotron:active {
+  background: #68a4fa !important;
+  color: #fff !important;
+  border-color: #68a4fa !important;
+}
 .btn-danger {
   color: #b22222;
   border-color: #b22222;
@@ -10057,4 +10084,39 @@ a:hover .thumbnail {
 }
 .basket-mini-item a.btn {
   color: #4682b4;
+}
+#homepage-jumbotron {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0, rgba(50, 50, 50, 0.6) 100%), url('../img/jumbotron.jpg') no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  background-attachment: fixed;
+  text-align: center;
+  padding: 40px 20px;
+}
+@media (min-width: 768px) {
+  #homepage-jumbotron {
+    padding: 40px 20px;
+  }
+}
+@media (min-width: 900px) {
+  #homepage-jumbotron {
+    padding: 60px 20px;
+  }
+}
+@media (min-width: 1200px) {
+  #homepage-jumbotron {
+    padding: 80px 20px;
+  }
+}
+@media (min-width: 1400px) {
+  #homepage-jumbotron {
+    padding: 100px 20px;
+  }
+}
+#homepage-jumbotron .main-text {
+  color: #fff;
+  margin-bottom: 40px;
+}
+#homepage-jumbotron .see-all-products {
+  font-size: 1em;
 }

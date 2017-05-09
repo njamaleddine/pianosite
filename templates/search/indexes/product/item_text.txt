@@ -1,3 +1,5 @@
 {{ object.upc|default:"" }}
 {{ object.title }}
+{{ object.artist.name }}
+{{ object.genre.name }}
 {{ object.description|default:"" }}

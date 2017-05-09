@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, absolute_import
-
 # Catalogue models
 import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 from oscar.apps.catalogue.abstract_models import AbstractProduct
 
@@ -17,8 +14,7 @@ from apps.utility.process_midi import convert_to_audio, slice_audio, ogg_to_mp3
 from pianosite.settings import BASE_DIR
 
 
-@python_2_unicode_compatible
-class Artist (models.Model):
+class Artist(TimeStampedModel):
     name = models.CharField(max_length=255)
 
     class Meta (object):
@@ -28,8 +24,7 @@ class Artist (models.Model):
         return '{0}'.format(self.name)
 
 
-@python_2_unicode_compatible
-class Genre (models.Model):
+class Genre(TimeStampedModel):
     name = models.CharField(max_length=255)
 
     class Meta (object):
@@ -39,7 +34,7 @@ class Genre (models.Model):
         return '{0}'.format(self.name)
 
 
-class Product (AbstractProduct):
+class Product(AbstractProduct):
     artist = models.ForeignKey(Artist, null=True, blank=True)
     genre = models.ForeignKey(Genre, null=True, blank=True)
     midi_file = models.FileField(upload_to=upload_file, max_length=1024)
@@ -92,7 +87,6 @@ class Product (AbstractProduct):
         return super(Product, self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class MidiDownloadURL(TimeStampedModel):
     """ The midi download url available for the user to access the file """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

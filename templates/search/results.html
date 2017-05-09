@@ -24,13 +24,15 @@
 {% block column_left %}
     {% if has_facets %}
         <h4>{% trans "Refine your search" %}</h4>
-        <dl>
-            {% for field, data in facet_data.items %}
-                {% if data.results %}
-                    {% include 'search/partials/facet.html' with name=data.name items=data.results %}
-                {% endif %}
-            {% endfor %}
-        </dl>
+        <div class="side_categories">
+            <dl>
+                {% for field, data in facet_data.items %}
+                    {% if data.results %}
+                        {% include 'search/partials/facet.html' with name=data.name items=data.results %}
+                    {% endif %}
+                {% endfor %}
+            </dl>
+        </div>
     {% endif %}
 {% endblock %}
 
@@ -58,7 +60,7 @@
                 {% blocktrans count num_results=paginator.count %}
                     Found <strong>1</strong> result.
                 {% plural %}
-                    Found <strong>{{ num_results }}</strong> results. 
+                    Found <strong>{{ num_results }}</strong> results.
                 {% endblocktrans %}
             {% endif %}
             <div class="pull-right">
