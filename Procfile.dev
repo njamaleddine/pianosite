@@ -1,1 +1,2 @@
 web: python manage.py runserver_plus 0.0.0.0:$PORT
+search: sh -c 'cd ./solr-4.10.2/example/ && java -jar start.jar'
