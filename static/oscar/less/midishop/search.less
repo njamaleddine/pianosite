@@ -1,14 +1,30 @@
 #product-search-form {
+  margin: 0px;
+  padding: 0px;
+  width: 200px;
+
+  @media(max-width: 767px) {
+    width: 100%;
+  }
+
+  &:hover {
+    width: 350px;
+    transition: all .55s ease;
+  }
+
+  .box {
+    margin: 0px;
+    width: 100%;
+  }
   .container-4{
     overflow: hidden;
-    width: 300px;
     vertical-align: middle;
     white-space: nowrap;
+    height: 100%;
+    width: 100%;
   }
 
   .container-4 input#id_q{
-    width: 300px;
-    height: 40px;
     background: #fcfcfc;
     border: none;
     font-size: 10pt;
@@ -17,7 +33,10 @@
     padding-left: 15px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-    border-radius: 5px;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px;
+    width: 100%;
   }
 
   .container-4 input#id_q::-webkit-input-placeholder {
