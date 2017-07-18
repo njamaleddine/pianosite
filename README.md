@@ -17,30 +17,33 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 ```
 bin/dev-setup.sh
 ```
-  a. Dependencies installed in the project setup: 
-    * [git](https://git-scm.com/)
-    * [python3](https://www.python.org/)
-    * [PostgreSQL](http://www.postgresql.org/)
-    * [Virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/index.html)
-    * [node](https://nodejs.org/en/)
-    * [lessc](https://nodejs.org/en/)
-    * [ffmpeg](https://ffmpeg.org/)
-    * [FluidSynth](http://www.fluidsynth.org/)
-    * [A Soundfont (fluidr3_gm2-2.sf2)](http://www.musescore.org)
-  b. In order to get midi to audio conversion the environment needs to have
-     `ffmpeg`, `FluidSynth`, `A Soundfont`
+
+* Dependencies installed in the project setup: 
+   * [`git`](https://git-scm.com/)
+   * [`python3`](https://www.python.org/)
+   * [`PostgreSQL`](http://www.postgresql.org/)
+   * [`Virtualenvwrapper`](https://virtualenvwrapper.readthedocs.org/en/latest/index.html)
+   * [`node`](https://nodejs.org/en/)
+   * [`lessc`](https://nodejs.org/en/)
+   * [`ffmpeg`](https://ffmpeg.org/)
+   * [`FluidSynth`](http://www.fluidsynth.org/)
+   * [`A Soundfont (fluidr3_gm2-2.sf2)`](http://www.musescore.org)  
+
+ * In order to get midi to audio conversion the environment needs to have: `ffmpeg`, `FluidSynth`, `A Soundfont`
 
 3. Change default [Site](https://docs.djangoproject.com/en/dev/ref/contrib/sites/) object domain to host domain instead of `example.com`
 
-4. For production setup run `bin/setup.sh`
+4. For production setup run `./bin/setup.sh`
 
 ## Environment
 
 Local environment run server:
-        `honcho start -f Procfile.dev`
+    
+    honcho start -f Procfile.dev
 
 Production environment run server:
-        `honcho start`
+    
+    honcho start
 
 ## Useful Commands
     python manage.py runserver_plus
