@@ -17,3 +17,4 @@ audio_dump/*
 pianosite/public/media/*
 solr-4.10.2/*
 .vscode/*
+node_modules/*
