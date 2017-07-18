@@ -6,7 +6,7 @@ An ecommerce web application for that sells MIDIs
 Pianosite sells digital media in the form of MIDI files that other pianists/keyboard players can use to perform live at shows.
 Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 
-##### Project Setup is only supported on macOS
+> **Note:** Project Setup is only supported on macOS
 
 
 ## Project Setup (development)
@@ -46,9 +46,9 @@ Production environment run server:
     honcho start
 
 ## Useful Commands
-    python manage.py runserver_plus
+    ./bin/less.sh - compile less to css
 
-    python manage.py shell_plus
+    python manage.py shell_plus - open up interactive python shell
 
 ## Test if Fluidsynth is working correctly with the soundfont
 1. Enter this into the bash terminal:
