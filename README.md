@@ -36,36 +36,16 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 8. Install [sassc](https://github.com/sass/sassc)
         brew install sassc
 
-### Project Setup
-1. Create the database using the postgres cli:
+### Project Setup (development)
+1. Run the project setup:
 
-        createdb pianosite
+```bash
+bin/dev-setup.sh
+```
 
-2. Clone repository:
+2. Change default Site object domain to host domain instead of `example.com`
 
-        git clone git@bitbucket.org:njamaleddine/pianosite.git
-
-3. Create a virtualenv:
-
-        mkvirtualenv pianosite
-
-4. Activate virtualenv:
-
-        workon pianosite
-
-5. Install requirements:
-
-        pip install -r requirements.txt
-
-6. Copy and Save `sample.env` as `.env` and update variables for local environment.
-
-7. `pip install pycountry`
-
-8. `python manage.py oscar_populate_countries`
-
-9. Change default Site object domain to host domain instead of `example.com`
-
-10. Copy `static/oscar/img/placeholder.png` to `pianosite/public/media/`
+3. For production setup run `bin/setup.sh`
 
 # Environment
 
