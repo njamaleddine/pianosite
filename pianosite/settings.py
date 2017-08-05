@@ -202,6 +202,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
     append_to_base_dir('static/'),
+    append_to_base_dir('node_modules/'),
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -211,6 +212,9 @@ STATICFILES_FINDERS = (
 # Media URL
 MEDIA_ROOT = location("public/media")
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
+
+# App Settings
+SHOP_DEFAULT_AUDIO_LENGTH = env.int('SHOP_DEFAULT_AUDIO_LENGTH', default=30)  # in seconds
 
 # Email
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", None)
