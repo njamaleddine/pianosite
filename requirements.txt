@@ -12,16 +12,16 @@ dj-stripe==0.8.0
 
 # Audio Conversion
 # -------------------------------------
-pydub==0.18.0
+pydub==0.20.0
 
 # Extensions
 # -------------------------------------
 django-extensions==1.7.8
 django-uuid-upload-path==1.0.0
 pytz==2017.2
-ipython==6.0.0
-pycountry==17.1.8
-Werkzeug==0.12.1
+ipython==6.1.0
+pycountry==17.5.14
+Werkzeug==0.12.2
 
 # Configuration
 # -------------------------------------
@@ -30,7 +30,7 @@ python-dotenv==0.6.4
 
 # Images
 # -------------------------------------
-Pillow==4.1.1
+Pillow==4.2.1
 
 # Staticfiles
 # -------------------------------------
@@ -40,7 +40,7 @@ django-compressor==2.1.1
 # Persistence
 # -------------------------------------
 dj-database-url==0.4.2
-psycopg2==2.7.1
+psycopg2==2.7.3
 
 # Solr Search
 # -------------------------------------
@@ -52,4 +52,4 @@ honcho==1.0.1
 
 # Sentry
 # -------------------------------------
-raven==6.0.0
+raven==6.1.0
