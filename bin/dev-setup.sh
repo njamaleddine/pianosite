@@ -25,9 +25,6 @@ wget http://archive.apache.org/dist/lucene/solr/4.7.2/solr-4.7.2.tgz
 tar xzf solr-4.7.2.tgz
 ./solr-setup.sh
 
-# clone repository
-git clone git@bitbucket.org:njamaleddine/pianosite.git
-
 # download and setup soundfont
 mkdir ./tmp && cd tmp/
 wget http://www.musescore.org/download/fluid-soundfont.tar.gz

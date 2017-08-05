@@ -13,13 +13,18 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 
 1. Install the [homebrew](https://brew.sh/) package manager
 
-2. Run the project setup:
+2. Make sure `git` is installed
+
+3. Clone the repository 
+
+    git clone git@bitbucket.org:njamaleddine/pianosite.git
+
+4. Run the project setup:
 ```
-bin/dev-setup.sh
+./bin/dev-setup.sh
 ```
 
 * Dependencies installed in the project setup: 
-   * [`git`](https://git-scm.com/)
    * [`python3`](https://www.python.org/)
    * [`PostgreSQL`](http://www.postgresql.org/)
    * [`Virtualenvwrapper`](https://virtualenvwrapper.readthedocs.org/en/latest/index.html)
