@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.deletion import SET_NULL
 from django.utils.translation import ugettext_lazy as _
-from oscar.apps.customer.models import *
+from oscar.apps.customer.models import *  # noqa
 
 from djstripe.stripe_objects import StripeCustomer
 from djstripe.models import Charge

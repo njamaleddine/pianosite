@@ -18,7 +18,7 @@ import environ
 from django.utils.translation import ugettext_lazy as _
 from oscar import get_core_apps
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
-from oscar.defaults import *
+from oscar.defaults import *  # noqa
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -214,7 +214,11 @@ MEDIA_ROOT = location("public/media")
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 
 # App Settings
-SHOP_DEFAULT_AUDIO_LENGTH = env.int('SHOP_DEFAULT_AUDIO_LENGTH', default=30)  # in seconds
+MIDISHOP_AUDIO_SAMPLE_LENGTH = env.int('MIDISHOP_AUDIO_SAMPLE_LENGTH', default=30)  # in seconds
+MIDISHOP_SOUNDFONT_PATH = env(
+    'MIDISHOP_DEFAULT_SOUNDFONT_PATH',
+    default=append_to_base_dir('apps/utility/fluidr3_gm2-2.sf2')
+)
 
 # Email
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", None)
