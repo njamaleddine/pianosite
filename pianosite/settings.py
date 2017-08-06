@@ -222,6 +222,14 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 CELERYD_HIJACK_ROOT_LOGGER = False
 
+# Scheduled Tasks
+CELERYBEAT_SCHEDULE = {
+    'search-rebuild-index': {
+        'task': 'apps.catalogue.tasks.rebuild_search_index',
+        'schedule': crontab(hour=7, minute=00),
+    },
+}
+
 # MidiShop Settings
 MIDISHOP_AUDIO_SAMPLE_LENGTH = env.int('MIDISHOP_AUDIO_SAMPLE_LENGTH', default=30)  # in seconds
 MIDISHOP_SOUNDFONT_PATH = env(
