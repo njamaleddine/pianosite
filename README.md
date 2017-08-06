@@ -1,5 +1,7 @@
 # Pianosite Project Setup
 
+__Version:__ 0.0.0
+
 An ecommerce web application for that sells MIDIs
 **Pianosite** is an ecommerce web application built on top of [Oscar](https://github.com/django-oscar/django-oscar), a Django ecommerce platform.
 
