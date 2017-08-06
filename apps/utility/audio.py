@@ -12,17 +12,23 @@ logger = logging.getLogger(__name__)
 
 
 class MidiFile(File):
-
+    """ A subclass of File for handling Midi Files """
     def __init__(self, file, soundfont_path=settings.MIDISHOP_SOUNDFONT_PATH):
         super(MidiFile, self).__init__(file)
         self.soundfont_path = soundfont_path
 
     def convert_to_audio(self, output_type='oga'):
         """
-        Create audio files from a single midi file given an output_type
+        Creates an audio file of a given output_type from a midi file
 
-        paramters:
-        `output_type`: accepted file output types (wav, oga, ogg, etc.)
+        Requires fluidsynth to create audio files from midi
+
+        params:
+
+            `output_type`: accepted file output types (wav, oga, ogg, etc.)
+
+        returns:
+            `output_file_path`: the absolute file path for the audio file
         """
         if not self.soundfont_path:
             raise Exception('Soundfont file is required to convert midi into audio')
@@ -45,12 +51,15 @@ class MidiFile(File):
 
 
 class AudioFile(File):
+    """ A subclass of File for handling Audio Files (ogg, oga, mp3) """
+    ALLOWED_TYPES = ('mp3', 'ogg', 'oga')
+
     def __init__(self, file):
         super(AudioFile, self).__init__(file)
 
     def slice(self, seconds):
         """
-        Using pydub to slice n seconds from the middle of the song
+        Uses pydub to slice n seconds from the middle of the song
 
         Output ogg and mp3 file types
         """
@@ -86,7 +95,12 @@ class AudioFile(File):
             logger.error(e, extra={'error_code': e.errno})
 
     def save_as_type(self, new_file_extension):
-        """ Convert ogg to mp3 """
+        """ Export audio given the new file extension """
+        if new_file_extension not in self.ALLOWED_TYPES:
+            raise Exception(
+                'File extension must be: {}'.format(', '.join(self.ALLOWED_TYPES))
+            )
+
         file_name, file_extension = os.path.splitext(self.name)
         file_extension = file_extension.replace('.', '')
 

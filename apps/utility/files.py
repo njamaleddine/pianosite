@@ -9,10 +9,7 @@ def upload_file(self, file_name, random=False):
 
     uuid_string = uuid.uuid4().hex
 
-    total_path_length = (
-        len(uuid_string) +
-        len(file_name)
-    )
+    total_path_length = len(uuid_string) + len(file_name)
 
     filename, file_extension = file_name.split('.')[0], file_name.split('.')[-1]
     file_name = '{}.{}'.format(filename, file_extension)
