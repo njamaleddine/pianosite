@@ -37,6 +37,7 @@
                 </li>
                 {% endif %}
                 {% endcomment %}
+                {% comment %}
                 <li>
                     {% block nav_dropdown %}
                     <ul id="browse" class="nav navbar-nav">
@@ -75,8 +76,14 @@
                     </ul>
                     {% endblock %}
                 </li>
+                {% endcomment %}
+
+                <li class="nav-link-container">
+                    <a href="/catalogue/" class="btn btn-default nav-link-custom">All Products</a>
+                </li>
+
                 {% if user.is_authenticated %}
-                    <li class="account-dropdown dropdown">
+                    <li class="account-dropdown dropdown nav-link-container">
                         <a href="#" data-target="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">{{ request.user.email }} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>
@@ -100,11 +107,11 @@
                 {% else %}
                     <li><a id="login_link" class="btn btn-default" href="{% url 'customer:login' %}">{% trans "Login / Register" %}</a></li>
                 {% endif %}
-                <li>
+                <li class="nav-link-container basket-link-container">
                     {# Mini-basket wrapped in a block so some templates can now display it #}
                     {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
                 </li>
-                <li>
+                <li class="search-outer-container">
                     {% include "partials/search.html" %}
                 </li>
             </ul>

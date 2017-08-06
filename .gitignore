@@ -16,3 +16,7 @@ audio_dump/*
 *.sf2
 pianosite/public/media/*
 solr-4.10.2/*
+.vscode/*
+node_modules/*
+celerybeat-schedule
+celerybeat.pid

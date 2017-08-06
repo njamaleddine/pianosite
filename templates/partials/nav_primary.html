@@ -32,10 +32,11 @@
             {% endif %}
         </a>
 
+        <a href="/catalogue/" class="see-all-products">All products</a>
 
         <div class="navbar-collapse primary-collapse collapse">
             {% block nav_dropdown %}
-                <ul id="browse" class="nav navbar-nav">
+                <!-- <ul id="browse" class="nav navbar-nav">
                     <li class="dropdown active {% if expand_dropdown %}open{% endif %}">
                         <a href="#" class="dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
                             {% trans "Browse store" %}
@@ -68,7 +69,7 @@
                     </li>
                     {% block nav_extra %}
                     {% endblock %}
-                </ul>
+                </ul> -->
             {% endblock %}
             {% include "partials/search.html" %}
         </div><!-- /navbar-collapse -->

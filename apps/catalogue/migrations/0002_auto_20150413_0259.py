@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import apps.utility.toolbelt
+import apps.utility.files
 
 
 class Migration(migrations.Migration):
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='product',
             name='midi_file',
-            field=models.FileField(default=b'', upload_to=apps.utility.toolbelt.upload_file, blank=True),
+            field=models.FileField(default=b'', upload_to=apps.utility.files.upload_file, blank=True),
             preserve_default=True,
         ),
         migrations.AddField(

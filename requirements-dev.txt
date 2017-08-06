@@ -2,16 +2,16 @@
 
 # Development/Debug
 # -------------------------------------
-django-debug-toolbar==1.7
+django-debug-toolbar==1.8
 
 # Testing and coverage
 # -------------------------------------
-factory-boy==2.8.1
-Faker==0.7.11
+factory-boy==2.9.2
+Faker==0.7.18
 pytest-django==3.1.2
 pytest-pythonpath==0.7.1
-pytest-cov==2.4.0
-flake8==3.3.0
+pytest-cov==2.5.1
+flake8==3.4.1
 
 # Versioning
 # -------------------------------------

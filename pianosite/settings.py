@@ -15,10 +15,11 @@ from collections import OrderedDict
 import dj_database_url
 import environ
 
+from celery.schedules import crontab
 from django.utils.translation import ugettext_lazy as _
 from oscar import get_core_apps
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
-from oscar.defaults import *
+from oscar.defaults import *  # noqa
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -202,6 +203,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
     append_to_base_dir('static/'),
+    append_to_base_dir('node_modules/'),
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -211,6 +213,29 @@ STATICFILES_FINDERS = (
 # Media URL
 MEDIA_ROOT = location("public/media")
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
+
+# Celery
+BROKER_URL = env('BROKER_URL', default='redis://127.0.0.1:6379')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERYD_HIJACK_ROOT_LOGGER = False
+
+# Scheduled Tasks
+CELERYBEAT_SCHEDULE = {
+    'search-rebuild-index': {
+        'task': 'apps.catalogue.tasks.rebuild_search_index',
+        'schedule': crontab(hour=7, minute=00),
+    },
+}
+
+# MidiShop Settings
+MIDISHOP_AUDIO_SAMPLE_LENGTH = env.int('MIDISHOP_AUDIO_SAMPLE_LENGTH', default=30)  # in seconds
+MIDISHOP_SOUNDFONT_PATH = env(
+    'MIDISHOP_DEFAULT_SOUNDFONT_PATH',
+    default=append_to_base_dir('apps/utility/fluidr3_gm2-2.sf2')
+)
 
 # Email
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", None)
@@ -473,6 +498,16 @@ LOGGING = {
         'django.request': {
             'handlers': ['mail_admins', 'console', 'sentry'],
             'level': 'ERROR',
+            'propagate': False,
+        },
+        'celery': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
+            'propagate': False,
+        },
+        'celery.task': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
             'propagate': False,
         },
         'gunicorn': {
