@@ -15,6 +15,7 @@ from collections import OrderedDict
 import dj_database_url
 import environ
 
+from celery.schedules import crontab
 from django.utils.translation import ugettext_lazy as _
 from oscar import get_core_apps
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
@@ -213,7 +214,15 @@ STATICFILES_FINDERS = (
 MEDIA_ROOT = location("public/media")
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 
-# App Settings
+# Celery
+BROKER_URL = env('BROKER_URL', default='redis://127.0.0.1:6379')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERYD_HIJACK_ROOT_LOGGER = False
+
+# MidiShop Settings
 MIDISHOP_AUDIO_SAMPLE_LENGTH = env.int('MIDISHOP_AUDIO_SAMPLE_LENGTH', default=30)  # in seconds
 MIDISHOP_SOUNDFONT_PATH = env(
     'MIDISHOP_DEFAULT_SOUNDFONT_PATH',
@@ -481,6 +490,16 @@ LOGGING = {
         'django.request': {
             'handlers': ['mail_admins', 'console', 'sentry'],
             'level': 'ERROR',
+            'propagate': False,
+        },
+        'celery': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
+            'propagate': False,
+        },
+        'celery.task': {
+            'level': 'INFO',
+            'handlers': ['console', 'sentry'],
             'propagate': False,
         },
         'gunicorn': {

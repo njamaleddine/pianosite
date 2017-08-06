@@ -10,6 +10,7 @@ from oscar.apps.catalogue.abstract_models import AbstractProduct
 from apps.utility.audio import AudioFile, MidiFile
 from apps.utility.files import upload_file
 from apps.utility.models import TimeStampedModel
+from .tasks import update_search_index
 
 
 class Artist(TimeStampedModel):
@@ -61,7 +62,14 @@ class Product(AbstractProduct):
                         self.full_audio.save(audio.name.split('/')[-1], audio, save=False)
                         self.sample_ogg.save(sample_ogg_audio.name.split('/')[-1], sample_ogg_audio, save=False)
                         self.sample_mp3.save(sample_mp3_audio.name.split('/')[-1], sample_mp3_audio, save=False)
+
+        update_search_index.delay()
+
         return super(Product, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        super(Product, self).delete(*args, **kwargs)
+        update_search_index.delay()
 
 
 class MidiDownloadURL(TimeStampedModel):
