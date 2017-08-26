@@ -6,20 +6,22 @@
 
 {% if session.price.exists %}
     {% if session.price.excl_tax == 0 %}
-        <p class="price_color">{% trans "Free" %}</p>
+        <span class="label label-info">{% trans "Free" %}</span>
     {% elif session.price.is_tax_known %}
-        <p class="price_color">{{ session.price.incl_tax|currency:session.price.currency }}</p>
+        <span class="label label-success">{{ session.price.incl_tax|currency:session.price.currency }}</span>
     {% else %}
-        <p class="price_color">{{ session.price.excl_tax|currency:session.price.currency }}</p>
+        <span class="label label-success">{{ session.price.excl_tax|currency:session.price.currency }}</span>
     {% endif %}
 {% else %}
-    <p class="price_color">&nbsp;</p>
+    <span class="price_color">&nbsp;</span>
 {% endif %}
-<p class="{{ session.availability.code }} availability">
-    <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i>
-    {% if verbose %}
-        {{ session.availability.message }}
-    {% else %}
-        {{ session.availability.short_message }}
-    {% endif %}
-</p>
+{% if not session.availability.is_available_to_buy %}
+    <span class="{{ session.availability.code }} availability">
+        <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i>
+        {% if verbose %}
+            {{ session.availability.message }}
+        {% else %}
+            {{ session.availability.short_message }}
+        {% endif %}
+    </span>
+{% endif %}

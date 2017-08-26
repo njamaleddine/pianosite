@@ -18,43 +18,76 @@ ul {
 //Products listed container
 // Space between products in a list is determined by the Grid and therfore the
 // gutter width: 20px
-.product_pod {
-    height:370px;
-    overflow:hidden;
-    text-align:center;
-    margin: @line-height-computed 0;
-    position:relative;
-    p, h3, h2, form {
-        margin-bottom:0;
-    }
-    h3 {
-        .h5();
-        margin-bottom:0;
-    }
-    .price_color {
-        .h4();
-        color:@brand-success;
-    }
-    .availability,
-    .price_color {
-        min-height:30px;
-        white-space:nowrap;
-    }
-    .image_container,
-    .availability,
-    .price_color {
-        margin-bottom: @line-height-computed / 2;
-        margin-bottom: -4px;
-    }
-    .product_price {
-        position:absolute;
-        bottom:0;
-        width: 100%;
-        margin-bottom: 4px;
-    }
+.product-container {
+    .product-card {
+        height: 400px;
+        margin: 0;
+        // margin: @line-height-computed 0;
+        overflow: hidden;
+        position: relative;
+        text-align: center;
 
-    audio {
-        width: 100%;
+        .album-image-container {
+            height: 200px;
+            overflow: hidden;
+
+            a {
+                img {
+                    // height: 200px;
+                    // min-width: 300px;
+                    width: 100%;
+                }
+            }
+        }
+
+        .title {
+            margin-top: 0;
+        }
+
+        .artist {
+            margin: 0;
+        }
+
+        p, h3, h2, form {
+            margin-bottom:0;
+        }
+        h3 {
+            .h5();
+            margin-bottom:0;
+        }
+        .price_color {
+            .h4();
+            // color:@brand-success;
+        }
+        .availability,
+        .price_color {
+            // min-height: 30px;
+            // white-space: nowrap;
+        }
+        .image_container,
+        .availability,
+        .price_color {
+            // margin-bottom: @line-height-computed / 2;
+            // margin-bottom: -4px;
+        }
+        .product-price {
+            position:absolute;
+            bottom: 0;
+            width: 100%;
+            margin-bottom: 12px;
+
+            .label {
+                font-size: 1.2em;
+                line-height: 2.2em;
+            }
+        }
+
+        .product_sample_audio {
+            margin: 10px 0px;
+        }
+        audio {
+            width: 100%;
+        }
     }
 }
 

@@ -10694,20 +10694,33 @@ ul.row {
 .row [class*="col-"].no-margin {
   margin-left: 0;
 }
-.product_pod {
-  height: 370px;
+.product-container .product-card {
+  height: 400px;
+  margin: 0;
   overflow: hidden;
-  text-align: center;
-  margin: 23px 0;
   position: relative;
+  text-align: center;
 }
-.product_pod p,
-.product_pod h3,
-.product_pod h2,
-.product_pod form {
+.product-container .product-card .album-image-container {
+  height: 200px;
+  overflow: hidden;
+}
+.product-container .product-card .album-image-container a img {
+  width: 100%;
+}
+.product-container .product-card .title {
+  margin-top: 0;
+}
+.product-container .product-card .artist {
+  margin: 0;
+}
+.product-container .product-card p,
+.product-container .product-card h3,
+.product-container .product-card h2,
+.product-container .product-card form {
   margin-bottom: 0;
 }
-.product_pod h3 {
+.product-container .product-card h3 {
   font-family: inherit;
   font-weight: 400;
   line-height: 1.1;
@@ -10719,17 +10732,17 @@ ul.row {
   line-height: 1.846;
   margin-bottom: 0;
 }
-.product_pod h3 small,
-.product_pod h3 .small {
+.product-container .product-card h3 small,
+.product-container .product-card h3 .small {
   font-weight: normal;
   line-height: 1;
   color: #bbb;
 }
-.product_pod h3 small,
-.product_pod h3 .small {
+.product-container .product-card h3 small,
+.product-container .product-card h3 .small {
   font-size: 75%;
 }
-.product_pod .price_color {
+.product-container .product-card .price_color {
   font-family: inherit;
   font-weight: 400;
   line-height: 1.1;
@@ -10739,36 +10752,31 @@ ul.row {
   font-size: 24px;
   font-size: 14.95px;
   line-height: 1.4;
-  color: #81c784;
 }
-.product_pod .price_color small,
-.product_pod .price_color .small {
+.product-container .product-card .price_color small,
+.product-container .product-card .price_color .small {
   font-weight: normal;
   line-height: 1;
   color: #bbb;
 }
-.product_pod .price_color small,
-.product_pod .price_color .small {
+.product-container .product-card .price_color small,
+.product-container .product-card .price_color .small {
   font-size: 75%;
 }
-.product_pod .availability,
-.product_pod .price_color {
-  min-height: 30px;
-  white-space: nowrap;
-}
-.product_pod .image_container,
-.product_pod .availability,
-.product_pod .price_color {
-  margin-bottom: 11.5px;
-  margin-bottom: -4px;
-}
-.product_pod .product_price {
+.product-container .product-card .product-price {
   position: absolute;
   bottom: 0;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 }
-.product_pod audio {
+.product-container .product-card .product-price .label {
+  font-size: 1.2em;
+  line-height: 2.2em;
+}
+.product-container .product-card .product_sample_audio {
+  margin: 10px 0px;
+}
+.product-container .product-card audio {
   width: 100%;
 }
 .image_container {
