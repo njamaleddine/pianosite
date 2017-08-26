@@ -7,10 +7,10 @@
 {% block product %}
     <article class="product_pod">
         {% block product_image %}
-            <div class="image_container">
+            <div class="album-image-container">
                 {% with image=product.primary_image %}
                     {% thumbnail image.original "x155" upscale=False as thumb %}
-                    <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
+                    <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
                     {% endthumbnail %}
                 {% endwith %}
             </div>

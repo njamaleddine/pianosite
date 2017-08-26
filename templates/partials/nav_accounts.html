@@ -16,6 +16,9 @@
 
         <div class="navbar-collapse account-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
+                <li class="search-outer-container">
+                    {% include "partials/search.html" %}
+                </li>
                 {% comment %}
                 {% if LANGUAGES|length > 1 %}
                 <li>
@@ -110,9 +113,6 @@
                 <li class="nav-link-container basket-link-container">
                     {# Mini-basket wrapped in a block so some templates can now display it #}
                     {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
-                </li>
-                <li class="search-outer-container">
-                    {% include "partials/search.html" %}
                 </li>
             </ul>
 
