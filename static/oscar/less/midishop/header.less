@@ -31,11 +31,11 @@
     margin-bottom: 0;
     padding: 10px 15px;
 
-    @media (min-width: 768px) {
-        padding: 30px 80px;
+    @media (min-width: 1201px) {
+        padding: 30px;
     }
     #login_link {
-        padding: 7px;
+        padding: 10px;
     }
 
     .nav-link-container {
@@ -47,7 +47,7 @@
     }
 
     .nav-link-custom {
-        padding: 7px !important;
+        padding: 10px !important;
     }
 
     .account-dropdown {
@@ -56,7 +56,11 @@
             font-size: inherit;
             font-family: inherit;
             font-weight: 300;
-            padding: 6px;
+            padding: 10px;
+        }
+        .dropdown-menu {
+            width: 95%;
+            margin: 0px 5px 0px 0px;
         }
     }
 
@@ -65,12 +69,12 @@
 
         .btn-group {
             a {
-                padding: 7px !important;
+                padding: 10px !important;
             }
 
             button {
-                padding-top: 7px !important;
-                padding-bottom: 7px !important;
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
             }
         }
     }
@@ -81,7 +85,7 @@
 }
 
 #browse {
-    @media (max-width: 767px) {
+    @media (max-width: 1200px) {
         margin: 7.5px 0px;
     }
 
@@ -102,4 +106,45 @@
 #product-search-form {
     margin: 0px;
     padding: 0px;
+}
+
+.navbar {
+    // background-color: #90cafb;
+}
+
+@media (max-width: 1201px) {
+  .navbar-header {
+      float: none;
+  }
+  .navbar-left,.navbar-right {
+      float: none !important;
+  }
+  .navbar-toggle {
+      display: block;
+  }
+  .navbar-collapse {
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .navbar-fixed-top {
+      top: 0;
+      border-width: 0 0 1px;
+  }
+  .navbar-collapse.collapse {
+      display: none!important;
+  }
+  .navbar-nav {
+      float: none!important;
+      margin-top: 7.5px;
+  }
+  .navbar-nav>li {
+      float: none;
+  }
+  .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+  }
+  .collapse.in{
+      display:block !important;
+  }
 }

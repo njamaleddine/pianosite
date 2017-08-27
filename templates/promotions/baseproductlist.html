@@ -2,7 +2,7 @@
 {% load product_tags %}
 
 {% block content %}
-<section class="well well-blank">
+<section class="well">
     <div class="sub-header">
         <h3>{{ promotion.name }}</h3>
     </div>
@@ -11,7 +11,11 @@
 
     <ul class="row">
         {% for product in products %}
-        <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3">{% render_product product %}</li>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 product-container">
+                <li class="panel panel-default">
+                    {% render_product product %}
+                </li>
+            </div>
         {% endfor %}
     </ul>
 

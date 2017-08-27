@@ -26,3 +26,19 @@
         }
     }
 }
+
+audio {
+    max-width: 320px;
+    width: 100%;
+}
+
+.alert .close {
+    // Fixes bug where trying to dismiss messages is impossible since the
+    // "x" (close) button is not clickable
+    z-index: 9999;
+    position: relative;
+}
+
+.btn-info {
+    color: #333 !important;
+}

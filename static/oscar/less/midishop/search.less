@@ -1,16 +1,16 @@
 #product-search-form {
   margin: 0px;
   padding: 0px;
-  width: 200px;
+  width: 300px;
 
-  @media(max-width: 767px) {
+  @media(max-width: 1200px) {
     width: 100%;
   }
 
-  &:hover {
-    width: 350px;
-    transition: all .55s ease;
-  }
+  // &:hover {
+  //   width: 350px;
+  //   transition: all .55s ease;
+  // }
 
   .box {
     margin: 0px;
@@ -68,23 +68,28 @@
     height: 40px;
     width: 40px;
     color: #333;
-    opacity: 0;
+    opacity: 1;
+    margin-left: -40px;
     font-size: 10pt;
 
-    -webkit-transition: all .55s ease;
-    -moz-transition: all .55s ease;
-    -ms-transition: all .55s ease;
-    -o-transition: all .55s ease;
-    transition: all .55s ease;
+    // -webkit-transition: all .55s ease;
+    // -moz-transition: all .55s ease;
+    // -ms-transition: all .55s ease;
+    // -o-transition: all .55s ease;
+    // transition: all .55s ease;
   }
 
   .container-4:hover button.icon, .container-4:active button.icon, .container-4:focus button.icon{
     outline: none;
     opacity: 1;
-    margin-left: -40px;
+    // margin-left: 40px;
   }
 
   .container-4:hover button.icon:hover{
     background: white;
   }
+}
+
+.search-outer-container {
+  padding: 0px 5px;
 }

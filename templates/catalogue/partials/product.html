@@ -5,12 +5,12 @@
 {% load staticfiles %}
 
 {% block product %}
-    <article class="product_pod">
+    <article class="product-card">
         {% block product_image %}
-            <div class="image_container">
+            <div class="album-image-container">
                 {% with image=product.primary_image %}
-                    {% thumbnail image.original "x155" upscale=False as thumb %}
-                    <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
+                    {% thumbnail image.original "440x400" upscale=False as thumb %}
+                    <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
                     {% endthumbnail %}
                 {% endwith %}
             </div>
@@ -29,16 +29,29 @@
         {% endblock %}
 
         {% block product_title %}
-            <h3><a href="{{ product.get_absolute_url }}" title="{{ product.get_title }}">{{ product.get_title|truncatewords:4 }}</a></h3>
-            <h3><a href="{{ product.get_absolute_url }}" title="{{ product.artist }}">{{ product.artist|truncatewords:4 }}</a></h3>
+            <h3 class="title"><a href="{{ product.get_absolute_url }}" title="{{ product.get_title }}">{{ product.get_title|truncatewords:4 }}</a></h3>
+            <h3 class="artist">{{ product.artist|truncatewords:4 }}</h3>
         {% endblock %}
 
         {% block product_price %}
-            <div class="product_price">
-                {% include "catalogue/partials/stock_record.html" %}
+            <div class="product-price col-md-12">
+                <div class="product-price-container">
+                    {% include "catalogue/partials/stock_record.html" %}
+                </div>
+                {% if product.sample_ogg or product.sample_mp3 %}
+                <div class="product_sample_audio">
+                    <audio controls>
+                        <source src={{ product.sample_ogg.url }} type="audio/ogg">
+                        <source src={{ product.sample_mp3.url }} type="audio/mp3">
+                        Your browser does not support the html5 audio tag and cannot play the sample.
+                    </audio>
+                </div>
+                {% endif %}
+                <div>
                 {% if not product.is_parent %}
                     {% include "catalogue/partials/add_to_basket_form_compact.html" %}
                 {% endif %}
+                </div>
             </div>
         {% endblock %}
     </article>

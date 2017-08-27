@@ -3,22 +3,17 @@
 {% load purchase_info_tags %}
 
 {% purchase_info_for_product request product as session %}
-{% if product.sample_ogg or product.sample_mp3 %}
-<div class="product_sample_audio">
-    <audio controls>
-        <source src={{ product.sample_ogg.url }} type="audio/ogg">
-        <source src={{ product.sample_mp3.url }} type="audio/mp3">
-        Your browser does not support the html5 audio tag and cannot play the sample.
-    </audio>
-</div>
-{% endif %}
+
 {% if session.availability.is_available_to_buy %}
     {% basket_form request product 'single' as basket_form %}
-    <form action="{% url 'basket:add' pk=product.pk %}" method="post">
+    <form action="{% url 'basket:add' pk=product.pk %}" method="post" class="add_to_basket_compact_form">
         {% csrf_token %}
         {{ basket_form.as_p }}
-        <button type="submit" class="btn btn-default btn-block" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to cart" %}</button>
+        <button type="submit" class="btn btn-primary btn-block" data-loading-text="{% trans 'Adding...' %}">
+            <i class="icon-shopping-cart"></i>
+            {% trans "Add to cart" %}
+        </button>
     </form>
 {% else %}
-    <span class="btn btn-default btn-block disabled">{% trans "Add to cart" %}</span>
+    <span class="btn btn-primary btn-block disabled">{% trans "Add to cart" %}</span>
 {% endif %}
