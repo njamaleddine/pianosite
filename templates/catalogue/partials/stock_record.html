@@ -4,17 +4,19 @@
 
 {% purchase_info_for_product request product as session %}
 
-{% if session.price.exists %}
-    {% if session.price.excl_tax == 0 %}
-        <span class="label label-info">{% trans "Free" %}</span>
-    {% elif session.price.is_tax_known %}
-        <span class="label label-success">{{ session.price.incl_tax|currency:session.price.currency }}</span>
+<div class="price-label-container">
+    {% if session.price.exists %}
+        {% if session.price.excl_tax == 0 %}
+            <span class="price_color">{% trans "Free" %}</span>
+        {% elif session.price.is_tax_known %}
+            <span class="price_color">{{ session.price.incl_tax|currency:session.price.currency }}</span>
+        {% else %}
+            <span class="price_color">{{ session.price.excl_tax|currency:session.price.currency }}</span>
+        {% endif %}
     {% else %}
-        <span class="label label-success">{{ session.price.excl_tax|currency:session.price.currency }}</span>
+        <span class="price_color">&nbsp;</span>
     {% endif %}
-{% else %}
-    <span class="price_color">&nbsp;</span>
-{% endif %}
+</div>
 {% if not session.availability.is_available_to_buy %}
     <span class="{{ session.availability.code }} availability">
         <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i>

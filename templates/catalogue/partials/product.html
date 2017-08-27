@@ -33,21 +33,20 @@
             <h3 class="artist">{{ product.artist|truncatewords:4 }}</h3>
         {% endblock %}
 
-        {% if product.sample_ogg or product.sample_mp3 %}
-        <div class="product_sample_audio col-md-12">
-            <audio controls>
-                <source src={{ product.sample_ogg.url }} type="audio/ogg">
-                <source src={{ product.sample_mp3.url }} type="audio/mp3">
-                Your browser does not support the html5 audio tag and cannot play the sample.
-            </audio>
-        </div>
-        {% endif %}
-
         {% block product_price %}
             <div class="product-price col-md-12">
                 <div class="product-price-container">
                     {% include "catalogue/partials/stock_record.html" %}
                 </div>
+                {% if product.sample_ogg or product.sample_mp3 %}
+                <div class="product_sample_audio">
+                    <audio controls>
+                        <source src={{ product.sample_ogg.url }} type="audio/ogg">
+                        <source src={{ product.sample_mp3.url }} type="audio/mp3">
+                        Your browser does not support the html5 audio tag and cannot play the sample.
+                    </audio>
+                </div>
+                {% endif %}
                 <div>
                 {% if not product.is_parent %}
                     {% include "catalogue/partials/add_to_basket_form_compact.html" %}

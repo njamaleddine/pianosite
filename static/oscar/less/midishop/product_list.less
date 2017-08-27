@@ -20,7 +20,7 @@ ul {
 // gutter width: 20px
 .product-container {
     .product-card {
-        height: 400px;
+        height: 425px;
         margin: 0;
         // margin: @line-height-computed 0;
         overflow: hidden;
@@ -28,14 +28,15 @@ ul {
         text-align: center;
 
         .album-image-container {
-            height: 200px;
+            height: 220px;
             overflow: hidden;
 
             a {
                 img {
                     // height: 200px;
                     // min-width: 300px;
-                    width: 100%;
+                    width: 300px;
+                    margin: -50px;
                 }
             }
         }
@@ -75,11 +76,6 @@ ul {
             bottom: 0;
             width: 100%;
             margin-bottom: 12px;
-
-            .label {
-                font-size: 1.2em;
-                line-height: 2.2em;
-            }
         }
 
         .product_sample_audio {
@@ -88,6 +84,14 @@ ul {
         audio {
             width: 100%;
         }
+    }
+}
+
+.price-label-container {
+    .price_color {
+        color: @brand-success !important;
+        font-size: 1.2em;
+        line-height: 2.2em;
     }
 }
 
