@@ -10479,9 +10479,9 @@ input[type="checkbox"]:disabled:checked:after,
   margin-bottom: 0;
   padding: 10px 15px;
 }
-@media (min-width: 768px) {
+@media (min-width: 1201px) {
   #top_page {
-    padding: 30px 80px;
+    padding: 30px;
   }
 }
 #top_page #login_link {
@@ -10520,7 +10520,7 @@ input[type="checkbox"]:disabled:checked:after,
 #top_page .basket-mini .btn-group {
   margin: 0px !important;
 }
-@media (max-width: 767px) {
+@media (max-width: 1200px) {
   #browse {
     margin: 7.5px 0px;
   }
@@ -10539,7 +10539,7 @@ input[type="checkbox"]:disabled:checked:after,
   margin: 0px;
   padding: 0px;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1201px) {
   .navbar-header {
     float: none;
   }
@@ -10581,7 +10581,7 @@ input[type="checkbox"]:disabled:checked:after,
   padding: 0px;
   width: 300px;
 }
-@media (max-width: 767px) {
+@media (max-width: 1200px) {
   #product-search-form {
     width: 100%;
   }
