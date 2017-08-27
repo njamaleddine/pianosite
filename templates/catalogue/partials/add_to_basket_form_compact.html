@@ -9,7 +9,10 @@
     <form action="{% url 'basket:add' pk=product.pk %}" method="post" class="add_to_basket_compact_form">
         {% csrf_token %}
         {{ basket_form.as_p }}
-        <button type="submit" class="btn btn-primary btn-block" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to cart" %}</button>
+        <button type="submit" class="btn btn-primary btn-block" data-loading-text="{% trans 'Adding...' %}">
+            <i class="icon-shopping-cart"></i>
+            {% trans "Add to cart" %}
+        </button>
     </form>
 {% else %}
     <span class="btn btn-primary btn-block disabled">{% trans "Add to cart" %}</span>

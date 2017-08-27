@@ -38,7 +38,7 @@
                 {% blocktrans with name=wishlist.name url=wishlist.get_absolute_url %}
                     <span class="pull-left">Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.</span>
                 {% endblocktrans %}
-                <button type="submit" class="btn btn-sm pull-right" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove" %}</button>
+                <button type="submit" class="btn btn-sm btn-default pull-right" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove" %}</button>
             </form>
         {% endfor %}
     {% endwith %}

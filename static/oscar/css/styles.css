@@ -10689,6 +10689,9 @@ audio {
   z-index: 9999;
   position: relative;
 }
+.btn-info {
+  color: #333 !important;
+}
 ol.row,
 ul.row {
   margin-left: 0;
