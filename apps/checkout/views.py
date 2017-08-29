@@ -129,15 +129,18 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
         # Create the charge on stripe
         try:
-            if customer and customer.can_charge():
-                customer.charge(
-                    amount=total.incl_tax,
-                    currency='usd',
-                    description=self.payment_description(
-                        order_number, total, customer.subscriber.email, **kwargs
-                    ),
-                    metadata=self.get_stripe_metadata(order_number, ctx['basket'])
-                )
+            if customer:
+                if customer.can_charge():
+                    customer.charge(
+                        amount=total.incl_tax,
+                        currency='usd',
+                        description=self.payment_description(
+                            order_number, total, customer.subscriber.email, **kwargs
+                        ),
+                        metadata=self.get_stripe_metadata(order_number, ctx['basket'])
+                    )
+                else:
+                    customer.update_card(bankcard.stripe_token)
             elif guest_email and bankcard and bankcard.stripe_token:
                 guest_customer = GuestStripeCustomer.create(email=guest_email)
                 guest_customer.add_card(
