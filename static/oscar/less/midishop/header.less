@@ -21,11 +21,18 @@
 }
 
 #top_page {
+    background-color: #f5f5f5;
+    margin-bottom: 0px;
+
     @media (min-width: 1201px) {
         padding: 30px;
     }
     #login_link {
         padding: 10px;
+    }
+
+    .nav .open > a, .nav .open > a:hover, .nav .open > a:focus{
+        background: @brand-primary;
     }
 
     .nav-link-container {
@@ -80,15 +87,21 @@
     .basket-mini .btn-group {
         margin: 0px !important;
     }
+
+    .container {
+        .navbar-collapse {
+            .collapsed-menu-group {
+                @media (min-width: 768px) {
+                    padding: 18px 0px;
+                }
+            }
+        }
+    }
 }
 
 #product-search-form {
     margin: 0px;
     padding: 0px;
-}
-
-.navbar {
-    // background-color: #90cafb;
 }
 
 @media (max-width: 1201px) {
