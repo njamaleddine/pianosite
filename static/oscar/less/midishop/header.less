@@ -31,7 +31,10 @@
         padding: 10px;
     }
 
-    .nav .open > a, .nav .open > a:hover, .nav .open > a:focus{
+    div > div.navbar-collapse.account-collapse.collapse > ul > li.nav-link-container.basket-link-container > div > span > a {
+        &:hover, &:focus {
+            background: @brand-primary;
+        }
         background: @brand-primary;
     }
 
