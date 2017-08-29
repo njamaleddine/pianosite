@@ -1,9 +1,4 @@
 .site-brand-name-link {
-    color: #333;
-    // border: 4px double #333;
-    font-weight: 300;
-    padding: 5px;
-    position: relative;  // This seems to cause an issue with this and the nav positioning
     text-decoration: none;
 
     &:visited {
@@ -13,7 +8,6 @@
     &:hover {
         text-decoration: none;
         color: lighten(#333, 15%);
-        // border: 4px double #88a;
         -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
         transition: border 200ms color 200ms, transform 200ms;
     }
@@ -21,16 +15,12 @@
     &:active {
         text-decoration: none;
         color: darken(#333, 15%);
-        // border: 4px double darken(#88a, 15%);
         -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
         transition: border 200ms color 200ms, transform 200ms;
     }
 }
 
 #top_page {
-    margin-bottom: 0;
-    padding: 10px 15px;
-
     @media (min-width: 1201px) {
         padding: 30px;
     }
@@ -44,6 +34,14 @@
 
     .basket-link-container {
         padding: 0px 10px 0px 5px;
+    }
+
+    .navbar-right {
+        padding: 18px 12px;
+
+        @media (min-width: 768px) {
+            padding: 18px 12px;
+        }
     }
 
     .nav-link-custom {
@@ -81,25 +79,6 @@
 
     .basket-mini .btn-group {
         margin: 0px !important;
-    }
-}
-
-#browse {
-    @media (max-width: 1200px) {
-        margin: 7.5px 0px;
-    }
-
-    .li > a {
-        padding: 6px;
-        font-family: inherit;
-        font-weight: 300;
-    }
-    li {
-        a {
-            padding: 6px;
-            font-family: inherit;
-            font-weight: 300;
-        }
     }
 }
 
@@ -146,5 +125,12 @@
   }
   .collapse.in{
       display:block !important;
+  }
+
+  .basket-mini {
+      display: none !important;
+  }
+  .btn-cart {
+      display: block !important;
   }
 }
