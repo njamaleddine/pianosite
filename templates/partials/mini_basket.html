@@ -3,7 +3,7 @@
 
 <div class="basket-mini pull-right hidden-xs">
     <span class="btn-group">
-        <a class="btn btn-default" href="{% url 'basket:summary' %}">
+        <a class="btn btn-primary" href="{% url 'basket:summary' %}">
             <i class="icon-shopping-cart"></i>
                 {% trans "Cart" %}
                 {% if not request.basket.is_empty %}
@@ -18,7 +18,7 @@
                     {% endif %}
                 {% endif %}
         </a>
-        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu pull-right">
