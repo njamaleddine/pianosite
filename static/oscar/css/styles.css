@@ -10454,10 +10454,6 @@ input[type="checkbox"]:disabled:checked:after,
   color: inherit;
 }
 .site-brand-name-link {
-  color: #333;
-  font-weight: 300;
-  padding: 5px;
-  position: relative;
   text-decoration: none;
 }
 .site-brand-name-link:visited {
@@ -10475,10 +10471,6 @@ input[type="checkbox"]:disabled:checked:after,
   -webkit-transition: border 200ms color 200ms, -webkit-transform 200ms;
   transition: border 200ms color 200ms, transform 200ms;
 }
-#top_page {
-  margin-bottom: 0;
-  padding: 10px 15px;
-}
 @media (min-width: 1201px) {
   #top_page {
     padding: 30px;
@@ -10492,6 +10484,14 @@ input[type="checkbox"]:disabled:checked:after,
 }
 #top_page .basket-link-container {
   padding: 0px 10px 0px 5px;
+}
+#top_page .navbar-right {
+  padding: 18px 12px;
+}
+@media (min-width: 768px) {
+  #top_page .navbar-right {
+    padding: 18px 12px;
+  }
 }
 #top_page .nav-link-custom {
   padding: 10px !important;
@@ -10519,21 +10519,6 @@ input[type="checkbox"]:disabled:checked:after,
 }
 #top_page .basket-mini .btn-group {
   margin: 0px !important;
-}
-@media (max-width: 1200px) {
-  #browse {
-    margin: 7.5px 0px;
-  }
-}
-#browse .li > a {
-  padding: 6px;
-  font-family: inherit;
-  font-weight: 300;
-}
-#browse li a {
-  padding: 6px;
-  font-family: inherit;
-  font-weight: 300;
 }
 #product-search-form {
   margin: 0px;
@@ -10575,6 +10560,12 @@ input[type="checkbox"]:disabled:checked:after,
   .collapse.in {
     display: block !important;
   }
+  .basket-mini {
+    display: none !important;
+  }
+  .btn-cart {
+    display: block !important;
+  }
 }
 #product-search-form {
   margin: 0px;
@@ -10604,11 +10595,11 @@ input[type="checkbox"]:disabled:checked:after,
   float: left;
   color: #333;
   padding-left: 15px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
   box-shadow: none;
-  padding: 20px;
+  padding: 21px;
   width: 100%;
 }
 #product-search-form .container-4 input#id_q::-webkit-input-placeholder {
