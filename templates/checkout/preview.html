@@ -12,7 +12,7 @@
             <strong>{{ amount }}</strong> will be debited from your bankcard.{% endblocktrans %}
         </p>
         <div class="alert-actions">
-            <a href="{% url 'checkout:payment-details' %}" class="btn btn-primary">{% trans "Change payment details" %}</a>
+            <a href="{% url 'checkout:payment-details' %}?update_card=true" class="btn btn-primary">{% trans "Change payment details" %}</a>
         </div>
     </div>
 </div>
