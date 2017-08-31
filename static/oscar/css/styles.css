@@ -10483,9 +10483,11 @@ input[type="checkbox"]:disabled:checked:after,
 #top_page #login_link {
   padding: 10px;
 }
-#top_page .nav .open > a,
-#top_page .nav .open > a:hover,
-#top_page .nav .open > a:focus {
+#top_page div > div.navbar-collapse.account-collapse.collapse > ul > li.nav-link-container.basket-link-container > div > span > a {
+  background: #2196f3;
+}
+#top_page div > div.navbar-collapse.account-collapse.collapse > ul > li.nav-link-container.basket-link-container > div > span > a:hover,
+#top_page div > div.navbar-collapse.account-collapse.collapse > ul > li.nav-link-container.basket-link-container > div > span > a:focus {
   background: #2196f3;
 }
 #top_page .nav-link-container {
@@ -10700,6 +10702,9 @@ audio {
 .alert-danger,
 .alert-error {
   background-color: #ffcdd2;
+}
+.alert-warning {
+  background-color: #ffcc80;
 }
 .alert-success {
   background-color: #c8e6c9;

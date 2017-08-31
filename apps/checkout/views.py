@@ -4,10 +4,11 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 from oscar.apps.checkout import views
+from oscar.apps.payment.exceptions import UnableToTakePayment
 from djstripe.models import Customer as DJStripeCustomer
 
 from apps.catalogue.models import MidiDownloadURL
@@ -41,19 +42,12 @@ class PaymentDetailsView(views.PaymentDetailsView):
         # Skip if the user is authenticated and has a valid stripe credit card
         ctx = self.get_context_data()
         customer = ctx['customer']
-        if customer and customer.can_charge():
+        if customer and customer.can_charge() and not request.GET.get('update_card'):
             # Don't show the bank card form if the customer is authenticated
             return self.render_preview(request, bankcard_form=None)
         return super(PaymentDetailsView, self).get(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        # Override so we can validate the bankcard submission.
-        # If it is valid, we render the preview screen with the forms hidden
-        # within it.  When the preview is submitted, we pick up the 'action'
-        # parameters and actually place the order.
-        if request.POST.get('action', '') == 'place_order':
-            return self.do_place_order(request)
-
+    def handle_payment_details_submission(self, request):
         bankcard_form = forms.BankcardForm(request.POST)
         ctx = self.get_context_data(bankcard_form=bankcard_form)
 
@@ -62,12 +56,15 @@ class PaymentDetailsView(views.PaymentDetailsView):
             self.preview = False
             return self.render_to_response(ctx)
 
-        # Render preview with bankcard details hidden
+        if request.user.is_authenticated():
+            try:
+                ctx['customer'].update_card(bankcard_form.bankcard.stripe_token)
+            except Exception as e:
+                messages.error(request, _(str(e._message)))
+            return HttpResponseRedirect(reverse('checkout:payment-details'))
         return self.render_preview(request, bankcard_form=bankcard_form)
 
-    def do_place_order(self, request):
-        # Helper method to check that the hidden forms wasn't tinkered
-        # with.
+    def handle_place_order_submission(self, request):
         ctx = self.get_context_data()
         customer = ctx['customer']
 
@@ -141,6 +138,14 @@ class PaymentDetailsView(views.PaymentDetailsView):
                     )
                 else:
                     customer.update_card(bankcard.stripe_token)
+                    customer.charge(
+                        amount=total.incl_tax,
+                        currency='usd',
+                        description=self.payment_description(
+                            order_number, total, customer.subscriber.email, **kwargs
+                        ),
+                        metadata=self.get_stripe_metadata(order_number, ctx['basket'])
+                    )
             elif guest_email and bankcard and bankcard.stripe_token:
                 guest_customer = GuestStripeCustomer.create(email=guest_email)
                 guest_customer.add_card(
@@ -155,10 +160,15 @@ class PaymentDetailsView(views.PaymentDetailsView):
                     metadata=self.get_stripe_metadata(order_number, ctx['basket'])
                 )
             else:
-                raise ValidationError('Unable to make charge, credit card is invalid')
+                raise UnableToTakePayment(
+                    _(
+                        'Unable to charge card, please check to make sure '
+                        'your card details are correct and/or not expired or '
+                        'try another card.'
+                    )
+                )
         except Exception as e:
-            # Some invalid card error here
-            raise ValidationError(str(e))
+            raise UnableToTakePayment(_(str(e._message)))
         self.add_payment_event('charge-created', total.incl_tax)
 
     def create_midi_download_urls(self, user, basket):
