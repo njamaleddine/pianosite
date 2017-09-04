@@ -108,7 +108,11 @@
                         </ul>
                     </li>
                 {% else %}
-                    <li><a id="login_link" class="btn btn-default" href="{% url 'customer:login' %}">{% trans "Login / Register" %}</a></li>
+                    <li class="nav-link-container">
+                        <a id="login_link" class="btn btn-default" href="{% url 'customer:login' %}">
+                            {% trans "Login / Register" %}
+                        </a>
+                    </li>
                 {% endif %}
                 <li class="nav-link-container basket-link-container">
                     {# Mini-basket wrapped in a block so some templates can now display it #}
