@@ -28,8 +28,8 @@ workon $APP_NAME
 mkdir ./tmp && cd tmp/
 wget http://www.musescore.org/download/fluid-soundfont.tar.gz
 tar xopf fluid-soundfont.tar.gz
+mv FluidR3\ GM2-2.SF2 ../apps/utility/fluidr3_gm2-2.sf2
 cd ..
-mv FluidR3\ GM2-2.SF2 apps/utility/fluidr3_gm2-2.sf2
 
 # create postgresql database
 createdb $APP_NAME
