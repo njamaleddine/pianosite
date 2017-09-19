@@ -20,3 +20,4 @@ solr-4.10.2/*
 node_modules/*
 celerybeat-schedule
 celerybeat.pid
+.private/*

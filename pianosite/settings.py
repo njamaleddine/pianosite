@@ -20,6 +20,7 @@ from django.utils.translation import ugettext_lazy as _
 from oscar import get_core_apps
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
 from oscar.defaults import *  # noqa
+from pianosite import __version__
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -236,6 +237,7 @@ MIDISHOP_SOUNDFONT_PATH = env(
     'MIDISHOP_DEFAULT_SOUNDFONT_PATH',
     default=append_to_base_dir('apps/utility/fluidr3_gm2-2.sf2')
 )
+MIDISHOP_ENVIRONMENT = env('MIDISHOP_ENVIRONMENT', default='development')
 
 # Email
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", None)
@@ -448,6 +450,21 @@ LANGUAGES = (
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_API_VERSION = os.environ.get('STRIPE_API_VERSION', '2012-11-07')
+
+# Sentry
+# ------------------------------------------------------------------------------
+SENTRY_DSN = env('SENTRY_DSN', default=None)
+if SENTRY_DSN:
+    INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
+    RAVEN_CONFIG = {
+        'dsn': SENTRY_DSN,
+        'environment': MIDISHOP_ENVIRONMENT,
+        'release': __version__,
+    }
+
+    MIDDLEWARE_CLASSES += (
+        'apps.utility.middleware.GroupDisallowedHostExceptionMiddleware',
+    )
 
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
