@@ -51,6 +51,7 @@ sudo apt-get update && apt-get upgrade && apt-get install -y \
  qt4-dev-tools
 
 # install global python requirements
+sudo pip3 install --upgrade pip
 sudo pip3 install virtualenvwrapper
 
 # Activate Virtual Environment Requirements
@@ -60,14 +61,14 @@ mkvirtualenv --python=$(which python3) $APP_NAME
 workon $APP_NAME
 
 # download and setup solr
-./solr-setup.sh
+./bin/solr-setup.sh
 
 # download and setup soundfont
 mkdir ./tmp && cd tmp/
 wget http://www.musescore.org/download/fluid-soundfont.tar.gz
 tar xopf fluid-soundfont.tar.gz
-mv FluidR3\ GM2-2.SF2 apps/utility/fluidr3_gm2-2.sf2
 cd ..
+mv FluidR3\ GM2-2.SF2 apps/utility/fluidr3_gm2-2.sf2
 
 # create the application db
 createdb $APP_NAME
