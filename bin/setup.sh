@@ -56,6 +56,7 @@ sudo pip3 install virtualenvwrapper
 
 # Activate Virtual Environment Requirements
 # if virtualenvwrapper.sh is in your PATH (i.e. installed with pip)
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 source `which virtualenvwrapper.sh`
 mkvirtualenv --python=$(which python3) $APP_NAME
 workon $APP_NAME
