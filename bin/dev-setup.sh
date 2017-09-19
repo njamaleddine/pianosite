@@ -21,8 +21,6 @@ mkvirtualenv --python=$(which python3) $APP_NAME
 workon $APP_NAME
 
 # get and setup solr
-wget http://archive.apache.org/dist/lucene/solr/4.7.2/solr-4.7.2.tgz
-tar xzf solr-4.7.2.tgz
 ./solr-setup.sh
 
 # download and setup soundfont
