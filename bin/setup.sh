@@ -80,6 +80,10 @@ pip install -r requirements.txt
 # install node packages
 npm install
 
+# setup .env file
+# note, you'll still need to populate some of these variables (see blank ones)
+./bin/setup_env.sh
+
 # run db migrations
 python manage.py migrate
 
@@ -91,9 +95,6 @@ cp static/oscar/img/placeholder.png > pianosite/public/media/
 
 # collect static files
 python manage.py collectstatic
-
-# copy over sample env file
-cp sample.env > .env
 
 # TODO: copy over nginx config
 # TODO: setup upstart script
