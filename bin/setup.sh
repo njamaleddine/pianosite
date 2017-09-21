@@ -72,7 +72,7 @@ sudo -u postgres createdb $APP_NAME
 # download and setup soundfont
 mkdir ./tmp && cd tmp/
 wget https://github.com/musescore/MuseScore/raw/master/share/sound/FluidR3Mono_GM.sf3
-mv FluidR3Mono_GM.sf3 ../apps/utility/fluidr3_gm2-2.sf2
+mv FluidR3Mono_GM.sf3 apps/utility/fluidr3_gm2-2.sf2
 cd ..
 
 # install all production requirements
