@@ -64,15 +64,16 @@ workon $APP_NAME
 # download and setup solr
 ./bin/solr-setup.sh
 
+# postgres setup (requires manual input)
+export POSTGRES_PASSWORD=$(openssl rand -hex 64)
+sudo -u postgres createuser --interactive
+sudo -u postgres createdb $APP_NAME
+
 # download and setup soundfont
 mkdir ./tmp && cd tmp/
-wget http://www.musescore.org/download/fluid-soundfont.tar.gz
-tar xopf fluid-soundfont.tar.gz
-mv FluidR3\ GM2-2.SF2 ../apps/utility/fluidr3_gm2-2.sf2
+wget https://github.com/musescore/MuseScore/raw/master/share/sound/FluidR3Mono_GM.sf3
+mv FluidR3Mono_GM.sf3 ../apps/utility/fluidr3_gm2-2.sf2
 cd ..
-
-# create the application db
-createdb $APP_NAME
 
 # install all production requirements
 pip install -r requirements.txt
