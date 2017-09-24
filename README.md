@@ -23,7 +23,7 @@ Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 
 4. Run the project setup:
 ```
-./bin/dev-setup.sh
+./bin/dev_setup.sh
 ```
 
 * Dependencies installed in the project setup: 
@@ -59,5 +59,4 @@ Production environment run server:
 
 ## Test if Fluidsynth is working correctly with the soundfont
 1. Enter this into the bash terminal:
-        `fluidsynth -T oga -F gerudo_valley.mp3 -ni fluidr3_gm2-2.sf2 gerudo_valley.mid`
-
+        `fluidsynth -T oga -F test.mp3 -ni fluidr3_gm2-2.sf2 test.mid`
