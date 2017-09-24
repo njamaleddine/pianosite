@@ -64,7 +64,7 @@ mkvirtualenv --python=$(which python3) $APP_NAME
 workon $APP_NAME
 
 # download and setup solr
-./bin/solr-setup.sh
+./bin/solr_setup.sh
 
 # postgres setup (requires manual input)
 export POSTGRES_PASSWORD=$(openssl rand -hex 64)
@@ -92,6 +92,9 @@ python manage.py migrate
 
 # populate countries
 python manage.py oscar_populate_countries
+
+# setup default store data
+python manage.py setup_store
 
 # replace the existing placeholder for media
 cp static/oscar/img/placeholder.png pianosite/public/media/placeholder.png

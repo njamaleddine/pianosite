@@ -23,7 +23,7 @@ mkvirtualenv --python=$(which python3) $APP_NAME
 workon $APP_NAME
 
 # get and setup solr
-./bin/solr-setup.sh
+./bin/solr_setup.sh
 
 # download and setup soundfont
 mkdir ./tmp && cd tmp/

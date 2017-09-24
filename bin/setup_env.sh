@@ -1,3 +1,4 @@
+#!/bin/bash
 # First time setup for .env file
 if [ -f /.env ]; then
     sudo echo "'.env' file already exists, exiting environment variable file setup..."
@@ -10,7 +11,7 @@ sudo echo 'APP_NAME=""' >> ${ENV_FILE}
 sudo echo 'CONTACT_EMAIL=""' >> ${ENV_FILE}
 sudo echo 'DATABASE_URL=""' >> ${ENV_FILE}
 sudo echo 'DEBUG=False' >> ${ENV_FILE}
-sudo echo 'DJANGO_SECRET_KEY="$(openssl rand -hex 64)"' >> ${ENV_FILE}
+sudo echo 'DJANGO_SECRET_KEY="'$(openssl rand -hex 64)'"' >> ${ENV_FILE}
 sudo echo 'EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"' >> ${ENV_FILE}
 sudo echo 'EMAIL_HOST="email-smtp.us-east-1.amazonaws.com"' >> ${ENV_FILE}
 sudo echo 'EMAIL_HOST_USER=""' >> ${ENV_FILE}

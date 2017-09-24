@@ -1,3 +1,4 @@
+#!/bin/bash
 # Apache Solr Setup
 APP_NAME="pianosite"
 SOLR_VERSION=4.10.2
@@ -10,6 +11,3 @@ cp build
 workon $APP_NAME
 python manage.py build_solr_schema > solr-$SOLR_VERSION/example/solr/collection1/schema.xml
 cd solr-$SOLR_VERSION/example
-
-# solr will start when invoked with honcho (Procfile)
-# java -jar start.jar

@@ -13,7 +13,5 @@
   "author": "",
   "license": "ISC",
   "homepage": "https://bitbucket.org/njamaleddine/pianosite#readme",
-  "dependencies": {
-    "materialize-css": "^0.99.0"
-  }
+  "dependencies": {}
 }
