@@ -7,6 +7,7 @@ APP_NAME="pianosite"
 sudo apt-get update && apt-get upgrade && apt-get install -y \
  autoconf \
  build-essential \
+ default-jre \
  fluidsynth \
  git \
  idle-python2.7 \
@@ -48,7 +49,8 @@ sudo apt-get update && apt-get upgrade && apt-get install -y \
  python3-dev \
  python3-pip \
  qt4-designer \
- qt4-dev-tools
+ qt4-dev-tools \
+ redis-server
 
 # install global python requirements
 sudo pip3 install --upgrade pip
@@ -92,7 +94,7 @@ python manage.py migrate
 python manage.py oscar_populate_countries
 
 # replace the existing placeholder for media
-cp static/oscar/img/placeholder.png > pianosite/public/media/
+cp static/oscar/img/placeholder.png pianosite/public/media/placeholder.png
 
 # collect static files
 python manage.py collectstatic
