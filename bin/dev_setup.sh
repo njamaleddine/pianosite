@@ -3,13 +3,7 @@
 # Assumes the OS is: macOS Sierra
 APP_NAME="pianosite"
 
-brew install git
-brew install python3
-brew install postgres
-brew install node
-brew install fluid-synth --with-libsndfile
-brew install ffmpeg
-npm install -g less
+./mac_os/install_packages.sh
 
 # install global python requirements
 sudo pip3 install --upgrade pip
