@@ -4,14 +4,15 @@
 APP_NAME="pianosite"
 
 # Update and install all packages
-./ubuntu/install_packages.sh
+./bin/ubuntu/install_packages.sh
 
 # install global python requirements
 sudo pip3 install --upgrade pip
 sudo pip3 install virtualenvwrapper
 
 # Add virtualenvwrapper to path
-cat ./ubuntu/bash_profile >> ~/.bash_profile
+cat ./bin/ubuntu/.bash_profile >> ~/.bash_profile
+source `which virtualenvwrapper.sh`
 # Setup virtual environment
 mkvirtualenv --python=$(which python3) $APP_NAME
 workon $APP_NAME

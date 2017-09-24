@@ -3,7 +3,7 @@
 # Assumes the OS is: macOS Sierra
 APP_NAME="pianosite"
 
-./mac_os/install_packages.sh
+./bin/mac_os/install_packages.sh
 
 # install global python requirements
 sudo pip3 install --upgrade pip

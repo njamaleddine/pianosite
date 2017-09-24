@@ -3,6 +3,8 @@
 APP_NAME="pianosite"
 SOLR_VERSION=4.10.2
 
+source `which virtualenvwrapper.sh`
+
 wget http://archive.apache.org/dist/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz
 tar xzf solr-$SOLR_VERSION.tgz
 cd solr-$SOLR_VERSION/example/solr/collection1
