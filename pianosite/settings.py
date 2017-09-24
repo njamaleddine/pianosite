@@ -204,7 +204,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
     append_to_base_dir('static/'),
-    append_to_base_dir('node_modules/'),
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',

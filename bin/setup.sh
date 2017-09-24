@@ -102,5 +102,11 @@ cp static/oscar/img/placeholder.png pianosite/public/media/placeholder.png
 # collect static files
 python manage.py collectstatic
 
-# TODO: copy over nginx config
+# copy nginx config
+sudo mkdir /etc/nginx/sites-available/$APP_NAME
+sudo cp ./nginx.conf /etc/nginx/sites-available/pianosite
+sudo ln -s /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo service nginx restart
+
 # TODO: setup upstart script
