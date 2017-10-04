@@ -41,6 +41,9 @@ python manage.py migrate
 # populate countries
 python manage.py oscar_populate_countries
 
+# setup default store data
+python manage.py setup_store
+
 # replace the existing placeholder for media
 cp static/oscar/img/placeholder.png > pianosite/public/media/
 
