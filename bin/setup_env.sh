@@ -18,6 +18,7 @@ sudo echo 'EMAIL_HOST_USER=""' >> ${ENV_FILE}
 sudo echo 'EMAIL_HOST_PASSWORD=""' >> ${ENV_FILE}
 sudo echo 'EMAIL_PORT=""' >> ${ENV_FILE}
 sudo echo 'MEDIA_URL=""' >> ${ENV_FILE}
+sudo echo 'OSCAR_GOOGLE_ANALYTICS_ID=""' >> ${ENV_FILE}
 sudo echo 'PORT=8000' >> ${ENV_FILE}
 sudo echo 'SENTRY_DSN=""' >> ${ENV_FILE}
 sudo echo 'STRIPE_PUBLIC_KEY=""' >> ${ENV_FILE}
