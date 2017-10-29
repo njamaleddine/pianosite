@@ -11,7 +11,7 @@ Faker==0.7.18
 pytest-django==3.1.2
 pytest-pythonpath==0.7.1
 pytest-cov==2.5.1
-flake8==3.4.1
+flake8==3.5.0
 
 # Versioning
 # -------------------------------------
