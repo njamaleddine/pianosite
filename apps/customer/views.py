@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
+import logging
 
+import stripe
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
-
+from djstripe.models import Customer
+from djstripe.settings import subscriber_request_callback
 from djstripe.views import ChangeCardView as StripeChangeCardView
 from djstripe.views import LoginRequiredMixin, PaymentsContextMixin, DetailView
-from djstripe.models import Customer
-
-from djstripe.settings import subscriber_request_callback
-import stripe
 
 from apps.customer.utils import delete_all_stripe_cards
+
+
+logger = logging.getLogger(__name__)
 
 
 class ChangeCardView(StripeChangeCardView):
@@ -23,6 +26,34 @@ class ChangeCardView(StripeChangeCardView):
         context = super(ChangeCardView, self).get_context_data(**kwargs)
         context['active_tab'] = 'creditcards'
         return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        TODO: Raise a validation error when a stripe token isn't passed.
+            Should be resolved when a form is used.
+        """
+        customer = self.get_object()
+        try:
+            send_invoice = customer.card_fingerprint == ""
+            customer.update_card(
+                request.POST.get("stripe_token")
+            )
+            if send_invoice:
+                customer.send_invoice()
+            customer.retry_unpaid_invoices()
+        except stripe.StripeError as exc:
+            # messages.info(request, "Stripe Error")
+            return render(
+                request,
+                self.template_name,
+                {
+                    "STRIPE_PUBLIC_KEY": settings.STRIPE_PUBLIC_KEY,
+                    "customer": self.get_object(),
+                    "stripe_error": str(exc._message)
+                }
+            )
+        messages.info(request, "Your card is now updated.")
+        return redirect(self.get_post_success_url())
 
     def get_post_success_url(self):
         """ Makes it easier to do custom dj-stripe integrations. """
