@@ -10676,6 +10676,14 @@ input[type="checkbox"]:disabled:checked:after,
 #default .page .page_inner {
   box-shadow: none;
 }
+@media (max-width: 768px) {
+  #default .page .page_inner {
+    padding: 0px;
+  }
+}
+#default .page .page_inner .content #promotions .well .row {
+  margin-left: -15px !important;
+}
 #default .side_categories {
   border: 1px solid #e3e3e3;
   box-shadow: 0 0 0 !important;
