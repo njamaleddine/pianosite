@@ -95,6 +95,7 @@ class DeleteCardView(LoginRequiredMixin, PaymentsContextMixin, DetailView):
                 request,
                 self.template_name,
                 {
+                    "STRIPE_PUBLIC_KEY": settings.STRIPE_PUBLIC_KEY,
                     "customer": self.get_object(),
                     "stripe_error": str(exc)
                 }

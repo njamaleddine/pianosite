@@ -24,33 +24,57 @@
 {% block column_left %}
     {% category_tree as tree_categories %}
     {% if tree_categories %}
-        <h4>{% trans "Show results for" %}</h4>
-        <div class="side_categories">
-            <ul class="nav nav-list">
-                {% for tree_category, info in tree_categories %}
-                    <li>
-                    {% if tree_category.pk == category.pk %}
-                        <strong>{{ tree_category.name }}</strong>
-                    {% else %}
-                        <a href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                    {% endif %}
+        <div class="panel-group" id="product-categories-list" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="search-facet-heading">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#product-categories-list" href="#collapseProductCategories" aria-expanded="true" aria-controls="collapseProductCategories">
+                  {% trans "Show results for" %}
+                </a>
+              </h4>
+            </div>
+            <div id="collapseProductCategories" class="panel-collapse collapse in search-panel-collapse" role="tabpanel" aria-labelledby="search-facet-heading">
+              <div class="side_categories list-group">
+                <ul class="nav nav-list">
+                    {% for tree_category, info in tree_categories %}
+                        <li>
+                        {% if tree_category.pk == category.pk %}
+                            <strong>{{ tree_category.name }}</strong>
+                        {% else %}
+                            <a href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                        {% endif %}
 
-                    {% if info.has_children %}<ul>{% else %}</li>{% endif %}
-                    {% for n in info.num_to_close %}
-                        </ul></li>
+                        {% if info.has_children %}<ul>{% else %}</li>{% endif %}
+                        {% for n in info.num_to_close %}
+                            </ul></li>
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-            </ul>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
     {% endif %}
     {% if has_facets %}
-        <h4>{% trans "Refine by" %}</h4>
-        <div class="side_categories">
-            {% for field, data in facet_data.items %}
-                {% if data.results %}
-                    {% include 'search/partials/facet.html' with name=data.name items=data.results %}
-                {% endif %}
-            {% endfor %}
+        <div class="panel-group search-panel-group" id="search-facets" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="search-facet-heading">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#search-facets" href="#collapseSearchFilters" aria-expanded="true" aria-controls="collapseSearchFilters">
+                  {% trans "Refine your search" %}
+                </a>
+              </h4>
+            </div>
+            <div id="collapseSearchFilters" class="panel-collapse collapse in search-panel-collapse" role="tabpanel" aria-labelledby="search-facet-heading">
+              <div class="side_categories list-group">
+                {% for field, data in facet_data.items %}
+                    {% if data.results %}
+                        {% include 'search/partials/facet.html' with name=data.name items=data.results %}
+                    {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
         </div>
     {% endif %}
 {% endblock %}
