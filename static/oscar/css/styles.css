@@ -10721,6 +10721,14 @@ audio {
   border-color: #eceff1;
   background-color: #eceff1;
 }
+.product-search-panel-arrow {
+  float: right;
+}
+@media (min-width: 769px) {
+  .product-search-panel-arrow {
+    display: none;
+  }
+}
 ol.row,
 ul.row {
   margin-left: 0;
