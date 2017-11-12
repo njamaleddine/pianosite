@@ -7,8 +7,8 @@ APP_NAME="pianosite"
 ./bin/ubuntu/install_packages.sh
 
 # install global python requirements
-sudo pip3 install --upgrade pip
-sudo pip3 install virtualenvwrapper
+sudo pip install --upgrade pip
+sudo pip install virtualenvwrapper
 
 # Add virtualenvwrapper to path
 cat ./bin/ubuntu/.bash_profile >> ~/.bash_profile
