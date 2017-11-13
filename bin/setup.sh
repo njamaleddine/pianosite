@@ -21,9 +21,9 @@ workon $APP_NAME
 ./bin/solr_setup.sh
 
 # postgres setup (requires manual input)
-export POSTGRES_PASSWORD=$(openssl rand -hex 64)
-sudo -u postgres createuser --interactive
-sudo -u postgres createdb $APP_NAME
+# export POSTGRES_PASSWORD=$(openssl rand -hex 64)
+# sudo -u postgres createuser --interactive
+# sudo -u postgres createdb $APP_NAME
 
 # download and setup soundfont
 mkdir ./tmp

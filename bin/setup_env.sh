@@ -5,7 +5,7 @@ if [ -f /.env ]; then
 fi
 
 ENV_FILE=".env"
-touch ENV_FILE
+touch $ENV_FILE
 sudo echo 'ALLOWED_HOSTS=""' > ${ENV_FILE}
 sudo echo 'APP_NAME=""' >> ${ENV_FILE}
 sudo echo 'CONTACT_EMAIL=""' >> ${ENV_FILE}
@@ -16,7 +16,7 @@ sudo echo 'EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"' >> ${ENV
 sudo echo 'EMAIL_HOST="email-smtp.us-east-1.amazonaws.com"' >> ${ENV_FILE}
 sudo echo 'EMAIL_HOST_USER=""' >> ${ENV_FILE}
 sudo echo 'EMAIL_HOST_PASSWORD=""' >> ${ENV_FILE}
-sudo echo 'EMAIL_PORT=""' >> ${ENV_FILE}
+sudo echo 'EMAIL_PORT=587' >> ${ENV_FILE}
 sudo echo 'MEDIA_URL=""' >> ${ENV_FILE}
 sudo echo 'OSCAR_GOOGLE_ANALYTICS_ID=""' >> ${ENV_FILE}
 sudo echo 'PORT=8000' >> ${ENV_FILE}
