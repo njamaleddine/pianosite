@@ -15,6 +15,7 @@ specs.md
 audio_dump/*
 *.sf2
 pianosite/public/media/*
+pianosite/public/static/*
 solr-4.10.2/*
 .vscode/*
 node_modules/*
