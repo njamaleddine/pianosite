@@ -11,7 +11,4 @@ python manage.py migrate
 python manage.py collectstatic
 
 # restart systemd application services
-sudo systemctl restart pianosite_worker
-sudo systemctl restart pianosite_scheduler
-sudo systemctl restart pianosite_search
-sudo systemctl restart pianosite_web
+./bin/restart.sh
