@@ -1,6 +1,6 @@
 #!/bin/bash
 # First time setup for .env file
-if [ -f /.env ]; then
+if [ -f ".env" ]; then
     sudo echo "'.env' file already exists, exiting environment variable file setup..."
 fi
 

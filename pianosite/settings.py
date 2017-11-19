@@ -38,8 +38,10 @@ def append_to_base_dir(path):
 
 
 # Project specific information
-SITE_NAME = 'Midi Shop'
-SITE_ID = 1  # Necessary for Oscar
+# Django Sites Framework
+SITE_NAME = env('SITE_NAME', default='Midi Shop')
+SITE_DOMAIN = env('SITE_DOMAIN', default='midisonline.com')
+SITE_ID = env.int('SITE_ID', default=1)  # Necessary for Oscar
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/

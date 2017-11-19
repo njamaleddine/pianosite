@@ -1,0 +1,17 @@
+[Unit]
+Description=Pianosite Queue Monitor (Celery Flower)
+Requires=pianosite_worker.service pianosite_scheduler.service
+
+[Service]
+WorkingDirectory=/home/ubuntu/pianosite
+Type=forking
+KillMode=process
+Restart=always
+User=ubuntu
+Group=ubuntu
+Environment=VIRTUAL_ENV=/home/ubuntu/.virtualenvs/pianosite
+Environment=PATH=/home/ubuntu/.virtualenvs/pianosite/bin:$PATH
+ExecStart=/home/ubuntu/.virtualenvs/pianosite/bin/flower -A pianosite --port=5555
+
+[Install]
+WantedBy=multi-user.target

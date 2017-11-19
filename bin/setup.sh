@@ -12,10 +12,17 @@ sudo pip install virtualenvwrapper
 
 # Add virtualenvwrapper to path
 cat ./bin/ubuntu/.bash_profile >> ~/.bash_profile
-source `which virtualenvwrapper.sh`
+source ~/.bash_profile
+
 # Setup virtual environment
 mkvirtualenv --python=$(which python3) $APP_NAME
 workon $APP_NAME
+
+# install all production requirements
+pip install -r requirements.txt
+
+# install node packages
+npm install
 
 # download and setup solr
 ./bin/solr_setup.sh
@@ -26,15 +33,10 @@ workon $APP_NAME
 # sudo -u postgres createdb $APP_NAME
 
 # download and setup soundfont
-mkdir ./tmp
+mkdir ./tmp && cd ./tmp
 wget https://github.com/musescore/MuseScore/raw/master/share/sound/FluidR3Mono_GM.sf3
+cd ..
 mv ./tmp/FluidR3Mono_GM.sf3 apps/utility/fluidr3_gm2-2.sf2
-
-# install all production requirements
-pip install -r requirements.txt
-
-# install node packages
-npm install
 
 # setup .env file
 # note, you'll still need to populate some of these variables (see blank ones)
@@ -56,10 +58,25 @@ cp static/oscar/img/placeholder.png pianosite/public/media/placeholder.png
 python manage.py collectstatic
 
 # copy nginx config
-sudo mkdir /etc/nginx/sites-available/$APP_NAME
-sudo cp ./nginx.conf /etc/nginx/sites-available/pianosite
+sudo rm /etc/nginx/sites-enabled/default
+sudo cp ./nginx.conf /etc/nginx/sites-available/$APP_NAME
 sudo ln -s /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo service nginx restart
 
-# TODO: setup upstart script
+# copy over and start systemd script
+sudo cp ./bin/ubuntu/pianosite_worker.service /etc/systemd/system/pianosite_worker.service
+sudo cp ./bin/ubuntu/pianosite_scheduler.service /etc/systemd/system/pianosite_scheduler.service
+sudo cp ./bin/ubuntu/pianosite_search.service /etc/systemd/system/pianosite_search.service
+sudo cp ./bin/ubuntu/pianosite_web.service /etc/systemd/system/pianosite_web.service
+sudo systemctl daemon-reload
+
+sudo systemctl enable pianosite_worker
+sudo systemctl enable pianosite_scheduler
+sudo systemctl enable pianosite_search
+sudo systemctl enable pianosite_web
+
+sudo systemctl start pianosite_worker
+sudo systemctl start pianosite_scheduler
+sudo systemctl start pianosite_search
+sudo systemctl start pianosite_web

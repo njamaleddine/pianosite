@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from django.core.management.base import BaseCommand
 
 from apps.catalogue.models import Category
@@ -15,12 +17,19 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Setting up store data...'))
 
+        site, _ = self.setup_site()
         self.create_product_classes()
         self.create_categories()
         self.create_partners()
         self.create_automatic_product_lists()
 
         self.stdout.write(self.style.SUCCESS('Store setup complete'))
+
+    def setup_site(self):
+        return Site.objects.update_or_create(
+            id=settings.SITE_ID,
+            defaults={'domain': settings.SITE_DOMAIN, 'name': settings.SITE_NAME}
+        )
 
     def create_product_classes(self):
         product_class, created = ProductClass.objects.get_or_create(
