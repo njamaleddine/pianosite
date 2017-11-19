@@ -65,10 +65,10 @@ sudo nginx -t
 sudo service nginx restart
 
 # copy over and start systemd script
-sudo cp ./bin/ubuntu/pianosite_worker.service /etc/systemd/system/pianosite_worker.service
-sudo cp ./bin/ubuntu/pianosite_scheduler.service /etc/systemd/system/pianosite_scheduler.service
-sudo cp ./bin/ubuntu/pianosite_search.service /etc/systemd/system/pianosite_search.service
-sudo cp ./bin/ubuntu/pianosite_web.service /etc/systemd/system/pianosite_web.service
+sudo cp ./bin/ubuntu/services/pianosite_worker.service /etc/systemd/system/pianosite_worker.service
+sudo cp ./bin/ubuntu/services/pianosite_scheduler.service /etc/systemd/system/pianosite_scheduler.service
+sudo cp ./bin/ubuntu/services/pianosite_search.service /etc/systemd/system/pianosite_search.service
+sudo cp ./bin/ubuntu/services/pianosite_web.service /etc/systemd/system/pianosite_web.service
 sudo systemctl daemon-reload
 
 sudo systemctl enable pianosite_worker

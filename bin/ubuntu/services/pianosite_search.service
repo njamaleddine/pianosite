@@ -8,7 +8,7 @@ KillMode=process
 Restart=always
 User=ubuntu
 Group=ubuntu
-ExecStart=/bin/bash -c '/home/ubuntu/pianosite/solr-4.10.2/example/ && java -jar start.jar'
+ExecStart=/bin/bash -c 'cd /home/ubuntu/pianosite/solr-4.10.2/example/ && java -jar start.jar'
 
 [Install]
 WantedBy=multi-user.target
