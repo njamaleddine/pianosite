@@ -10615,7 +10615,8 @@ input[type="checkbox"]:disabled:checked:after,
   -moz-border-radius: 3px;
   border-radius: 3px;
   box-shadow: none;
-  padding: 21px;
+  padding-left: 20px;
+  height: 43px;
   width: 100%;
 }
 #product-search-form .container-4 input#id_q::-webkit-input-placeholder {
