@@ -10689,6 +10689,7 @@ input[type="checkbox"]:disabled:checked:after,
   border: 1px solid #e3e3e3;
   box-shadow: 0 0 0 !important;
   border-radius: 2px;
+  margin-bottom: 0px;
 }
 #default .side_categories .nav > li {
   padding: 0px;
@@ -10728,6 +10729,16 @@ audio {
 @media (min-width: 769px) {
   .product-search-panel-arrow {
     display: none;
+  }
+}
+@media (max-width: 768px) {
+  .breadcrumb {
+    margin: 15px 0px;
+  }
+}
+@media (max-width: 768px) {
+  .panel-group {
+    margin-bottom: 15px;
   }
 }
 ol.row,
