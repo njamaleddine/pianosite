@@ -2,7 +2,7 @@
 
 # Development/Debug
 # -------------------------------------
-django-debug-toolbar==1.8
+django-debug-toolbar==1.9
 
 # Testing and coverage
 # -------------------------------------

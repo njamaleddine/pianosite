@@ -39,6 +39,7 @@ def append_to_base_dir(path):
 
 # Project specific information
 # Django Sites Framework
+SITE_SCHEME = env('SITE_SCHEME', default='http')
 SITE_NAME = env('SITE_NAME', default='Midi Shop')
 SITE_DOMAIN = env('SITE_DOMAIN', default='midisonline.com')
 SITE_ID = env.int('SITE_ID', default=1)  # Necessary for Oscar
@@ -60,15 +61,12 @@ USE_TZ = True
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('DJANGO_SECRET_KEY', None)
+SECRET_KEY = env('DJANGO_SECRET_KEY', default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=True)
+DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="").split(",")
-
-
-# Application definition
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -96,14 +94,17 @@ INSTALLED_APPS = [
     'apps.dashboard.orders',
 ])
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Ensure a valid basket is added to the request instance for every request
     'oscar.apps.basket.middleware.BasketMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
@@ -112,23 +113,22 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # location('templates'),
-            os.path.abspath("templates"),
+            os.path.abspath('templates'),
             OSCAR_MAIN_TEMPLATE_DIR,
         ],
         'APP_DIRS': False,
         'OPTIONS': {
-            'debug': env.bool("TEMPLATE_DEBUG", default=DEBUG),
+            'debug': env.bool('TEMPLATE_DEBUG', default=DEBUG),
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                "django.template.context_processors.i18n",
-                "django.template.context_processors.media",
-                "django.template.context_processors.static",
-                "django.template.context_processors.tz",
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
 
                 'oscar.apps.search.context_processors.search_form',
                 'oscar.apps.promotions.context_processors.promotions',
@@ -139,14 +139,33 @@ TEMPLATES = [
                 'pianosite.context_processors.contact_email',
             ],
             'loaders': [
-                'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader',
-                # needed by django-treebeard for admin (and potentially other libs)
-                'django.template.loaders.eggs.Loader',
+                ('django.template.loaders.cached.Loader', [
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                    # needed by django-treebeard for admin (and potentially other libs)
+                    'django.template.loaders.eggs.Loader',
+                ]),
             ]
         },
     },
 ]
+
+# SECURITY
+# -----------------------------------------------------------------------------
+# Allow javascripts to read CSRF token from cookies
+CSRF_COOKIE_HTTPONLY = False
+# Do not allow Session cookies to be read by javascript
+SESSION_COOKIE_HTTPONLY = True
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+
+if SITE_SCHEME == 'https':
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.EmailBackend',
@@ -161,25 +180,14 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-# DEBUG Toolbar
-DEBUG_TOOLBAR_CONFIG = {
-    "INTERCEPT_REDIRECTS": env.bool("TOOLBAR_INTERCEPT", default=False)
-}
-
-DEBUG_TOOLBAR = env.bool("DEBUG_TOOLBAR", default=DEBUG)
-if DEBUG_TOOLBAR:
-    MIDDLEWARE_CLASSES += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
-    INSTALLED_APPS += ("debug_toolbar",)
-
-
 ROOT_URLCONF = 'pianosite.urls'
 
 WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
+# -----------------------------------------------------------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -189,19 +197,32 @@ DATABASES = {
         'HOST': '',
         'PORT': '',
         'ATOMIC_REQUESTS': True,
+        'CONN_MAX_AGE': env.int('DATABASE_CONN_MAX_AGE', default=60)
     }
 }
 
-if env("DATABASE_URL", default=None):
+if env('DATABASE_URL', default=None):
     DATABASES['default'] = dj_database_url.config()
+
+# CACHES
+# -----------------------------------------------------------------------------
+CACHES = {
+    'default': env.cache('CACHE_URL', default='redis://127.0.0.1:6379/0'),
+}
+
+# SESSIONS
+# -----------------------------------------------------------------------------
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_CACHE_ALIAS = "default"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+# -----------------------------------------------------------------------------
 DEFAULT_FILE_STORAGE = os.environ.get(
-    "DEFAULT_FILE_STORAGE",
-    "django.core.files.storage.FileSystemStorage"
+    'DEFAULT_FILE_STORAGE',
+    'django.core.files.storage.FileSystemStorage'
 )
-
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
 STATICFILES_DIRS = (
@@ -212,11 +233,14 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
-# Media URL
-MEDIA_ROOT = location("public/media")
-MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
+
+# Media
+# -----------------------------------------------------------------------------
+MEDIA_ROOT = location('public/media')
+MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
 
 # Celery
+# -----------------------------------------------------------------------------
 BROKER_URL = env('BROKER_URL', default='redis://127.0.0.1:6379')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -233,6 +257,7 @@ CELERYBEAT_SCHEDULE = {
 }
 
 # MidiShop Settings
+# -----------------------------------------------------------------------------
 MIDISHOP_AUDIO_SAMPLE_LENGTH = env.int('MIDISHOP_AUDIO_SAMPLE_LENGTH', default=30)  # in seconds
 MIDISHOP_SOUNDFONT_PATH = env(
     'MIDISHOP_DEFAULT_SOUNDFONT_PATH',
@@ -241,22 +266,24 @@ MIDISHOP_SOUNDFONT_PATH = env(
 MIDISHOP_ENVIRONMENT = env('MIDISHOP_ENVIRONMENT', default='development')
 
 # Email
-CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", None)
-SERVER_EMAIL = "server@midishop.com"
-EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", None)
-EMAIL_HOST = os.environ.get("EMAIL_HOST", None)
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", None)
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", None)
-EMAIL_PORT = env.int("EMAIL_PORT", default=25)
+# -----------------------------------------------------------------------------
+CONTACT_EMAIL = env('CONTACT_EMAIL', default=None)
+SERVER_EMAIL = 'server@midishop.com'
+EMAIL_BACKEND = env('EMAIL_BACKEND', default=None)
+EMAIL_HOST = env('EMAIL_HOST', default=None)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default=None)
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default=None)
+EMAIL_PORT = env.int('EMAIL_PORT', default=25)
 
 if EMAIL_PORT:
     EMAIL_USE_TLS = True
 
 # Oscar Settings
-OSCAR_SHOP_NAME = "{}".format(SITE_NAME)
-OSCAR_SHOP_TAGLINE = ""
+# -----------------------------------------------------------------------------
+OSCAR_SHOP_NAME = SITE_NAME
+OSCAR_SHOP_TAGLINE = ''
 OSCAR_FROM_EMAIL = SERVER_EMAIL
-OSCAR_DEFAULT_CURRENCY = "USD"
+OSCAR_DEFAULT_CURRENCY = 'USD'
 OSCAR_ALLOW_ANON_CHECKOUT = True
 OSCAR_GOOGLE_ANALYTICS_ID = env('OSCAR_GOOGLE_ANALYTICS_ID', default=None)
 
@@ -425,48 +452,40 @@ OSCAR_SEARCH_FACETS = {
 }
 OSCAR_MISSING_IMAGE_URL = append_to_base_dir('pianosite/public/media/placeholder.png')
 
-# Oscar Paypal Support
-PAYPAL_API_USERNAME = os.environ.get("PAYPAL_API_USERNAME", "")
-PAYPAL_API_PASSWORD = os.environ.get("PAYPAL_API_PASSWORD", "")
-PAYPAL_API_SIGNATURE = os.environ.get("PAYPAL_API_SIGNATURE", "")
-# Taken from PayPal's documentation - these should always work in the sandbox
-PAYPAL_SANDBOX_MODE = env.bool("PAYPAL_SANDBOX_MODE", default=True)
-PAYPAL_CALLBACK_HTTPS = False
-PAYPAL_API_VERSION = '88.0'
-PAYPAL_CURRENCY = PAYPAL_PAYFLOW_CURRENCY = "USD"
-
-PAYPAL_PAYFLOW_DASHBOARD_FORMS = True
-
-# Paypal Payflow
-PAYPAL_PAYFLOW_PARTNER = os.environ.get("PAYPAL_PAYFLOW_PARTNER", "PayPal")
-PAYPAL_PAYFLOW_VENDOR_ID = os.environ.get("PAYPAL_PAYFLOW_VENDOR_ID", "")
-PAYPAL_PAYFLOW_PASSWORD = os.environ.get("PAYPAL_PAYFLOW_PASSWORD", "")
-PAYPAL_PAYFLOW_PRODUCTION_MODE = DEBUG
-
 LANGUAGES = (
     ('en-us', _('English')),
     ('es', _('Español')),
 )
 
 # DJ-STRIPE
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
-STRIPE_API_VERSION = os.environ.get('STRIPE_API_VERSION', '2012-11-07')
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_API_VERSION = env('STRIPE_API_VERSION', default='2012-11-07')
 
 # Sentry
 # ------------------------------------------------------------------------------
 SENTRY_DSN = env('SENTRY_DSN', default=None)
 if SENTRY_DSN:
-    INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
+    INSTALLED_APPS += ['raven.contrib.django.raven_compat']
     RAVEN_CONFIG = {
         'dsn': SENTRY_DSN,
         'environment': MIDISHOP_ENVIRONMENT,
         'release': __version__,
     }
 
-    MIDDLEWARE_CLASSES += (
+    MIDDLEWARE += (
         'apps.utility.middleware.GroupDisallowedHostExceptionMiddleware',
     )
+
+# Django Debug Toolbar
+# ------------------------------------------------------------------------------
+DEBUG_TOOLBAR = env.bool('DEBUG_TOOLBAR', default=DEBUG)
+if DEBUG_TOOLBAR:
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': env.bool('TOOLBAR_INTERCEPT', default=False)
+    }
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    INSTALLED_APPS += ['debug_toolbar']
 
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
