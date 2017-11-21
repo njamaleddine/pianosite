@@ -8,6 +8,7 @@ sudo apt-get update -y && apt-get upgrade -y && apt-get install -y \
  autoconf \
  build-essential \
  default-jre \
+ ffmpeg \
  fluidsynth \
  git \
  idle-python2.7 \
