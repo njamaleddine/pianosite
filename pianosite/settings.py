@@ -473,9 +473,6 @@ if SENTRY_DSN:
         'release': __version__,
     }
 
-    MIDDLEWARE += (
-        'apps.utility.middleware.GroupDisallowedHostExceptionMiddleware',
-    )
 
 # Django Debug Toolbar
 # ------------------------------------------------------------------------------
@@ -484,8 +481,8 @@ if DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG = {
         'INTERCEPT_REDIRECTS': env.bool('TOOLBAR_INTERCEPT', default=False)
     }
-    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
     INSTALLED_APPS += ['debug_toolbar']
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
