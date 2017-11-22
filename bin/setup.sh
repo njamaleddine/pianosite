@@ -62,6 +62,8 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo cp ./nginx.conf /etc/nginx/sites-available/$APP_NAME
 sudo ln -s /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
 sudo nginx -t
+sudo touch /home/ubuntu/pianosite/access.log
+sudo touch /home/ubuntu/pianosite/error.log
 sudo service nginx restart
 
 # copy over and start systemd script
