@@ -11,7 +11,7 @@ python manage.py migrate
 python manage.py collectstatic --no-input
 
 # copy over and start systemd script
-./update_services.sh
+./bin/update_services.sh
 
 # restart systemd application services
 ./bin/restart.sh

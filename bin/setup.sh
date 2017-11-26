@@ -67,7 +67,7 @@ sudo touch /home/ubuntu/pianosite/error.log
 sudo service nginx restart
 
 # copy over and start systemd script
-./update_services.sh
+./bin/update_services.sh
 
 sudo systemctl enable pianosite_worker
 sudo systemctl enable pianosite_scheduler
