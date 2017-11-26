@@ -1,5 +1,5 @@
 [Unit]
-Description=Pianosite Worker
+Description=Pianosite Worker (Celery)
 
 [Service]
 WorkingDirectory=/home/ubuntu/pianosite
@@ -7,6 +7,7 @@ User=ubuntu
 Group=ubuntu
 Environment=VIRTUAL_ENV=/home/ubuntu/.virtualenvs/pianosite
 Environment=PATH=/home/ubuntu/.virtualenvs/pianosite/bin:$PATH
+Environment=PATH=/usr/bin
 ExecStart=/home/ubuntu/.virtualenvs/pianosite/bin/celery -A pianosite worker -l info
 
 [Install]

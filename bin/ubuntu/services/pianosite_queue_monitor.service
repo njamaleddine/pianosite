@@ -4,13 +4,11 @@ Requires=pianosite_worker.service pianosite_scheduler.service
 
 [Service]
 WorkingDirectory=/home/ubuntu/pianosite
-Type=forking
-KillMode=process
-Restart=always
 User=ubuntu
 Group=ubuntu
 Environment=VIRTUAL_ENV=/home/ubuntu/.virtualenvs/pianosite
 Environment=PATH=/home/ubuntu/.virtualenvs/pianosite/bin:$PATH
+Environment=PATH=/usr/bin
 ExecStart=/home/ubuntu/.virtualenvs/pianosite/bin/flower -A pianosite --port=5555
 
 [Install]
