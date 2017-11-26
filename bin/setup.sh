@@ -59,8 +59,8 @@ python manage.py collectstatic
 
 # copy nginx config
 sudo rm /etc/nginx/sites-enabled/default
-sudo cp ./nginx.conf /etc/nginx/sites-available/$APP_NAME
-sudo ln -s /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/
+sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx_default.conf
+sudo cp ./nginx.conf /etc/nginx/nginx.conf
 sudo nginx -t
 sudo touch /home/ubuntu/pianosite/access.log
 sudo touch /home/ubuntu/pianosite/error.log
