@@ -268,7 +268,7 @@ MIDISHOP_ENVIRONMENT = env('MIDISHOP_ENVIRONMENT', default='development')
 # Email
 # -----------------------------------------------------------------------------
 CONTACT_EMAIL = env('CONTACT_EMAIL', default=None)
-SERVER_EMAIL = 'server@midishop.com'
+SERVER_EMAIL = env('SERVER_EMAIL', default='noreply@mail.midisonline.com')
 EMAIL_BACKEND = env('EMAIL_BACKEND', default=None)
 EMAIL_HOST = env('EMAIL_HOST', default=None)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', default=None)
