@@ -3,9 +3,6 @@ Description=Pianosite Worker
 
 [Service]
 WorkingDirectory=/home/ubuntu/pianosite
-Type=forking
-KillMode=process
-Restart=always
 User=ubuntu
 Group=ubuntu
 Environment=VIRTUAL_ENV=/home/ubuntu/.virtualenvs/pianosite

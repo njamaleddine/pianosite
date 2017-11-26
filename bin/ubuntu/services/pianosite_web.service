@@ -1,17 +1,15 @@
 [Unit]
-Description=Pianosite Web Server
+Description=Pianosite Web Service
+After=network.target
 Requires=pianosite_search.service pianosite_worker.service pianosite_scheduler.service
 
 [Service]
-WorkingDirectory=/home/ubuntu/pianosite
-Type=forking
-KillMode=process
-Restart=always
 User=ubuntu
-Group=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/pianosite
 Environment=VIRTUAL_ENV=/home/ubuntu/.virtualenvs/pianosite
 Environment=PATH=/home/ubuntu/.virtualenvs/pianosite/bin:$PATH
-ExecStart=/home/ubuntu/.virtualenvs/pianosite/bin/gunicorn -w 4 -b 0.0.0.0:8000 wsgi:application
+ExecStart=/home/ubuntu/.virtualenvs/pianosite/bin/gunicorn --access-logfile - --workers 4 --bind unix:/home/ubuntu/pianosite/pianosite.sock wsgi:application
 
 [Install]
 WantedBy=multi-user.target
