@@ -57,14 +57,20 @@ cp static/oscar/img/placeholder.png pianosite/public/media/placeholder.png
 # collect static files
 python manage.py collectstatic
 
-# copy nginx config
+# Setup nginx config
 sudo rm /etc/nginx/sites-enabled/default
 sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx_default.conf
 sudo cp ./nginx.conf /etc/nginx/nginx.conf
 sudo nginx -t
 sudo touch /home/ubuntu/pianosite/access.log
 sudo touch /home/ubuntu/pianosite/error.log
+# use certbot (letsencrypt) to setup ssl cert
+sudo certbot --nginx
 sudo service nginx restart
+
+# Setup ssl auto renewal
+# This step is manual paste:  "00 09 1 1 1 /home/ubuntu/pianosite/bin/ubuntu/renew_ssl.sh"
+sudo crontab -e
 
 # copy over and start systemd script
 ./bin/update_services.sh

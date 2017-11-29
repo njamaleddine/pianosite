@@ -51,4 +51,11 @@ sudo apt-get update -y && apt-get upgrade -y && apt-get install -y \
  python3-pip \
  qt4-designer \
  qt4-dev-tools \
- redis-server
+ redis-server \
+
+
+# install certbot for letsencrypt.org
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python-certbot-nginx
