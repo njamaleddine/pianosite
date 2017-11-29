@@ -69,7 +69,7 @@ sudo certbot --nginx
 sudo service nginx restart
 
 # Setup ssl auto renewal
-# This step is manual paste:  "00 09 1 1 1 /home/ubuntu/pianosite/bin/ubuntu/renew_ssl.sh"
+# This step is manual paste:  00 09 1 1 1 /home/ubuntu/pianosite/bin/ubuntu/renew_ssl.sh
 sudo crontab -e
 
 # copy over and start systemd script

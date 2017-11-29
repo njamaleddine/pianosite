@@ -1,4 +1,3 @@
 #!/bin/bash
 # Renew SSL
-certbot renew --post-hook "service nginx reload"
-
+sudo certbot renew --dry-run --post-hook "sudo service nginx reload"
