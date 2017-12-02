@@ -12,6 +12,7 @@ brew install postgres
 brew install node
 brew install fluid-synth --with-libsndfile
 brew install ffmpeg
+brew install libmagic
 
 brew cleanup
 

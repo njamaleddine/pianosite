@@ -417,7 +417,8 @@ OSCAR_DASHBOARD_NAVIGATION = [
 OSCAR_SEARCH_FACETS = {
     'fields': OrderedDict([
         ('product_class', {'name': _('Type'), 'field': 'product_class'}),
-        ('category', {'name': _('Type'), 'field': 'category'}),
+        # categories are already shown by default
+        # ('category', {'name': _('Type'), 'field': 'category'}),
         ('rating', {'name': _('Rating'), 'field': 'rating'}),
         ('genre', {'name': _('Genre'), 'field': 'genre'}),
         ('artist', {'name': _('Artist'), 'field': 'artist'}),

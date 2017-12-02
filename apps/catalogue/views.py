@@ -24,7 +24,7 @@ class MidiDownloadView(View):
 
         try:
             midi_download = MidiDownloadURL.objects.get(uuid=uuid)
-        except:
+        except MidiDownloadURL.DoesNotExist:
             midi_download = None
 
         if midi_download:
@@ -76,7 +76,7 @@ class MidiDownloadCancelView(View):
 
         try:
             midi_download = MidiDownloadURL.objects.get(uuid=uuid)
-        except:
+        except MidiDownloadURL.DoesNotExist:
             midi_download = None
 
         if (

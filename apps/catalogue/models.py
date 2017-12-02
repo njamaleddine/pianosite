@@ -2,9 +2,12 @@
 # Catalogue models
 import uuid
 
+import magic
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 from oscar.apps.catalogue.abstract_models import AbstractProduct
 
 from apps.utility.audio import AudioFile, MidiFile
@@ -34,21 +37,54 @@ class Genre(TimeStampedModel):
 
 
 class Product(AbstractProduct):
+    """
+    Midishop Product class that handles both midi files and pdf sheet music
+    """
     artist = models.ForeignKey(Artist, null=True, blank=True)
     genre = models.ForeignKey(Genre, null=True, blank=True)
-    midi_file = models.FileField(upload_to=upload_file, max_length=1024)
+    upload = models.FileField(upload_to=upload_file, max_length=1024)
     full_audio = models.FileField(upload_to=upload_file, max_length=1024, blank=True, null=True)
     sample_ogg = models.FileField(upload_to=upload_file, max_length=1024, blank=True, null=True)
     sample_mp3 = models.FileField(upload_to=upload_file, max_length=1024, blank=True, null=True)
 
+    @property
+    def mime_type(self):
+        if self.upload._file:
+            return magic.from_buffer(self.upload._file.read(1024), mime=True)
+        with open(self.upload.path, mode='rb') as product_file:
+            return magic.from_buffer(product_file.read(1024), mime=True)
+        return None
+
+    def reset_fields(self):
+        """
+        Clear out audio fields so that changes in mime_type don't leave audio
+        samples (ex. changing type)
+        """
+        self.full_audio = None
+        self.sample_ogg = None
+        self.sample_mp3 = None
+
+    def clean(self, *args, **kwargs):
+        self.reset_fields()
+        cleaned_data = super().clean(*args, **kwargs)
+
+        if self.product_class.name.lower() == 'midi' and self.mime_type != 'audio/midi':
+            raise ValidationError(
+                _(
+                    'You must upload a midi for a midi product, change '
+                    'the product type or upload a midi to continue'
+                )
+            )
+        return cleaned_data
+
     def save(self, *args, **kwargs):
         super(Product, self).save(*args, **kwargs)
 
-        if self.midi_file:
+        if self.upload and self.mime_type == 'audio/midi':
             # Generate audio from midi and create sample audio in mp3 and ogg format
             # TODO: optimize to speed up save method, or throw into celery queue
-            with open(self.midi_file.path, 'rb+') as midi_file:
-                midi = MidiFile(midi_file)
+            with open(self.upload.path, 'rb+') as upload:
+                midi = MidiFile(upload)
 
                 with open(midi.convert_to_audio(), 'rb+') as audio_file:
                     audio = AudioFile(audio_file)
@@ -73,7 +109,11 @@ class Product(AbstractProduct):
 
 
 class MidiDownloadURL(TimeStampedModel):
-    """ The midi download url available for the user to access the file """
+    """
+    A download url available for the user to access the product upload file
+
+    This may be either a midi or a sheet music file (like a pdf)
+    """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey(Product)
     owner = models.ForeignKey(User, blank=True, null=True)
@@ -93,7 +133,7 @@ class MidiDownloadURL(TimeStampedModel):
     @property
     def file(self):
         if not self.expired:
-            return self.product.midi_file
+            return self.product.upload
         return None
 
     @property

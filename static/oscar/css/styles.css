@@ -10826,8 +10826,14 @@ ul.row {
   width: 100%;
   margin-bottom: 12px;
 }
-.product-container .product-card .product_sample_audio {
+.product-container .product-card .product_sample_audio,
+.product-container .product-card .sheet-music-placeholder {
   margin: 10px 0px;
+}
+.product-container .product-card .sheet-music-placeholder {
+  font-weight: 500 !important;
+  height: 32px;
+  width: 100%;
 }
 .product-container .product-card audio {
   width: 100%;

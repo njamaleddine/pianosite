@@ -17,8 +17,21 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Setting up store data...'))
 
+        new_product_types = [
+            {
+                'name': 'Midi',
+                'slug': 'midi',
+                'path': '001'
+            },
+            {
+                'name': 'Sheet Music',
+                'slug': 'sheet-music',
+                'path': '002'
+            }
+        ]
+
         site, _ = self.setup_site()
-        self.create_product_classes()
+        self.create_product_classes(new_product_types)
         self.create_categories()
         self.create_partners()
         self.create_automatic_product_lists()
@@ -31,13 +44,16 @@ class Command(BaseCommand):
             defaults={'domain': settings.SITE_DOMAIN, 'name': settings.SITE_NAME}
         )
 
-    def create_product_classes(self):
-        product_class, created = ProductClass.objects.get_or_create(
-            name='Midi',
-            requires_shipping=False,
-            track_stock=False
-        )
-        return product_class
+    def create_product_classes(self, new_product_classes=['Midi', 'Sheet Music']):
+        created_product_classes = []
+        for new_product_class in new_product_classes:
+            product_class, created = ProductClass.objects.get_or_create(
+                name=new_product_class,
+                requires_shipping=False,
+                track_stock=False
+            )
+            created_product_classes.append(product_class)
+        return created_product_classes
 
     def create_categories(self):
         try:
@@ -47,15 +63,15 @@ class Command(BaseCommand):
 
         if not category:
             category, created = Category.objects.get_or_create(
-                slug='midi',
-                name='Midi',
+                slug='all-products',
+                name='All Products',
                 path='0001',
                 depth=1,
                 numchild=0
             )
         else:
-            category.name = 'Midi'
-            category.slug = 'midi'
+            category.name = 'All Products'
+            category.slug = 'all-products'
             category.depth = 1
             category.numchild = 0
             category.save()

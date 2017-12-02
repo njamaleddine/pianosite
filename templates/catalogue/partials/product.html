@@ -38,13 +38,18 @@
                 <div class="product-price-container">
                     {% include "catalogue/partials/stock_record.html" %}
                 </div>
-                {% if product.sample_ogg or product.sample_mp3 %}
+                {% if product.mime_type == 'midi' and product.sample_ogg or product.sample_mp3 %}
                 <div class="product_sample_audio">
                     <audio controls>
                         <source src={{ product.sample_ogg.url }} type="audio/ogg">
                         <source src={{ product.sample_mp3.url }} type="audio/mp3">
                         Your browser does not support the html5 audio tag and cannot play the sample.
                     </audio>
+                </div>
+                {% else %}
+                {% comment %} This isn't a great check but it'll do {% endcomment %}
+                <div class="sheet-music-container">
+                  <div class="sheet-music-placeholder">🎼 Sheet Music</div>
                 </div>
                 {% endif %}
                 <div>
