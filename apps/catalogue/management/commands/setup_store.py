@@ -17,21 +17,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Setting up store data...'))
 
-        new_product_types = [
-            {
-                'name': 'Midi',
-                'slug': 'midi',
-                'path': '001'
-            },
-            {
-                'name': 'Sheet Music',
-                'slug': 'sheet-music',
-                'path': '002'
-            }
-        ]
-
         site, _ = self.setup_site()
-        self.create_product_classes(new_product_types)
+        self.create_product_classes()
         self.create_categories()
         self.create_partners()
         self.create_automatic_product_lists()
