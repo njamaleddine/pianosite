@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from oscar.apps.catalogue.abstract_models import AbstractProduct
 
@@ -99,13 +100,7 @@ class Product(AbstractProduct):
                         self.sample_ogg.save(sample_ogg_audio.name.split('/')[-1], sample_ogg_audio, save=False)
                         self.sample_mp3.save(sample_mp3_audio.name.split('/')[-1], sample_mp3_audio, save=False)
 
-        update_search_index.delay()
-
         return super(Product, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        super(Product, self).delete(*args, **kwargs)
-        update_search_index.delay()
 
 
 class MidiDownloadURL(TimeStampedModel):
@@ -143,3 +138,19 @@ class MidiDownloadURL(TimeStampedModel):
 
 # Required to import the rest of the oscar models unfortunately
 from oscar.apps.catalogue.models import *  # noqa
+
+
+@receiver(models.signals.post_save, sender=Artist)
+@receiver(models.signals.post_save, sender=Genre)
+@receiver(models.signals.post_save, sender=Product)
+@receiver(models.signals.post_save, sender=Category)
+@receiver(models.signals.post_save, sender=ProductClass)
+@receiver(models.signals.post_save, sender=ProductCategory)
+@receiver(models.signals.post_delete, sender=Artist)
+@receiver(models.signals.post_delete, sender=Genre)
+@receiver(models.signals.post_delete, sender=Product)
+@receiver(models.signals.post_delete, sender=Category)
+@receiver(models.signals.post_delete, sender=ProductClass)
+@receiver(models.signals.post_delete, sender=ProductCategory)
+def update_search_index_on_change(sender, instance, **kwargs):
+    update_search_index.delay()
