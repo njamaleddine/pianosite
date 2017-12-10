@@ -109,6 +109,8 @@ MIDDLEWARE = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
+TEMPLATE_DEBUG = env.bool('TEMPLATE_DEBUG', default=DEBUG)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -118,7 +120,7 @@ TEMPLATES = [
         ],
         'APP_DIRS': False,
         'OPTIONS': {
-            'debug': env.bool('TEMPLATE_DEBUG', default=DEBUG),
+            'debug': TEMPLATE_DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
