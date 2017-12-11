@@ -34,9 +34,9 @@ npm install
 
 # download and setup soundfont
 mkdir ./tmp && cd ./tmp
-wget https://github.com/musescore/MuseScore/raw/master/share/sound/FluidR3Mono_GM.sf3
+wget https://s3.amazonaws.com/www.midisonline.com/fluidr3_gm2-2.sf2
 cd ..
-mv ./tmp/FluidR3Mono_GM.sf3 apps/utility/fluidr3_gm2-2.sf2
+mv ./tmp/fluidr3_gm2-2.sf2 apps/utility/fluidr3_gm2-2.sf2
 
 # setup .env file
 # note, you'll still need to populate some of these variables (see blank ones)

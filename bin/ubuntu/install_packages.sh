@@ -14,6 +14,8 @@ sudo apt-get update -y && apt-get upgrade -y && apt-get install -y \
  idle-python2.7 \
  lib32ncurses5-dev \
  libav-tools \
+ libavcodec-extra \
+ libavcodec-ffmpeg-extra56 \
  libffi-dev \
  libgle3 \
  libicu-dev \
