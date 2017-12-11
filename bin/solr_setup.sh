@@ -9,4 +9,4 @@ tar xzf solr-$SOLR_VERSION.tgz
 sudo cp -R $SOLR_DIRECTORY/conf $SOLR_DIRECTORY/conf.original
 sudo cp $SOLR_DIRECTORY/build
 workon $APP_NAME
-sudo python manage.py build_solr_schema > solr-$SOLR_VERSION/example/solr/collection1/schema.xml
+python manage.py build_solr_schema > solr-$SOLR_VERSION/example/solr/collection1/conf/schema.xml
