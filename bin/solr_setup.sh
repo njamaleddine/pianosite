@@ -9,4 +9,8 @@ tar xzf solr-$SOLR_VERSION.tgz
 sudo cp -R $SOLR_DIRECTORY/conf $SOLR_DIRECTORY/conf.original
 sudo cp $SOLR_DIRECTORY/build
 workon $APP_NAME
-python manage.py build_solr_schema > solr-$SOLR_VERSION/example/solr/collection1/conf/schema.xml
+# This may not work because the latest django-haystack doesn't support creating
+# schema.xml files for solr 4.X, instead we need to copy the local dev one until we
+# update to solr 6.x
+# Open issue: https://github.com/django-haystack/django-haystack/issues/1546
+./manage.py build_solr_schema > solr-$SOLR_VERSION/example/solr/collection1/conf/schema.xml

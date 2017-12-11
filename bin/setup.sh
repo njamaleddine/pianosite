@@ -34,6 +34,9 @@ npm install
 
 # download and setup soundfont
 mkdir ./tmp && cd ./tmp
+# unfortunately ubuntu 16.04 does not have the latest fluidsynth that supports sf3 files
+# instead we'll store the soundfont 2 file in s3 and use that for setup
+# wget https://github.com/musescore/MuseScore/raw/master/share/sound/FluidR3Mono_GM.sf3
 wget https://s3.amazonaws.com/www.midisonline.com/fluidr3_gm2-2.sf2
 cd ..
 mv ./tmp/fluidr3_gm2-2.sf2 apps/utility/fluidr3_gm2-2.sf2
