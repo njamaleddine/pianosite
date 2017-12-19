@@ -10,7 +10,7 @@ WorkingDirectory=/home/ubuntu/pianosite
 Environment=VIRTUAL_ENV=/home/ubuntu/.virtualenvs/pianosite
 Environment=PATH=/home/ubuntu/.virtualenvs/pianosite/bin:$PATH
 Environment=PATH=/usr/bin
-ExecStart=/home/ubuntu/.virtualenvs/pianosite/bin/gunicorn --access-logfile - --workers 4 --bind unix:/home/ubuntu/pianosite/pianosite.sock wsgi:application
+ExecStart=/home/ubuntu/.virtualenvs/pianosite/bin/gunicorn --access-logfile - --workers 2 --bind unix:/home/ubuntu/pianosite/pianosite.sock wsgi:application
 
 [Install]
 WantedBy=multi-user.target
