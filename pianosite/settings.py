@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'apps.customer',
     'apps.dashboard',
     'apps.order',
+    'apps.partner',
     'apps.payment',
     'apps.search',
     'apps.dashboard.catalogue',
@@ -266,7 +267,13 @@ MIDISHOP_SOUNDFONT_PATH = env(
     default=append_to_base_dir('apps/utility/fluidr3_gm2-2.sf2')
 )
 MIDISHOP_ENVIRONMENT = env('MIDISHOP_ENVIRONMENT', default='development')
-
+MIDISHOP_AUDIO_MIME_TYPES = env.list(
+    'MIDISHOP_AUDIO_MIME_TYPES',
+    default=[
+        'audio/mpeg', 'audio/mp3', 'audio/mp4', 'audio/ogg', 'audio/vorbis',
+        'audio/wav'
+    ]
+)
 # Email
 # -----------------------------------------------------------------------------
 CONTACT_EMAIL = env('CONTACT_EMAIL', default=None)

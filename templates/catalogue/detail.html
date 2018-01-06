@@ -78,15 +78,7 @@
 
             <!-- <hr/> -->
 
-            {% if product.sample_ogg or product.sample_mp3 %}
-            <div id="product_sample_audio" class="sub-header">
-                <audio controls>
-                    <source src={{ product.sample_ogg.url }} type="audio/ogg">
-                    <source src={{ product.sample_mp3.url }} type="audio/mp3">
-                    Your browser does not support the html5 audio tag and cannot play the sample.
-                </audio>
-            </div>
-            {% endif %}
+            {% include "catalogue/partials/audio_controls.html" with include_subheader=True %}
 
             {% block product_basket_form %}
                 {% include "catalogue/partials/add_to_basket_form.html" %}

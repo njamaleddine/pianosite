@@ -45,10 +45,10 @@ python manage.py oscar_populate_countries
 python manage.py setup_store
 
 # replace the existing placeholder for media
-cp static/oscar/img/placeholder.png > pianosite/public/media/
+cp static/oscar/img/placeholder.png pianosite/public/media/
 
 # copy over sample env file
-cp sample.env > .env
+cp sample.env .env
 
 # run the application
 honcho start -f Procfile.dev

@@ -4,6 +4,7 @@
 
 {% purchase_info_for_product request product as session %}
 
+{% if session.availability.is_available_to_buy %}
 <div class="price-label-container">
     {% if session.price.exists %}
         {% if session.price.excl_tax == 0 %}
@@ -17,7 +18,7 @@
         <span class="price_color">&nbsp;</span>
     {% endif %}
 </div>
-{% if not session.availability.is_available_to_buy %}
+{% else %}
     <span class="{{ session.availability.code }} availability">
         <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i>
         {% if verbose %}

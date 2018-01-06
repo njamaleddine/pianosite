@@ -2,18 +2,20 @@
 # Catalogue models
 import uuid
 
-import magic
+import filetype
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.dispatch import receiver
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from oscar.apps.catalogue.abstract_models import AbstractProduct
 
-from apps.utility.audio import AudioFile, MidiFile
 from apps.utility.files import upload_file
 from apps.utility.models import TimeStampedModel
+from .tasks import create_audio_samples
+from .tasks import create_audio_samples_for_midi
 from .tasks import update_search_index
 
 
@@ -44,17 +46,59 @@ class Product(AbstractProduct):
     artist = models.ForeignKey(Artist, null=True, blank=True)
     genre = models.ForeignKey(Genre, null=True, blank=True)
     upload = models.FileField(upload_to=upload_file, max_length=1024)
-    full_audio = models.FileField(upload_to=upload_file, max_length=1024, blank=True, null=True)
-    sample_ogg = models.FileField(upload_to=upload_file, max_length=1024, blank=True, null=True)
-    sample_mp3 = models.FileField(upload_to=upload_file, max_length=1024, blank=True, null=True)
+    full_audio = models.FileField(
+        upload_to=upload_file,
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text=_(
+            'The full audio for an audio file, this field will be automatically set.'
+        )
+    )
+    sample_ogg = models.FileField(
+        upload_to=upload_file,
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text=_(
+            'The sample ogg audio for an audio file, this field will be automatically set.'
+        )
+    )
+    sample_mp3 = models.FileField(
+        upload_to=upload_file,
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text=_(
+            'The sample audio for an audio file, this field will be automatically set.'
+        )
+    )
+
+    @cached_property
+    def original(self):
+        try:
+            return self.__class__.objects.get(pk=self.pk)
+        except self.__class__.DoesNotExist:
+            return None
 
     @property
     def mime_type(self):
         if self.upload._file:
-            return magic.from_buffer(self.upload._file.read(1024), mime=True)
+            return getattr(filetype.guess(self.upload._file.read(1024)), 'mime', None)
         with open(self.upload.path, mode='rb') as product_file:
-            return magic.from_buffer(product_file.read(1024), mime=True)
+            return getattr(filetype.guess(product_file.read(1024)), 'mime', None)
         return None
+
+    def is_available_for_digital_purchase(self):
+        if self.mime_type == 'audio/midi' or self.mime_type in settings.MIDISHOP_AUDIO_MIME_TYPES:
+            return bool(self.upload and self.sample_ogg and self.sample_mp3)
+        return bool(self.upload)
+
+    def upload_has_changed(self):
+        return not self.original or self.upload != self.original.upload
+
+    def product_class_has_changed(self):
+        return self.product_class.name.lower() != self.original.product_class.name.lower()
 
     def reset_fields(self):
         """
@@ -66,41 +110,38 @@ class Product(AbstractProduct):
         self.sample_mp3 = None
 
     def clean(self, *args, **kwargs):
-        self.reset_fields()
+        if self.upload_has_changed() or self.product_class_has_changed():
+            self.reset_fields()
         cleaned_data = super().clean(*args, **kwargs)
 
         if self.product_class.name.lower() == 'midi' and self.mime_type != 'audio/midi':
             raise ValidationError(
                 _(
-                    'You must upload a midi for a midi product, change '
-                    'the product type or upload a midi to continue'
+                    'You must upload a midi for a midi product. Change '
+                    'the product type or upload a midi to continue.'
                 )
             )
+
+        if self.product_class.name.lower() == 'mp3' and self.mime_type != 'audio/mpeg':
+            raise ValidationError(
+                _(
+                    'You must upload an mp3 for a mp3 product. Change '
+                    'the product type or upload a mp3 to continue.'
+                )
+            )
+
         return cleaned_data
 
     def save(self, *args, **kwargs):
-        super(Product, self).save(*args, **kwargs)
+        original = self.original
+        product = super().save(*args, **kwargs)
 
-        if self.upload and self.mime_type == 'audio/midi':
-            # Generate audio from midi and create sample audio in mp3 and ogg format
-            # TODO: optimize to speed up save method, or throw into celery queue
-            with open(self.upload.path, 'rb+') as upload:
-                midi = MidiFile(upload)
-
-                with open(midi.convert_to_audio(), 'rb+') as audio_file:
-                    audio = AudioFile(audio_file)
-                    sample_ogg = audio.slice(seconds=settings.MIDISHOP_AUDIO_SAMPLE_LENGTH)
-
-                    with open(sample_ogg, 'rb+') as sample_ogg_file:
-                        sample_ogg_audio = AudioFile(sample_ogg_file)
-                        sample_mp3 = sample_ogg_audio.save_as_type('mp3')
-                        sample_mp3_audio = AudioFile(sample_mp3)
-
-                        self.full_audio.save(audio.name.split('/')[-1], audio, save=False)
-                        self.sample_ogg.save(sample_ogg_audio.name.split('/')[-1], sample_ogg_audio, save=False)
-                        self.sample_mp3.save(sample_mp3_audio.name.split('/')[-1], sample_mp3_audio, save=False)
-
-        return super(Product, self).save(*args, **kwargs)
+        if (not original or self.upload != original.upload) or not self.sample_ogg or not self.sample_mp3:
+            if self.upload and self.mime_type == 'audio/midi':
+                create_audio_samples_for_midi.delay(self.pk)
+            elif self.upload and self.mime_type in settings.MIDISHOP_AUDIO_MIME_TYPES:
+                create_audio_samples.delay(self.pk)
+        return product
 
 
 class MidiDownloadURL(TimeStampedModel):

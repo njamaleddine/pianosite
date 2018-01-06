@@ -31,7 +31,7 @@ class Command(BaseCommand):
             defaults={'domain': settings.SITE_DOMAIN, 'name': settings.SITE_NAME}
         )
 
-    def create_product_classes(self, new_product_classes=['Midi', 'Sheet Music']):
+    def create_product_classes(self, new_product_classes=['Midi', 'MP3', 'Sheet Music']):
         created_product_classes = []
         for new_product_class in new_product_classes:
             product_class, created = ProductClass.objects.get_or_create(

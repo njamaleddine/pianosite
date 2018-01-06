@@ -1,0 +1,19 @@
+{% comment %} Audio and Sheet music {% endcomment %}
+{% if 'audio' in product.mime_type %}
+  <div class="product_sample_audio{% if include_subheader %} sub-header{% endif %}">
+    <audio controls>
+      {% if product.sample_ogg and product.sample_mp3 %}
+        <source src={{ product.sample_ogg.url }} type="audio/ogg">
+        <source src={{ product.sample_mp3.url }} type="audio/mp3">
+        Your browser does not support the html5 audio tag and cannot play the sample.
+      {% else %}
+        No audio available
+      {% endif %}
+    </audio>
+  </div>
+{% else %}
+  {% comment %} This isn't a great check but it'll do {% endcomment %}
+  <div class="sheet-music-container  {% if include_subheader %}sub-header{% endif %}">
+    <div class="sheet-music-placeholder">🎼 Sheet Music</div>
+  </div>
+{% endif %}
