@@ -437,20 +437,19 @@ OSCAR_SEARCH_FACETS = {
             'name': _('Price range'),
             'field': 'price',
             'queries': [
-                # This is a list of (name, query) tuples where the name will
-                # be displayed on the front-end.
-                (_('0 to 5'), '[0 TO 5]'),
-                (_('5 to 20'), '[5 TO 20]'),
-                (_('20 to 40'), '[20 TO 40]'),
-                (_('40+'), '[40 TO *]'),
+                # May need to modify solr schema.xml if this is generated incorrectly
+                # as a string instead of a double field
+                (_('0 to 2'), '[0 TO 2]'),
+                (_('2 to 5'), '[2 TO 5]'),
+                (_('5 to 10'), '[5 TO 10]'),
+                (_('10 to 20'), '[10 TO 20]'),
+                (_('20+'), '[20 TO *]'),
             ]
         }),
         ('rating', {
             'name': _('Rating'),
             'field': 'rating',
             'queries': [
-                # This is a list of (name, query) tuples where the name will
-                # be displayed on the front-end.
                 (_('5 stars'), '5'),
                 (_('4 stars'), '4'),
                 (_('3 stars'), '3'),
