@@ -134,6 +134,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
                         description=self.payment_description(
                             order_number, total, customer.subscriber.email, **kwargs
                         ),
+                        send_receipt=False,
                         metadata=self.get_stripe_metadata(order_number, ctx['basket'])
                     )
                 else:
@@ -144,6 +145,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
                         description=self.payment_description(
                             order_number, total, customer.subscriber.email, **kwargs
                         ),
+                        send_receipt=False,
                         metadata=self.get_stripe_metadata(order_number, ctx['basket'])
                     )
             elif guest_email and bankcard and bankcard.stripe_token:
@@ -157,6 +159,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
                     description=self.payment_description(
                         order_number, total, guest_email, **kwargs
                     ),
+                    send_receipt=False,
                     metadata=self.get_stripe_metadata(order_number, ctx['basket'])
                 )
             else:
