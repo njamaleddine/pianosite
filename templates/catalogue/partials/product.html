@@ -16,6 +16,11 @@
             </div>
         {% endblock %}
 
+        <span class="product-type">
+              {% comment %} This isn't a great check but it'll do {% endcomment %}
+              {% if 'audio' in product.mime_type %}🎵{% else %}🎼{% endif %} {{ product.product_class.name }}
+        </span>
+
         {% block product_review %}
             {% iffeature "reviews" %}
                 <p class="star-rating {{ product.rating|as_stars }}">
