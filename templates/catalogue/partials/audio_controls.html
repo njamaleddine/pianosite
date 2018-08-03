@@ -1,7 +1,7 @@
 {% comment %} Audio and Sheet music {% endcomment %}
 {% if 'audio' in product.mime_type %}
   <div class="product_sample_audio{% if include_subheader %} sub-header{% endif %}">
-    <audio controls>
+    <audio class="js-audio-player" controls>
       {% if product.sample_ogg and product.sample_mp3 %}
         <source src={{ product.sample_ogg.url }} type="audio/ogg">
         <source src={{ product.sample_mp3.url }} type="audio/mp3">

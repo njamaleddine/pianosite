@@ -13,5 +13,7 @@
   "author": "",
   "license": "ISC",
   "homepage": "https://bitbucket.org/njamaleddine/pianosite#readme",
-  "dependencies": {}
+  "dependencies": {
+    "plyr": "^3.4.0-beta.1"
+  }
 }

@@ -43,7 +43,9 @@
         {% endblock %}
 
         {# Additional CSS - specific to certain pages #}
-        {% block extrastyles %}{% endblock %}
+        {% block extrastyles %}
+            <link rel="stylesheet" href="{% static 'plyr/dist/plyr.css' %}">
+        {% endblock %}
 
         {% block extrahead %}{% endblock %}
 
@@ -70,6 +72,7 @@
         {# Local scripts #}
         {% block scripts %}
           {% compress js file inline %}
+            <script type="text/javascript" src="{% static 'plyr/dist/plyr.polyfilled.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'oscar/js/midishop/audio-controls.js' %}"></script>
             <script type="text/javascript" src="{% static 'oscar/js/midishop/search.js' %}"></script>
           {% endcompress %}

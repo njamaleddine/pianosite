@@ -6,6 +6,8 @@ workon pianosite
 git fetch origin
 git merge origin/master
 
+npm install
+
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py collectstatic --no-input
