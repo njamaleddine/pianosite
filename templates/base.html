@@ -71,8 +71,8 @@
 
         {# Local scripts #}
         {% block scripts %}
+          <script type="text/javascript" src="{% static 'plyr/dist/plyr.polyfilled.min.js' %}"></script>
           {% compress js file inline %}
-            <script type="text/javascript" src="{% static 'plyr/dist/plyr.polyfilled.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'oscar/js/midishop/audio-controls.js' %}"></script>
             <script type="text/javascript" src="{% static 'oscar/js/midishop/search.js' %}"></script>
           {% endcompress %}
