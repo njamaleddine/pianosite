@@ -29,8 +29,8 @@
         {% endblock %}
 
         {% block product_title %}
-            <h3 class="title"><a href="{{ product.get_absolute_url }}" title="{{ product.get_title }}">{{ product.get_title|truncatewords:4 }}</a></h3>
-            <h3 class="artist">{{ product.artist|truncatewords:4 }}</h3>
+            <h3 class="title"><a href="{{ product.get_absolute_url }}" title="{{ product.get_title }}">{{ product.get_title|truncatechars:45 }}</a></h3>
+            <h3 class="artist">{{ product.artist|truncatechars:45 }}</h3>
         {% endblock %}
 
         {% block product_price %}
