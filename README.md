@@ -2,10 +2,9 @@
 
 __Version:__ 0.0.0
 
-An ecommerce web application for that sells MIDIs
 **Pianosite** is an ecommerce web application built on top of [Oscar](https://github.com/django-oscar/django-oscar), a Django ecommerce platform.
 
-Pianosite sells digital media in the form of MIDI files that other pianists/keyboard players can use to perform live at shows.
+Pianosite sells digital media in the form of MIDI files (also audio and sheet music files) that other pianists/keyboard players can use to perform live at shows.
 Samples of `.midi/.mid` files are in the form of `ogg` and `mp3`
 
 > **Note:** Project Setup is only supported on macOS
