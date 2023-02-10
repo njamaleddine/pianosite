@@ -31,7 +31,7 @@ pydub==0.20.0
 django-extensions==1.7.8
 django-uuid-upload-path==1.0.0
 pytz==2017.3
-ipython==6.2.1
+ipython==8.10.0
 pycountry==17.9.23
 Werkzeug==0.15.3
 filetype==1.0.0
